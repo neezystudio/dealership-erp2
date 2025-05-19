@@ -4,7 +4,7 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SambazaModel extends Model {
-  Map<String, dynamic> _cache = <String, dynamic>{};
+  final Map<String, dynamic> _cache = <String, dynamic>{};
   late SharedPreferences _prefs; // ✅ FIXED HERE
   late Future<void> _ready;
 
@@ -34,6 +34,7 @@ class SambazaModel extends Model {
 
   bool has(String key) => _cache.containsKey(key);
 
+  @override
   dynamic noSuchMethod(Invocation invocation) {
     if (invocation.isGetter) {
       var ret = _cache[invocation.memberName.toString()];

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import 'model.dart';
-import 'pages.dart';
 
 void main() => runApp(ScopedModel(
   model: SambazaModel(),
@@ -10,6 +9,8 @@ void main() => runApp(ScopedModel(
 ));
 
 class Sambaza extends StatelessWidget {
+  const Sambaza({super.key});
+
   @override
   Widget build(BuildContext context) => MaterialApp(
     title: 'Sambaza',
