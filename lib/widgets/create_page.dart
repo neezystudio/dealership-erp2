@@ -6,7 +6,7 @@ class SambazaCreatePage extends StatelessWidget {
   final Widget form;
   final String title;
 
-  SambazaCreatePage({this.form, this.title});
+  SambazaCreatePage({required this.form, required this.title});
 
   Widget build(BuildContext context) => SambazaPage(
         body: ListView(
@@ -15,7 +15,7 @@ class SambazaCreatePage extends StatelessWidget {
             Padding(
               child: Text(
                 'Fill in the form below',
-                style: Theme.of(context).textTheme.subhead,
+                style: Theme.of(context).textTheme.headlineMedium,
               ),
               padding: EdgeInsets.only(
                 left: 8,

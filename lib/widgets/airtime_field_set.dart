@@ -10,9 +10,9 @@ class SambazaAirtimeFieldSet extends StatelessWidget {
 
   SambazaAirtimeFieldSet(
     this.formFieldBuilder, {
-    @required this.airtimeFieldName,
-    @required this.quantityFieldName,
-    void Function() onDelete,
+    required this.airtimeFieldName,
+    required this.quantityFieldName,
+    required void Function() onDelete,
   }) : deleteSetCallback = onDelete ?? (() {});
 
   @override

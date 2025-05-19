@@ -22,9 +22,9 @@ class SambazaDebtCard extends SambazaInjectableStatelessWidget {
         child: FutureBuilder<User>(
           builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
             if (snapshot.hasData) {
-              Debt debt = snapshot.data.debt;
+              Debt debt = snapshot.data!.debt;
               bool debtIsBad = debt.percentage > 0.2;
-              return Row(
+              return  Row(
                 children: <Widget>[
                   CircleAvatar(
                     backgroundColor:
@@ -34,7 +34,7 @@ class SambazaDebtCard extends SambazaInjectableStatelessWidget {
                           ? Icons.info_outline
                           : Icons.check_circle_outline,
                       color: debtIsBad
-                          ? _themeData.errorColor
+                          ? _themeData.colorScheme.error
                           : _themeData.primaryColor,
                       semanticLabel:
                           debtIsBad ? 'Bad debt level' : 'Good debt level',
@@ -43,12 +43,12 @@ class SambazaDebtCard extends SambazaInjectableStatelessWidget {
                   SizedBox(height: 72, width: 16),
                   Text(
                     'Debt:',
-                    style: _themeData.textTheme.body2,
+                    style: _themeData.textTheme.bodySmall,
                   ),
                   SizedBox(width: 16),
                   Text(
                     'KES ${debt.value.toString()}',
-                    style: _themeData.textTheme.display1,
+                    style: _themeData.textTheme.displaySmall,
                   )
                 ],
                 mainAxisAlignment: MainAxisAlignment.center,
