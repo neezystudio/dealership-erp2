@@ -13,30 +13,30 @@ class ForgotPasswordPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        body: Column(
-          children: <Widget>[
-            Expanded(
-              child: Center(
-                child: Image(
-                  fit: BoxFit.contain,
-                  height: 150,
-                  image: AssetImage('assets/images/logo.png'),
-                ),
-              ),
+    body: Column(
+      children: <Widget>[
+        Expanded(
+          child: Center(
+            child: Image(
+              fit: BoxFit.contain,
+              height: 150,
+              image: AssetImage('assets/images/logo.png'),
             ),
-            Text(
-              'Provide your email',
-              style: Theme.of(context).textTheme.headline,
-            ),
-            Expanded(
-              child: Container(
-                child: _ForgotPasswordForm(),
-                padding: EdgeInsets.all(16.0),
-              ),
-            ),
-          ],
+          ),
         ),
-      );
+        Text(
+          'Provide your email',
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
+        Expanded(
+          child: Container(
+            child: _ForgotPasswordForm(),
+            padding: EdgeInsets.all(16.0),
+          ),
+        ),
+      ],
+    ),
+  );
 }
 
 class _ForgotPasswordForm extends StatefulWidget {
@@ -46,7 +46,8 @@ class _ForgotPasswordForm extends StatefulWidget {
 
 class _ForgotPasswordFormState
     extends SambazaInjectableWidgetState<_ForgotPasswordForm> {
-  bool _autovalidate = false, _valid = false, _processing = false;
+  AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
+  bool _valid = false, _processing = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final SambazaField _field = SambazaField.email(
     autocomplete: true,
@@ -56,14 +57,16 @@ class _ForgotPasswordFormState
     require: true,
   );
   final List<Type> $inject = <Type>[SambazaAPI];
-  final SambazaResource _resource =
-      SambazaResource(SambazaAPIEndpoints.accounts, '/password/reset');
+  final SambazaResource _resource = SambazaResource(
+    SambazaAPIEndpoints.accounts,
+    '/password/reset',
+  );
 
   SambazaFieldBuilder get fieldBuilder => SambazaFieldBuilder.of(
-        _field,
-        onComplete: onFieldEditingComplete,
-        onSubmit: onFieldSubmitted,
-      );
+    _field,
+    onComplete: onFieldEditingComplete,
+    onSubmit: onFieldSubmitted,
+  );
 
   @override
   void dispose() {
@@ -79,47 +82,45 @@ class _ForgotPasswordFormState
 
   @override
   Widget template(BuildContext context) => Form(
-        autovalidate: _autovalidate,
-        child: Column(
-          children: <Widget>[
-            fieldBuilder.build(
-              _processing,
-              true,
-              true,
-            ),
-            Expanded(
-              child: _processing
+    autovalidateMode: _autovalidateMode,
+
+    child: Column(
+      children: <Widget>[
+        fieldBuilder.build(_processing, true, true),
+        Expanded(
+          child:
+              _processing
                   ? SambazaLoader('Sending reset email')
                   : SizedBox(width: 1.0),
-            ),
-            Row(
-              children: <Widget>[
-                FlatButton(
-                  child: Text('Back to login'),
-                  focusNode: null,
-                  onPressed: !_processing
+        ),
+        Row(
+          children: <Widget>[
+            TextButton(
+              onPressed:
+                  !_processing
                       ? () {
-                          Navigator.pop(context, false);
-                        }
+                        Navigator.pop(context, false);
+                      }
                       : null,
-                  textColor: Colors.black87,
-                ),
-                Expanded(
-                  child: SizedBox(height: 8),
-                ),
-                RaisedButton(
-                  child: Text('SEND LINK'),
-                  focusNode: null,
-                  onPressed: !_processing ? _submit : null,
-                ),
-              ],
-              mainAxisAlignment: MainAxisAlignment.end,
+              child: Text(
+                'Back to login',
+                style: TextStyle(color: Colors.black87),
+              ),
+            ),
+
+            Expanded(child: SizedBox(height: 8)),
+            ElevatedButton(
+              onPressed: !_processing ? _submit : null,
+              child: Text('SEND LINK'),
             ),
           ],
           mainAxisAlignment: MainAxisAlignment.end,
         ),
-        key: _formKey,
-      );
+      ],
+      mainAxisAlignment: MainAxisAlignment.end,
+    ),
+    key: _formKey,
+  );
 
   void _handleError(Exception error) {
     print(error);
@@ -138,8 +139,9 @@ class _ForgotPasswordFormState
             _processing = true;
           });
         })
-        .then((x) =>
-            _resource.$save(<String, dynamic>{_field.name: _field.value}))
+        .then(
+          (x) => _resource.$save(<String, dynamic>{_field.name: _field.value}),
+        )
         .then((Map<String, dynamic> result) {
           Navigator.pop(context, true);
         })
@@ -158,15 +160,17 @@ class _ForgotPasswordFormState
 
   Future<void> _validate() async {
     setState(() {
-      _valid = _formKey.currentState.validate();
-      _autovalidate = _valid == false;
+      _valid = _formKey.currentState!.validate();
+      _autovalidateMode = (_valid == false) as AutovalidateMode;
     });
     if (_valid) {
-      _formKey.currentState.save();
+      _formKey.currentState?.save();
       return Future.value();
     }
     _field.focusNode.requestFocus();
     throw SambazaException(
-        'A field(s) in the form is/are invalid', 'Form Error');
+      'A field(s) in the form is/are invalid',
+      'Form Error',
+    );
   }
 }
