@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter_autofill/flutter_autofill.dart';
 import 'package:flutter/material.dart';
 
 import '../models/all.dart';
@@ -19,38 +18,33 @@ class LoginPage extends SambazaInjectableStatelessWidget {
 
   @override
   Widget template(BuildContext context) => Scaffold(
-        body: WillPopScope(
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                child: Center(
-                  child: Image(
-                    fit: BoxFit.contain,
-                    height: 150,
-                    image: AssetImage('assets/images/logo.png'),
-                  ),
-                ),
+    body: WillPopScope(
+      child: Column(
+        children: <Widget>[
+          Expanded(
+            child: Center(
+              child: Image(
+                fit: BoxFit.contain,
+                height: 150,
+                image: AssetImage('assets/images/logo.png'),
               ),
-              Text(
-                'Sign in to continue',
-                style: Theme.of(context).textTheme.headline,
-              ),
-              Expanded(
-                child: Container(
-                  child: _LoginForm(),
-                  padding: EdgeInsets.all(16.0),
-                ),
-              ),
-            ],
+            ),
           ),
-          onWillPop: () async {
-            if ($$<SambazaAuth>().token.isEmpty) {
-              await FlutterAutofill.cancel();
-            }
-            return true;
-          },
-        ),
-      );
+          Text(
+            'Sign in to continue',
+            style: Theme.of(context).textTheme.headlineMedium,
+          ),
+          Expanded(
+            child: Container(
+              child: _LoginForm(),
+              padding: EdgeInsets.all(16.0),
+            ),
+          ),
+        ],
+      ),
+      onWillPop: () async => true,
+    ),
+  );
 }
 
 class _LoginForm extends StatefulWidget {
@@ -59,7 +53,8 @@ class _LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends SambazaInjectableWidgetState<_LoginForm> {
-  bool _autovalidate = false, _valid = false, _processing = false;
+  AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
+  bool _valid = false, _processing = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final Map<String, SambazaFieldBuilder> _fieldBuilders =
       <String, SambazaFieldBuilder>{};
@@ -100,54 +95,52 @@ class _LoginFormState extends SambazaInjectableWidgetState<_LoginForm> {
 
   @override
   Widget template(BuildContext context) => Form(
-        autovalidate: _autovalidate,
-        child: ListView(
+    autovalidateMode: _autovalidateMode,
+    child: ListView(
+      children: <Widget>[
+        _buildField('email'),
+        SizedBox(height: 8),
+        _buildField('password'),
+        SizedBox(height: 8),
+        SizedBox(
+          child: _processing ? SambazaLoader('Signing in') : null,
+          height: 35,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
-            _buildField('email'),
-            SizedBox(height: 8),
-            _buildField('password'),
-            SizedBox(height: 8),
-            SizedBox(
-              child: _processing ? SambazaLoader('Signing in') : null,
-              height: 35,
+            TextButton(
+              child: Text('Forgot password?'),
+              focusNode: null,
+              onPressed: !_processing ? _forgotPassword : null,
+              // textColor: Colors.black87,
             ),
-            Row(
-              children: <Widget>[
-                FlatButton(
-                  child: Text('Forgot password?'),
-                  focusNode: null,
-                  onPressed: !_processing ? _forgotPassword : null,
-                  textColor: Colors.black87,
-                ),
-                Expanded(
-                  child: SizedBox(height: 8),
-                ),
-                RaisedButton(
-                  child: Text('SIGN IN'),
-                  focusNode: null,
-                  onPressed: !_processing ? _login : null,
-                ),
-              ],
-              mainAxisAlignment: MainAxisAlignment.end,
+            Expanded(child: SizedBox(height: 8)),
+            ElevatedButton(
+              child: Text('SIGN IN'),
+              focusNode: null,
+              onPressed: !_processing ? _login : null,
             ),
           ],
-          shrinkWrap: true,
         ),
-        key: _formKey,
-      );
+      ],
+      shrinkWrap: true,
+    ),
+    key: _formKey,
+  );
 
-  String _addFieldBuilder(SambazaField field, [String builderName]) {
+  String _addFieldBuilder(SambazaField field, [String? builderName]) {
     builderName ??= '${field.name}${_fieldBuilders.length}';
     field.init();
     _fieldBuilders[builderName] = _createFieldBuilder(field);
     return builderName;
   }
 
-  Widget _buildField(String name) => _fieldBuilders[name].build(
-        _processing,
-        false,
-        _fieldBuilders.values.last.field.name == name,
-      );
+  Widget _buildField(String name) => _fieldBuilders[name]!.build(
+    _processing,
+    false,
+    _fieldBuilders.values.last.field.name == name,
+  );
 
   SambazaFieldBuilder _createFieldBuilder(SambazaField field) =>
       SambazaFieldBuilder.of(
@@ -159,18 +152,21 @@ class _LoginFormState extends SambazaInjectableWidgetState<_LoginForm> {
   void _forgotPassword() {
     Navigator.pushNamed(context, ForgotPasswordPage.route).then((result) {
       if (result == true) {
-        Scaffold.of(context).showSnackBar(SnackBar(
-          content: Row(
-            children: <Widget>[
-              Text('SENT'),
-              SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                    'An email with a link to reset your password has been sent. Please check your inbox.'),
-              ),
-            ],
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: <Widget>[
+                Text('SENT'),
+                SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'An email with a link to reset your password has been sent. Please check your inbox.',
+                  ),
+                ),
+              ],
+            ),
           ),
-        ));
+        );
       }
     });
   }
@@ -180,22 +176,20 @@ class _LoginFormState extends SambazaInjectableWidgetState<_LoginForm> {
   }
 
   void Function() _onFieldEditingComplete(SambazaField field) => () {
-        if (_fields.last == field) {
-          _validate().catchError(_handleError);
-        }
-      };
+    if (_fields.last == field) {
+      _validate().catchError(_handleError);
+    }
+  };
 
-  void Function(String) _onFieldSubmitted(SambazaField field) =>
-      (String value) {
-        if (_fields.last == field) {
-          _validate().catchError(_handleError);
-        } else {
-          _fields
-              .elementAt(_fields.indexOf(field) + 1)
-              .focusNode
-              .requestFocus();
-        }
-      };
+  void Function(String) _onFieldSubmitted(SambazaField field) => (
+    String value,
+  ) {
+    if (_fields.last == field) {
+      _validate().catchError(_handleError);
+    } else {
+      _fields.elementAt(_fields.indexOf(field) + 1).focusNode.requestFocus();
+    }
+  };
 
   void _login() async {
     try {
@@ -203,7 +197,7 @@ class _LoginFormState extends SambazaInjectableWidgetState<_LoginForm> {
       setState(() {
         _processing = true;
       });
-      await FlutterAutofill.commit();
+
       Map<String, dynamic> credentials = _fieldBuilders.map<String, dynamic>(
         (String name, SambazaFieldBuilder builder) =>
             MapEntry(name, builder.field.value),
@@ -211,17 +205,13 @@ class _LoginFormState extends SambazaInjectableWidgetState<_LoginForm> {
       Map<String, dynamic> jwtResult = await SambazaResource(
         SambazaAPIEndpoints.accounts,
         '/login',
-      ).$save(
-        credentials,
-      );
+      ).$save(credentials);
       $$<SambazaAuth>().jwt = jwtResult['token'].toString();
       User user = $$<SambazaAuth>().user;
       Map<String, dynamic> tokenResult = await SambazaResource(
         SambazaAPIEndpoints.accounts,
         '/login/token',
-      ).$save(
-        credentials,
-      );
+      ).$save(credentials);
       $$<SambazaAuth>().token = tokenResult['key'].toString();
       if (user.role == SambazaAuthRole.other) {
         $$<SambazaAuth>().clear();
@@ -231,12 +221,13 @@ class _LoginFormState extends SambazaInjectableWidgetState<_LoginForm> {
           'Forbidden',
         );
       }
-      String fcmToken = $$<SambazaStorage>()
-          .$get(SambazaState.FCM_TOKEN_STORAGE_KEY)
-          .toString();
+      String fcmToken =
+          $$<SambazaStorage>()
+              .$get(SambazaState.FCM_TOKEN_STORAGE_KEY)
+              .toString();
       await user.pull();
       Profile profile = user.profile;
-      if (profile.deviceToken != fcmToken) {
+      if (profile.deviceToken != fcmToken) {Hmm
         profile.deviceToken = fcmToken;
         await user.update();
       }
@@ -250,15 +241,13 @@ class _LoginFormState extends SambazaInjectableWidgetState<_LoginForm> {
         Navigator.pushReplacementNamed(context, AppPage.route);
       }
     } on SambazaException catch (e) {
-      Scaffold.of(context).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Row(
             children: <Widget>[
               Text('ERROR'),
               SizedBox(width: 8.0),
-              Expanded(
-                child: Text('${e.title} - ${e.message}'),
-              ),
+              Expanded(child: Text('${e.title} - ${e.message}')),
             ],
           ),
         ),
@@ -273,11 +262,11 @@ class _LoginFormState extends SambazaInjectableWidgetState<_LoginForm> {
 
   Future<void> _validate() {
     setState(() {
-      _valid = _formKey.currentState.validate();
-      _autovalidate = _valid == false;
+      _valid = _formKey.currentState!.validate();
+      _autovalidateMode = (_valid == false) as AutovalidateMode;
     });
     if (_valid) {
-      _formKey.currentState.save();
+      _formKey.currentState!.save();
       return Future.value();
     }
     _fields
@@ -285,10 +274,7 @@ class _LoginFormState extends SambazaInjectableWidgetState<_LoginForm> {
         .focusNode
         .requestFocus();
     return Future.error(
-      SambazaException(
-        'A field(s) in the form is/are invalid',
-        'Form Error',
-      ),
+      SambazaException('A field(s) in the form is/are invalid', 'Form Error'),
     );
   }
 }
