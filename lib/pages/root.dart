@@ -19,46 +19,63 @@ class RootPage extends StatefulWidget {
 }
 
 class _RootPageState extends SambazaInjectableWidgetState<RootPage> {
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+
   final List<Type> $inject = <Type>[SambazaAuth, SambazaStorage];
 
-  static Future<dynamic> myBackgroundMessageHandler(
-      Map<String, dynamic> message) {
-    print("onBackgroundMessage: $message");
-    if (message.containsKey('data')) {
-      // Handle data message
-      //  final dynamic data = message['data'];
+  static Future<void> myBackgroundMessageHandler(RemoteMessage message) async {
+    print("onBackgroundMessage: ${message.data}");
+
+    if (message.data.isNotEmpty) {
+      // Handle data message here
     }
 
-    if (message.containsKey('notification')) {
-      // Handle notification message
-      //  final dynamic notification = message['notification'];
+    if (message.notification != null) {
+      print('Notification Title: ${message.notification!.title}');
+      print('Notification Body: ${message.notification!.body}');
     }
-
-    // Or do other work.
-    return Future.value('Done');
   }
 
   @override
   void initState() {
     super.initState();
-    _firebaseMessaging.requestNotificationPermissions();
-    _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        print("onMessage: $message");
-      },
-      onBackgroundMessage: myBackgroundMessageHandler,
-      onLaunch: (Map<String, dynamic> message) async {
-        print("onLaunch: $message");
-      },
-      onResume: (Map<String, dynamic> message) async {
-        print("onResume: $message");
-      },
+
+    _requestPermissions();
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print("onMessage: ${message.data}");
+      if (message.notification != null) {
+        print("Notification Title: ${message.notification!.title}");
+        print("Notification Body: ${message.notification!.body}");
+      }
+    });
+
+    FirebaseMessaging.onBackgroundMessage(myBackgroundMessageHandler);
+
+    FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage? message) {
+      if (message != null) {
+        print("onLaunch: ${message.data}");
+      }
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print("onResume: ${message.data}");
+    });
+  }
+
+  Future<void> _requestPermissions() async {
+    NotificationSettings settings = await _firebaseMessaging.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
     );
+
+    print('User granted permission: ${settings.authorizationStatus}');
   }
 
   @override
-  Widget template(BuildContext context) => FutureBuilder(
+  Widget template(BuildContext context) => FutureBuilder<SambazaState>(
+        future: Future.microtask(_stateReady),
         builder: (BuildContext context, AsyncSnapshot<SambazaState> snapshot) {
           if (snapshot.hasData) {
             if ($$<SambazaAuth>().token.isNotEmpty) {
@@ -67,11 +84,25 @@ class _RootPageState extends SambazaInjectableWidgetState<RootPage> {
               return LoginPage();
             }
           } else if (snapshot.hasError) {
-            return SambazaError(snapshot.error);
+            final error = snapshot.error;
+            if (error is SambazaException) {
+              return SambazaError(error);
+            } else {
+              return SambazaError(SambazaException(error?.toString() ?? 'Unknown error'));
+            }
           }
 
           return Container(
+            decoration: BoxDecoration(
+              backgroundBlendMode: BlendMode.overlay,
+              color: Theme.of(context).primaryColor,
+              image: DecorationImage(
+                fit: BoxFit.cover,
+                image: AssetImage('assets/images/doodles.png'),
+              ),
+            ),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Image(
                   image: AssetImage('assets/images/logo.png'),
@@ -79,25 +110,17 @@ class _RootPageState extends SambazaInjectableWidgetState<RootPage> {
                 SizedBox(height: 8.0),
                 CircularProgressIndicator(),
               ],
-              mainAxisAlignment: MainAxisAlignment.center,
-            ),
-            decoration: BoxDecoration(
-              backgroundBlendMode: BlendMode.overlay,
-              color: Theme.of(context).backgroundColor,
-              image: DecorationImage(
-                fit: BoxFit.cover,
-                image: AssetImage('assets/images/doodles.png'),
-              ),
             ),
           );
         },
-        future: Future.microtask(_stateReady),
       );
 
   Future<SambazaState> _stateReady() async {
     if (!$$<SambazaStorage>().has(SambazaState.FCM_TOKEN_STORAGE_KEY)) {
-      $$<SambazaStorage>().$set(
-          SambazaState.FCM_TOKEN_STORAGE_KEY, await _firebaseMessaging.getToken());
+      String? token = await _firebaseMessaging.getToken();
+      if (token != null) {
+        $$<SambazaStorage>().$set(SambazaState.FCM_TOKEN_STORAGE_KEY, token);
+      }
     }
     return state.ready();
   }
