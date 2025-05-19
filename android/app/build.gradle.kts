@@ -8,7 +8,7 @@ plugins {
 android {
     namespace = "com.example.dealership_erp_sambaza_app"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = "26.1.10909125"
+    ndkVersion = "27.0.12077973"
 
 
     compileOptions {

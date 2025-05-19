@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import 'model.dart';
+import 'pages.dart';
 
 void main() => runApp(ScopedModel(
   model: SambazaModel(),
