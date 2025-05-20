@@ -42,10 +42,10 @@ class Transaction extends SambazaModel<TransactionResource>
   String get user;
   num get value;
 
-  Transaction.create([Map<String, dynamic> transaction])
-      : super.create(transaction);
+  Transaction.create([super.transaction])
+      : super.create();
 
-  Transaction.from(Map<String, dynamic> transaction) : super.from(transaction);
+  Transaction.from(super.transaction) : super.from();
 
   @override
   init() {

@@ -7,10 +7,11 @@ import '../utils/all.dart';
 
 class SambazaDispatchWidget<D extends Dispatch, DI extends DispatchItem>
     extends SambazaInjectableStatelessWidget {
+  @override
   final List<Type> $inject = <Type>[SambazaAPI, SambazaAuth, SambazaStorage];
   final SambazaListBuilder<D, SambazaModel> _listBuilder;
 
-  SambazaDispatchWidget({
+  SambazaDispatchWidget({super.key, 
     required SambazaModelFactory<D> modelFactory,
     required SambazaResource resource,
     required List<String> Function(D, [DI]) subtitle,
@@ -27,6 +28,7 @@ class SambazaDispatchWidget<D extends Dispatch, DI extends DispatchItem>
 
   @override
   Widget template(BuildContext context) => RefreshIndicator(
+        onRefresh: _onRefresh,
         child: ListView(
           children: <Widget>[_listBuilder(context)],
           padding: EdgeInsets.only(
@@ -35,7 +37,6 @@ class SambazaDispatchWidget<D extends Dispatch, DI extends DispatchItem>
           ),
           scrollDirection: Axis.vertical,
         ),
-        onRefresh: _onRefresh,
       );
 
   Future<void> _onRefresh() => Future.sync(() {

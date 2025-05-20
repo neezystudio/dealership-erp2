@@ -3,10 +3,10 @@ import 'dispatch.dart';
 import '../resources.dart';
 
 class DSADispatch extends Dispatch<DSADispatchResource> {
-  DSADispatch.create([Map<String, dynamic> dispatch])
+  DSADispatch.create([Map<String, dynamic>? dispatch])
       : super.create(dispatch ?? <String, dynamic>{});
 
-  DSADispatch.from(Map<String, dynamic> dispatch) : super.from(dispatch);
+  DSADispatch.from(super.dispatch) : super.from();
 
   @override
   void init() {
@@ -14,7 +14,7 @@ class DSADispatch extends Dispatch<DSADispatchResource> {
     listOn<DSADispatchItem>(
         'dispatch_items',
         List<Map<String, dynamic>>.from(fields['dispatch_items']),
-        ([Map<String, dynamic> dI]) => DSADispatchItem.create(resource, dI));
+        ([Map<String, dynamic>? dI]) => DSADispatchItem.create(resource, dI));
     super.init();
   }
 }

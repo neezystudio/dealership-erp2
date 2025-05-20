@@ -62,7 +62,7 @@ class SambazaListBuilder<M extends SambazaModel, I extends SambazaModel> {
           },
           future: listFuture(),
         ),
-        child: SambazaLoader(),
         rebuildOnChange: true,
+        child: SambazaLoader(),
       );
 }

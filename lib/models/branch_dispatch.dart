@@ -6,7 +6,7 @@ class BranchDispatch extends Dispatch<BranchDispatchResource> {
   BranchDispatch.create([Map<String, dynamic>? dispatch])
       : super.create(dispatch ?? <String, dynamic>{});
 
-  BranchDispatch.from(Map<String, dynamic> dispatch) : super.from(dispatch);
+  BranchDispatch.from(super.dispatch) : super.from();
 
   @override
   void init() {

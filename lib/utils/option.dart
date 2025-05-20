@@ -10,6 +10,7 @@ class  SambazaOption {
     @required this.value,
   });
 
+  @override
   String toString() => '{"optionText":"$optionText, "value":"$value"}';
 
 }

@@ -7,7 +7,7 @@ class SambazaNavBar extends StatelessWidget {
   final List<SambazaNav> navs;
   final void Function(int) onTap;
 
-  SambazaNavBar({required this.activeIndex, required this.navs, required this.onTap});
+  const SambazaNavBar({super.key, required this.activeIndex, required this.navs, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

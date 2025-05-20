@@ -6,7 +6,7 @@ import '../utils/all.dart';
 
 class SambazaInventoryListItemConfigBuilder<I extends Inventory>
     extends SambazaListItemConfigBuilder<I, SambazaModel> {
-  static Future<SambazaModels<Telco>> _telcoFuture = SambazaModel.list<Telco>(
+  static final Future<SambazaModels<Telco>> _telcoFuture = SambazaModel.list<Telco>(
     TelcoResource(),
     ([Map<String, dynamic>? fields]) => Telco.create(fields!),
   );
@@ -63,6 +63,7 @@ class SambazaInventoryListItemConfigBuilder<I extends Inventory>
   static Widget _buildTrailingIcon<I extends Inventory>(I inventory) {
     bool stocked = inventory.quantity > 0;
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Icon(
           Icons.fiber_manual_record,
@@ -71,7 +72,6 @@ class SambazaInventoryListItemConfigBuilder<I extends Inventory>
               stocked ? 'Inventory is stocked' : 'Inventory is not stocked',
         ),
       ],
-      mainAxisAlignment: MainAxisAlignment.center,
     );
   }
 }

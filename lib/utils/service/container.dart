@@ -12,12 +12,15 @@ class SambazaServiceContainer implements SambazaCache<Type, SambazaService> {
 
   SambazaServiceContainer._internal();
 
+  @override
   bool has(Type type) => _services.containsKey(type);
 
+  @override
   void $set(Type type, SambazaService value) {
     _services[type] = value;
   }
 
+  @override
   SambazaService $get(Type type) {
     if (_services.containsKey(type)) {
       return _services[type];

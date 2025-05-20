@@ -9,5 +9,6 @@ class SambazaException implements Exception {
 
   SambazaException(this.message, [this.title = 'Error']);
 
+  @override
   String toString() => '$title - $message';
 }

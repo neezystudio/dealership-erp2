@@ -15,7 +15,7 @@ class Branch extends SambazaModel<BranchResource> with SambazaModelFlags, Sambaz
 
   Branch.create([Map<String, dynamic>? branch]) : super.create(branch!);
 
-  Branch.from(Map<String, dynamic> branch) : super.from(branch);
+  Branch.from(super.branch) : super.from();
 
   @override
   void init() {

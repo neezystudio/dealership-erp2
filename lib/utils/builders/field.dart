@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../field.dart';
 import '../option.dart';
 
-typedef FormField<String> SambazaFormFieldBuilder(bool disabled, bool focus,
+typedef SambazaFormFieldBuilder = FormField<String> Function(bool disabled, bool focus,
     [void Function(SambazaField) onComplete,
     void Function(SambazaField) onSubmit]);
 
@@ -25,12 +25,12 @@ class SambazaFieldBuilder {
 
   DropdownMenuItem<String> _buildMenuItem(SambazaOption option) =>
       DropdownMenuItem(
-        child: Text(option.optionText),
         value: option.value,
+        child: Text(option.optionText),
       );
 
   Widget build(bool disabled, bool focus, bool last) => field.autofillWrap(
-      field.options.length > 0
+      field.options.isNotEmpty
           ? _buildDropdown(disabled)
           : _buildText(disabled, focus, last),
   );
@@ -54,8 +54,7 @@ class SambazaFieldBuilder {
 
   TextFormField _buildText(bool disabled, bool focus, bool last) =>
       TextFormField(
-        autofocus: focus,
-        autovalidate: false,
+        autovalidateMode: AutovalidateMode.disabled, autofocus: focus,
         controller: field.controller,
         decoration: InputDecoration(
           labelText: field.require ? '${field.label} *' : field.label,

@@ -9,7 +9,7 @@ class SambazaAirtimeFieldSet extends StatelessWidget {
   final String quantityFieldName;
 
   SambazaAirtimeFieldSet(
-    this.formFieldBuilder, {
+    this.formFieldBuilder, {super.key, 
     required this.airtimeFieldName,
     required this.quantityFieldName,
     required void Function() onDelete,

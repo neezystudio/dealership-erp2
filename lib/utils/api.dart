@@ -4,13 +4,16 @@ typedef SambazaAPIEndpointGenerator = String Function(String);
 
 class SambazaAPIException extends SambazaException {
   final int code;
+  @override
   final String message;
+  @override
   final String title;
   final Uri uri;
 
   SambazaAPIException(this.message, this.uri, [this.code = 0, this.title = ''])
       : super(message, title);
 
+  @override
   String toString() => message;
 }
 
@@ -38,13 +41,12 @@ class SambazaAPIEndpoints {
   static String transactions([path = '/']) => '/sales/transactions$path';
 
   static String serialiseQueryParams(Map<String, dynamic> params) =>
-      params.length > 0
-          ? '?' +
-              params
+      params.isNotEmpty
+          ? '?${params
                   .map<String, String>((String key, dynamic value) =>
                       MapEntry<String, String>(key, '$key=${value.toString()}'))
                   .values
-                  .join('&')
+                  .join('&')}'
           : '';
 
   static String withParams(String endpoint, [Map<String, dynamic> params]) =>

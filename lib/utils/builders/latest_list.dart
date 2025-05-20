@@ -12,20 +12,15 @@ class SambazaLatestListBuilder<M extends SambazaModel, I extends SambazaModel>
   final String title;
 
   SambazaLatestListBuilder({
-    @required SambazaListItemConfigBuilder<M, I> listItemConfigBuilder,
-    @required String listName,
-    @required SambazaModelFactory<M> modelFactory,
-    Map<String, dynamic> requestParams,
-    @required SambazaResource resource,
+    @required super.listItemConfigBuilder,
+    @required super.listName = null,
+    @required super.modelFactory,
+    super.requestParams,
+    @required super.resource,
     @required this.title,
-  }) : super(
-          listItemConfigBuilder: listItemConfigBuilder,
-          listName: listName,
-          modelFactory: modelFactory,
-          requestParams: requestParams,
-          resource: resource,
-        );
+  });
 
+  @override
   SambazaList buildList(List<M> models) => SambazaList(
         models
             .map<List<SambazaListItemConfig<M, I>>>(addDisplay)
@@ -38,6 +33,6 @@ class SambazaLatestListBuilder<M extends SambazaModel, I extends SambazaModel>
 
   Widget buildTitle(BuildContext context) => Text(
         title,
-        style: Theme.of(context).textTheme.headline,
+        style: Theme.of(context).textTheme.headline5,
       );
 }

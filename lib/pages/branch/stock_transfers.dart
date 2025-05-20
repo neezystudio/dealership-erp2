@@ -46,6 +46,7 @@ class _BranchStockTransfersView extends StatefulWidget {
 }
 
 class _BranchStockTransfersViewState extends SambazaInjectableWidgetState {
+  @override
   final List<Type> $inject = <Type>[
     SambazaAuth,
     SambazaStorage,
@@ -78,14 +79,14 @@ class _BranchStockTransfersViewState extends SambazaInjectableWidgetState {
   ) =>
       RefreshIndicator(
         child: ListView(
-          children: <Widget>[
-            _listBuilder(context),
-          ],
           padding: EdgeInsets.only(
             bottom: 8,
             top: 8,
           ),
           scrollDirection: Axis.vertical,
+          children: <Widget>[
+            _listBuilder(context),
+          ],
         ),
         onRefresh: () => Future.sync(
           () {

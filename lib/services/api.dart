@@ -14,6 +14,7 @@ class SambazaAPI extends SambazaInjectableService {
     'detail',
     'non_field_errors',
   ];
+  @override
   final List<Type> $inject = <Type>[SambazaAuth];
 
   String _decodeError(dynamic error) =>
@@ -33,14 +34,14 @@ class SambazaAPI extends SambazaInjectableService {
       Map<String, dynamic> responseBody, Iterable<String> fields) {
     String error = '';
     if (fields.isNotEmpty) {
-      fields.forEach((String field) {
+      for (var field in fields) {
         if (responseBody.containsKey(field)) {
           if (responseBody[field] is Map) {
-            _errors.forEach((String value) {
+            for (var value in _errors) {
               if (responseBody[field].containsKey(value)) {
                 error += _decodeError(responseBody[field][value]);
               }
-            });
+            }
           } else if (responseBody[field] is List) {
             responseBody[field].forEach((dynamic bodyPart) {
               error += bodyPart is Map
@@ -51,13 +52,13 @@ class SambazaAPI extends SambazaInjectableService {
             error += _decodeError(responseBody[field]);
           }
         }
-      });
+      }
     }
-    _errors.forEach((String value) {
+    for (var value in _errors) {
       if (responseBody.containsKey(value)) {
         error += _decodeError(responseBody[value]);
       }
-    });
+    }
     return error;
   }
 

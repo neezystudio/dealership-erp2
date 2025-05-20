@@ -8,6 +8,8 @@ import '../../widgets/all.dart';
 class AssignSerialsPage extends StatelessWidget {
   static String route = '/branch/lpos/items/assign-serials';
 
+  const AssignSerialsPage({super.key});
+
   static AssignSerialsPage create(BuildContext context) => AssignSerialsPage();
 
   @override
@@ -49,16 +51,17 @@ class _AssignSerialsFormState extends State<_AssignSerialsForm> {
 
   @override
   void dispose() {
-    _fieldBuilders.values
-        .forEach((SambazaFieldBuilder builder) => builder.field.destroy());
+    for (var builder in _fieldBuilders.values) {
+      builder.field.destroy();
+    }
     super.dispose();
   }
 
   @override
   void initState() {
-    _fields.forEach((SambazaField field) {
+    for (var field in _fields) {
       _addFieldBuilder(field, field.name);
-    });
+    }
     super.initState();
   }
 
@@ -90,6 +93,7 @@ class _AssignSerialsFormState extends State<_AssignSerialsForm> {
 
   Form _buildForm() => Form(
         autovalidate: _autovalidate,
+        key: _formKey,
         child: Column(
           children: <Widget>[
             _buildField('serial_first'),
@@ -125,7 +129,6 @@ class _AssignSerialsFormState extends State<_AssignSerialsForm> {
           ],
           mainAxisSize: MainAxisSize.min,
         ),
-        key: _formKey,
       );
 
   SambazaFieldBuilder _createFieldBuilder(SambazaField field) =>
@@ -170,9 +173,7 @@ class _AssignSerialsFormState extends State<_AssignSerialsForm> {
     if (ModalRoute.of(context).settings.arguments is! LPOItem) {
       throw SambazaException('Expected "LPO Item" to be passed to this page.');
     }
-    if (_lpoItem == null) {
-      _lpoItem = ModalRoute.of(context).settings.arguments;
-    }
+    _lpoItem ??= ModalRoute.of(context).settings.arguments;
     return _lpoItem;
   }
 

@@ -7,6 +7,7 @@ import '../services/storage.dart';
 
 class SambazaResource with SambazaInjectable {
   final SambazaAPIEndpointGenerator endpointGenerator;
+  @override
   final List<Type> $inject = <Type>[
     SambazaAPI,
     SambazaStorage,
@@ -92,7 +93,7 @@ class SambazaResource with SambazaInjectable {
     Map<String, dynamic> params
   ]) async {
     String result = await $$<SambazaAPI>().send(
-      '$endpoint',
+      endpoint,
       body,
       params,
     );

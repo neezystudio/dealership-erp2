@@ -28,9 +28,9 @@ mixin SambazaInjectable<T extends SambazaService> {
   }
 
   void inject() {
-    SambazaServiceProvider _provider = SambazaServiceProvider();
-    $inject.forEach((Type type) {
-      $services[type] = _provider(type);
-    });
+    SambazaServiceProvider provider = SambazaServiceProvider();
+    for (var type in $inject) {
+      $services[type] = provider(type);
+    }
   }
 }

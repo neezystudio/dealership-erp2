@@ -6,7 +6,7 @@ import '../service/provider.dart';
 abstract class SambazaInjectableService extends SambazaService
     with SambazaInjectable {
       
-  SambazaServiceProvider _provider = SambazaServiceProvider();
+  final SambazaServiceProvider _provider = SambazaServiceProvider();
 
   @override
   E $<E extends SambazaService>(Type type) {

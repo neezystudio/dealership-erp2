@@ -8,12 +8,18 @@ import '../utils/all.dart';
 import '../widgets/all.dart';
 
 class InventoryNav implements SambazaNav {
+  @override
   final bool hasFab = false;
+  @override
   final IconData icon = Icons.store_mall_directory;
+  @override
   final String label = 'Inventory tab';
+  @override
   final _InventoryNavView view = _InventoryNavView();
+  @override
   final String title = 'Inventory';
 
+  @override
   void Function() onFabPressed(
     BuildContext context,
   ) =>
@@ -21,6 +27,7 @@ class InventoryNav implements SambazaNav {
 }
 
 class _InventoryNavView extends StatefulWidget with SambazaInjectable {
+  @override
   final List<Type> $inject = <Type>[
     SambazaAuth,
   ];
@@ -89,11 +96,11 @@ class _InventoryNavViewState extends SambazaWidgetState<_InventoryNavView>
       Column(
         children: <Widget>[
           Container(
+            color: Colors.cyanAccent,
             child: SambazaTabBar(
               configs: widget.tabConfigs,
               controller: _tabController,
             ),
-            color: Colors.cyanAccent,
           ),
           Expanded(
             child: SambazaTabBarView(

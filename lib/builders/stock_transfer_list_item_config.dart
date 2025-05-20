@@ -7,7 +7,7 @@ import '../widgets/all.dart';
 
 class SambazaStockTransferListItemConfigBuilder
     extends SambazaListItemConfigBuilder<StockTransfer, SambazaModel> {
-  static Future<SambazaModels<Airtime>> _airtimeFuture = SambazaModel.list(
+  static final Future<SambazaModels<Airtime>> _airtimeFuture = SambazaModel.list(
     AirtimeResource(),
     ([
       Map<String, dynamic>? f,
@@ -16,7 +16,7 @@ class SambazaStockTransferListItemConfigBuilder
       f!,
     ),
   );
-  static Future<SambazaModels<Telco>> _telcoFuture = SambazaModel.list(
+  static final Future<SambazaModels<Telco>> _telcoFuture = SambazaModel.list(
     TelcoResource(),
     ([
       Map<String, dynamic>? f,
@@ -82,8 +82,8 @@ class SambazaStockTransferListItemConfigBuilder
 
   static FutureBuilder<SambazaModels<Airtime>> _airtimeDependentBuilder(
     StockTransfer stockTransfer,
-    Widget Function(Airtime) _fulfilledWidgetBuilder,
-    Widget _progressWidget,
+    Widget Function(Airtime) fulfilledWidgetBuilder,
+    Widget progressWidget,
   ) =>
       FutureBuilder<SambazaModels<Airtime>>(
         builder: (
@@ -94,7 +94,7 @@ class SambazaStockTransferListItemConfigBuilder
             Airtime airtime = snapshot.data!.list.firstWhere(
               (Airtime a) => stockTransfer.airtime == a.id,
             );
-            return _fulfilledWidgetBuilder(
+            return fulfilledWidgetBuilder(
               airtime,
             );
           } else if (snapshot.hasError) {
@@ -106,7 +106,7 @@ class SambazaStockTransferListItemConfigBuilder
               semanticLabel: 'error',
             );
           }
-          return _progressWidget;
+          return progressWidget;
         },
         future: _airtimeFuture,
       );

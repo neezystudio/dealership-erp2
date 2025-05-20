@@ -7,11 +7,12 @@ import '../utils/all.dart';
 
 class SambazaInventoryWidget<I extends Inventory>
     extends SambazaInjectableStatelessWidget {
+  @override
   final List<Type> $inject = <Type>[SambazaAPI, SambazaAuth, SambazaStorage];
   final SambazaListBuilder<I, SambazaModel> _listBuilder;
 
   SambazaInventoryWidget(
-      {required SambazaModelFactory<I> modelFactory, required SambazaResource resource})
+      {super.key, required SambazaModelFactory<I> modelFactory, required SambazaResource resource})
       : _listBuilder = SambazaListBuilder<I, SambazaModel>(
           listItemConfigBuilder: SambazaInventoryListItemConfigBuilder<I>(),
           modelFactory: modelFactory,
@@ -20,6 +21,7 @@ class SambazaInventoryWidget<I extends Inventory>
 
   @override
   Widget template(BuildContext context) => RefreshIndicator(
+        onRefresh: _onRefresh,
         child: ListView(
           children: <Widget>[_listBuilder(context)],
           padding: EdgeInsets.only(
@@ -28,7 +30,6 @@ class SambazaInventoryWidget<I extends Inventory>
           ),
           scrollDirection: Axis.vertical,
         ),
-        onRefresh: _onRefresh,
       );
 
   Future<void> _onRefresh() => Future.sync(() {

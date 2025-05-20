@@ -10,6 +10,8 @@ import '../../widgets/all.dart';
 class CreateStockTransferPage extends StatelessWidget {
   static String route = '/branch/transfers/create';
 
+  const CreateStockTransferPage({super.key});
+
   static CreateStockTransferPage create(BuildContext context) =>
       CreateStockTransferPage();
 
@@ -31,9 +33,10 @@ class _CreateStockTransferFormState
   bool _autovalidate = false, _valid = false, _processing = false;
   final Map<String, SambazaFieldBuilder> _fieldBuilders =
       <String, SambazaFieldBuilder>{};
-  Map<String, void Function(SambazaField)> _fieldSwappers =
+  final Map<String, void Function(SambazaField)> _fieldSwappers =
       <String, void Function(SambazaField)>{};
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  @override
   final List<Type> $inject = <Type>[SambazaAPI, SambazaAuth, SambazaStorage];
   Future<int> _loadFuture;
 
@@ -41,8 +44,9 @@ class _CreateStockTransferFormState
 
   @override
   void dispose() {
-    _fieldBuilders.values
-        .forEach((SambazaFieldBuilder builder) => builder.field.destroy());
+    for (var builder in _fieldBuilders.values) {
+      builder.field.destroy();
+    }
     super.dispose();
   }
 
@@ -141,6 +145,7 @@ class _CreateStockTransferFormState
 
   Form _buildForm() => Form(
         autovalidate: _autovalidate,
+        key: _formKey,
         child: Column(
           children: <Widget>[
             SambazaFieldRow(
@@ -206,7 +211,6 @@ class _CreateStockTransferFormState
           ],
           mainAxisSize: MainAxisSize.min,
         ),
-        key: _formKey,
       );
 
   SambazaOption _buildStockTransferPartyOption(StockTransferParty stp) =>

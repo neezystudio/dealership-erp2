@@ -5,11 +5,12 @@ import '../pages/all.dart';
 import '../utils/all.dart';
 
 class SambazaError extends SambazaInjectableStatelessWidget {
+  @override
   final List<Type> $inject = <Type>[SambazaAuth, SambazaStorage];
   final SambazaException exception;
   final void Function() onButtonPressed;
 
-  SambazaError(this.exception, {required this.onButtonPressed});
+  SambazaError(this.exception, {super.key, required this.onButtonPressed});
 
   void _logout() {
     $$<SambazaAuth>().clear();
@@ -31,6 +32,8 @@ class SambazaError extends SambazaInjectableStatelessWidget {
       print(e);
     }
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Icon(
           Icons.error,
@@ -52,8 +55,6 @@ class SambazaError extends SambazaInjectableStatelessWidget {
           onPressed: onPressed,
         ),
       ],
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisSize: MainAxisSize.min,
     );
   }
 }

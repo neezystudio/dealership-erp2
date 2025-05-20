@@ -49,6 +49,7 @@ class SambazaTransactionListItemConfigBuilder
     SambazaModel? listItem,
   ]) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Icon(
           transaction.status == TransactionStatus.approved
@@ -71,7 +72,6 @@ class SambazaTransactionListItemConfigBuilder
           ),
         ),
       ],
-      mainAxisAlignment: MainAxisAlignment.center,
     );
   }
 }

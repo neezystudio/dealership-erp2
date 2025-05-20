@@ -20,7 +20,7 @@ class Company extends SambazaModel<CompanyResource>
 
   Company.create([Map<String, dynamic>? company]) : super.create(company!);
 
-  Company.from(Map<String, dynamic> company) : super.from(company);
+  Company.from(super.company) : super.from();
 
   @override
   void init() {

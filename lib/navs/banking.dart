@@ -10,13 +10,19 @@ import '../utils/all.dart';
 import '../widgets/all.dart';
 
 class BankingNav implements SambazaNav {
+  @override
   final IconData icon = Icons.monetization_on;
+  @override
   final String label = 'Banking tab';
+  @override
   final _BankingNavView view = _BankingNavView();
+  @override
   final String title = 'Banking';
 
+  @override
   bool get hasFab => view.hasFab;
 
+  @override
   void Function() onFabPressed(BuildContext context) =>
       view.onFabPressed(context);
 }
@@ -81,6 +87,7 @@ class _BankingNavViewState extends SambazaInjectableWidgetState<_BankingNavView>
         SingleTickerProviderStateMixin,
         SambazaStateNotifier,
         SambazaWidgetStateStateNotifier {
+  @override
   final List<Type> $inject = <Type>[SambazaAPI, SambazaStorage];
   TabController _tabController;
 
@@ -88,9 +95,9 @@ class _BankingNavViewState extends SambazaInjectableWidgetState<_BankingNavView>
   Widget template(BuildContext context) => Column(
         children: <Widget>[
           Container(
+            color: Colors.cyanAccent,
             child: SambazaTabBar(
                 configs: widget.tabConfigs, controller: _tabController),
-            color: Colors.cyanAccent,
           ),
           Expanded(
             child: SambazaTabBarView(

@@ -28,11 +28,11 @@ class ServiceRequest extends SambazaModel<ServiceRequestResource>
   String get title;
   set title(t);
 
-  ServiceRequest.create([Map<String, dynamic> serviceRequest])
-      : super.create(serviceRequest);
+  ServiceRequest.create([super.serviceRequest])
+      : super.create();
 
-  ServiceRequest.from(Map<String, dynamic> serviceRequest)
-      : super.from(serviceRequest);
+  ServiceRequest.from(super.serviceRequest)
+      : super.from();
 
   @override
   init() {

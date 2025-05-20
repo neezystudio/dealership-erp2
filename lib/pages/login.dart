@@ -12,7 +12,10 @@ import 'forgot-password.dart';
 class LoginPage extends SambazaInjectableStatelessWidget {
   static String route = '/login';
 
+  @override
   final List<Type> $inject = <Type>[SambazaAuth];
+
+  LoginPage({super.key});
 
   static LoginPage create(BuildContext context) => LoginPage();
 
@@ -76,18 +79,23 @@ class _LoginFormState extends SambazaInjectableWidgetState<_LoginForm> {
     ),
   ];
 
+  @override
   final List<Type> $inject = <Type>[SambazaAPI, SambazaAuth, SambazaStorage];
 
   @override
   void dispose() {
-    _fields.forEach((SambazaField field) => field.destroy());
+    for (var field in _fields) {
+      field.destroy();
+    }
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
-    _fields.forEach((field) => _addFieldBuilder(field, field.name));
+    for (var field in _fields) {
+      _addFieldBuilder(field, field.name);
+    }
   }
 
   @override

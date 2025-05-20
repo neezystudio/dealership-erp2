@@ -10,6 +10,7 @@ enum LPOItemScaleStatus { processing, scaled, unscaled }
 
 class LPOItem extends SambazaInjectableModel
     with SambazaInjectable, SambazaModelTimestamps {
+  @override
   final List<Type> $inject = <Type>[SambazaAPI];
   final LPOResource lpoResource;
 
@@ -23,8 +24,8 @@ class LPOItem extends SambazaInjectableModel
   num get serialLast;
   num get value;
 
-  LPOItem.create(this.lpoResource, [Map<String, dynamic> lpoItem])
-      : super.create(lpoItem);
+  LPOItem.create(this.lpoResource, [Map<String, dynamic>? lpoItem])
+      : super.create(lpoItem!);
 
   LPOItem.from(this.lpoResource, Map<String, dynamic> lpoItem)
       : super.from(lpoItem);

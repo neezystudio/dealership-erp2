@@ -8,13 +8,19 @@ import '../utils/all.dart';
 import '../widgets/all.dart';
 
 class OrdersNav implements SambazaNav {
+  @override
   final IconData icon = Icons.local_shipping;
+  @override
   final String label = 'Orders tab';
+  @override
   final _OrdersNavView view = _OrdersNavView();
+  @override
   final String title = 'Ordering';
 
+  @override
   bool get hasFab => view.hasFab;
 
+  @override
   void Function() onFabPressed(BuildContext context) =>
       view.onFabPressed(context);
 }
@@ -95,11 +101,11 @@ class _OrdersNavViewState extends SambazaWidgetState<_OrdersNavView>
   Widget template(BuildContext context) => Column(
         children: <Widget>[
           Container(
+            color: Colors.cyanAccent,
             child: SambazaTabBar(
               configs: widget.tabConfigs,
               controller: _tabController,
             ),
-            color: Colors.cyanAccent,
           ),
           Expanded(
             child: SambazaTabBarView(

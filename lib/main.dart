@@ -14,6 +14,8 @@ void main() {
 }
 
 class Sambaza extends StatelessWidget {
+  const Sambaza({super.key});
+
   @override
   Widget build(BuildContext context) => MaterialApp(
         initialRoute: RootPage.route,
@@ -58,7 +60,7 @@ class Sambaza extends StatelessWidget {
             iconTheme: IconThemeData(
               color: Colors.white,
             ), systemOverlayStyle: SystemUiOverlayStyle.light,
-          ), colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.cyan).copyWith(background: Colors.cyan[50]),
+          ), colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.cyan).copyWith(surface: Colors.cyan[50]),
         ),
         title: 'Sambaza',
       );

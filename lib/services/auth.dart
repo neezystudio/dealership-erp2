@@ -16,6 +16,7 @@ class SambazaAuth extends SambazaInjectableService {
   DateTime _renewAtStart;
   DateTime _renewAtStop;
 
+  @override
   final List<Type> $inject = <Type>[SambazaAPI, SambazaStorage];
   User user;
 
@@ -94,9 +95,9 @@ class SambazaAuth extends SambazaInjectableService {
 
   bool get jwtIsValid {
     if (_rawJWT.isNotEmpty) {
-      JWTValidator validator = new JWTValidator();
+      JWTValidator validator = JWTValidator();
       Set<String> errors = validator.validate(_decodedJWT);
-      return errors.length == 0;
+      return errors.isEmpty;
     }
     return false;
   }

@@ -17,6 +17,7 @@ final Map<String, StockTransferStatus> _stockTransferStatusMap =
 
 class StockTransfer extends SambazaModel<StockTransferResource>
     with SambazaInjectable, SambazaModelFlags, SambazaModelTimestamps {
+  @override
   final List<Type> $inject = <Type>[SambazaAPI];
 
   String get airtime;
@@ -46,9 +47,9 @@ class StockTransfer extends SambazaModel<StockTransferResource>
 
   num get value;
 
-  StockTransfer.create([Map<String, dynamic> fields]) : super.create(fields);
+  StockTransfer.create([super.fields]) : super.create();
 
-  StockTransfer.from(Map<String, dynamic> fields) : super.from(fields);
+  StockTransfer.from(super.fields) : super.from();
 
   @override
   void init() {

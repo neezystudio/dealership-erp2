@@ -10,6 +10,8 @@ import '../../widgets/all.dart';
 class CreateOrderPage extends StatelessWidget {
   static String route = '/orders/create';
 
+  const CreateOrderPage({super.key});
+
   static CreateOrderPage create(BuildContext context) => CreateOrderPage();
 
   @override
@@ -38,15 +40,17 @@ class _CreateOrderFormState
     ),
   ];
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  @override
   final List<Type> $inject = <Type>[SambazaAPI, SambazaStorage];
-  List<List<String>> _nestedFieldBuilderSets = <List<String>>[];
+  final List<List<String>> _nestedFieldBuilderSets = <List<String>>[];
 
   ThemeData get themeData => Theme.of(context);
 
   @override
   void dispose() {
-    _fieldBuilders.values
-        .forEach((SambazaFieldBuilder builder) => builder.field.destroy());
+    for (var builder in _fieldBuilders.values) {
+      builder.field.destroy();
+    }
     super.dispose();
   }
 
@@ -77,9 +81,9 @@ class _CreateOrderFormState
           require: true,
         ),
       ]);
-      _fields.forEach((SambazaField field) {
+      for (var field in _fields) {
         _addFieldBuilder(field, field.name);
-      });
+      }
       _nestedFieldBuilderSets.add(<String>['airtime', 'quantity']);
       return airtimeList;
     });
@@ -138,6 +142,7 @@ class _CreateOrderFormState
 
   Form _buildForm(List<Airtime> airtimeList) => Form(
         autovalidate: _autovalidate,
+        key: _formKey,
         child: Column(
           children: <Widget>[
             Row(
@@ -196,7 +201,6 @@ class _CreateOrderFormState
             ]),
           mainAxisSize: MainAxisSize.min,
         ),
-        key: _formKey,
       );
 
   SambazaFieldBuilder _createFieldBuilder(SambazaField field) =>

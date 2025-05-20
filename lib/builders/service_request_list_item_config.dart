@@ -36,6 +36,7 @@ class SambazaServiceRequestListItemConfigBuilder
 
   static Widget _buildTrailing(ServiceRequest request, [SambazaModel? lI]) =>
       Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Icon(
             <ServiceRequestStatus, IconData>{
@@ -53,6 +54,5 @@ class SambazaServiceRequestListItemConfigBuilder
             semanticLabel: request.$get('status').toString(),
           ),
         ],
-        mainAxisAlignment: MainAxisAlignment.center,
       );
 }

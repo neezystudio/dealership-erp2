@@ -10,9 +10,9 @@ class SaleItem extends SambazaModel with SambazaModelTimestamps {
   String get sale;
   num get value;
 
-  SaleItem.create([Map<String, dynamic> saleItem]) : super.create(saleItem);
+  SaleItem.create(super.saleItem) : super.create();
 
-  SaleItem.from(Map<String, dynamic> saleItem) : super.from(saleItem);
+  SaleItem.from(super.saleItem) : super.from();
 
   @override
   void init() {

@@ -4,7 +4,7 @@ import 'cache.dart';
 import 'exception.dart';
 import 'resource.dart';
 
-typedef T SambazaModelFactory<T extends SambazaModel>(
+typedef SambazaModelFactory<T extends SambazaModel> = T Function(
     [Map<String, dynamic> fields]);
 
 class SambazaModelException extends SambazaException {
@@ -48,10 +48,13 @@ abstract class SambazaModel<R extends SambazaResource>
 
   void init() {}
 
+  @override
   dynamic $get(String key) => fields[key];
 
+  @override
   bool has(String key) => fields.containsKey(key);
 
+  @override
   void $set(String key, dynamic value) {
     fields[key] = value;
   }
@@ -124,6 +127,7 @@ abstract class SambazaModel<R extends SambazaResource>
   @override
   String toString() => serialised.toString();
 
+  @override
   dynamic noSuchMethod(Invocation invocation) {
     String key = invocation.memberName.toString().replaceAllMapped(
         RegExp(r'Symbol\("(\w+)=?"\)'), (Match m) => m.group(1));

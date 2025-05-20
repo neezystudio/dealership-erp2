@@ -7,7 +7,10 @@ import '../services/auth.dart';
 import '../utils/injectable/widget.dart';
 
 class SambazaDebtCard extends SambazaInjectableStatelessWidget {
+  @override
   final List<Type> $inject = <Type>[SambazaAuth];
+
+  SambazaDebtCard({super.key});
 
   ThemeData get _themeData => Theme.of(context);
 
@@ -25,6 +28,8 @@ class SambazaDebtCard extends SambazaInjectableStatelessWidget {
               Debt debt = snapshot.data!.debt;
               bool debtIsBad = debt.percentage > 0.2;
               return  Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
                   CircleAvatar(
                     backgroundColor:
@@ -51,8 +56,6 @@ class SambazaDebtCard extends SambazaInjectableStatelessWidget {
                     style: _themeData.textTheme.displaySmall,
                   )
                 ],
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
               );
             } else if (snapshot.hasError) {
               print(snapshot.error);
@@ -63,8 +66,8 @@ class SambazaDebtCard extends SambazaInjectableStatelessWidget {
               );
             }
             return Padding(
-              child: SambazaLoader('Loading debt'),
               padding: EdgeInsets.symmetric(vertical: 4),
+              child: SambazaLoader('Loading debt'),
             );
           },
           future: _getUser(),

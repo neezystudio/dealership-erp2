@@ -6,7 +6,7 @@ import '../utils/all.dart';
 
 class SambazaOrderListItemConfigBuilder
     extends SambazaListItemConfigBuilder<Order, OrderItem> {
-  static Future<SambazaModels<Telco>> _telcoFuture = SambazaModel.list<Telco>(
+  static final Future<SambazaModels<Telco>> _telcoFuture = SambazaModel.list<Telco>(
     TelcoResource(),
     ([Map<String, dynamic>? fields]) => Telco.create(fields!),
   );

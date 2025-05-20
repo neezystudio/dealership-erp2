@@ -6,7 +6,7 @@ class SambazaTabBar extends StatelessWidget {
   final List<SambazaTabConfig> configs;
   final TabController controller;
 
-  SambazaTabBar({required this.configs, required this.controller});
+  const SambazaTabBar({super.key, required this.configs, required this.controller});
 
   @override
   Widget build(BuildContext context) => TabBar(

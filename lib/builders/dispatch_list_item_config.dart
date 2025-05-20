@@ -7,11 +7,13 @@ import '../widgets/all.dart';
 
 class SambazaDispatchListItemConfigBuilder<D extends Dispatch,
     DI extends DispatchItem> extends SambazaListItemConfigBuilder<D, DI> {
-  static Future<SambazaModels<Telco>> _telcoFuture = SambazaModel.list<Telco>(
+  static final Future<SambazaModels<Telco>> _telcoFuture = SambazaModel.list<Telco>(
     TelcoResource(),
     ([Map<String, dynamic>? fields]) => Telco.create(fields!),
   );
+  @override
   final List<String> Function(D, [DI]) subtitle;
+  @override
   final String Function(D, [DI]) title;
 
   SambazaDispatchListItemConfigBuilder(

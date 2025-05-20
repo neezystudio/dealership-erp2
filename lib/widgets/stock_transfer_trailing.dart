@@ -7,9 +7,9 @@ class StockTransferTrailing extends StatefulWidget {
   final String entity;
   final StockTransfer stockTransfer;
 
-  StockTransferTrailing(
+  const StockTransferTrailing(
     this.entity,
-    this.stockTransfer,
+    this.stockTransfer, {super.key},
   );
 
   @override
@@ -67,6 +67,7 @@ class _StockTransferTrailingState extends State<StockTransferTrailing> {
 
   Widget _approvedDestinationWidget() => GestureDetector(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
               'Approved',
@@ -87,7 +88,6 @@ class _StockTransferTrailingState extends State<StockTransferTrailing> {
               ),
             )
           ],
-          mainAxisAlignment: MainAxisAlignment.center,
         ),
         onTap: () {
           setState(() {
@@ -107,6 +107,7 @@ class _StockTransferTrailingState extends State<StockTransferTrailing> {
       );
 
   Widget _approvedOriginWidget() => Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Icon(
             Icons.done,
@@ -121,10 +122,10 @@ class _StockTransferTrailingState extends State<StockTransferTrailing> {
             ),
           ),
         ],
-        mainAxisAlignment: MainAxisAlignment.center,
       );
 
   Widget _createdDestinationWidget() => Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Icon(
             Icons.schedule,
@@ -138,11 +139,11 @@ class _StockTransferTrailingState extends State<StockTransferTrailing> {
             ),
           ),
         ],
-        mainAxisAlignment: MainAxisAlignment.center,
       );
 
   Widget _createdOriginWidget() => GestureDetector(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
               'Created',
@@ -164,7 +165,6 @@ class _StockTransferTrailingState extends State<StockTransferTrailing> {
               ),
             ),
           ],
-          mainAxisAlignment: MainAxisAlignment.center,
         ),
         onTap: () {
           setState(() {
@@ -184,6 +184,7 @@ class _StockTransferTrailingState extends State<StockTransferTrailing> {
       );
 
   Widget _fulfilled() => Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Icon(
             Icons.done_all,
@@ -198,19 +199,18 @@ class _StockTransferTrailingState extends State<StockTransferTrailing> {
             ),
           ),
         ],
-        mainAxisAlignment: MainAxisAlignment.center,
       );
 
   Widget _processing() =>
       CircularProgressIndicator(semanticsLabel: widget.stockTransfer.$status);
 
   Widget _unknown() => Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Icon(
             Icons.warning,
             semanticLabel: 'unknown',
           ),
         ],
-        mainAxisAlignment: MainAxisAlignment.center,
       );
 }

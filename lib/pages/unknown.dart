@@ -7,7 +7,7 @@ class UnknownPage extends StatelessWidget {
 
   final String name;
 
-  UnknownPage(this.name);
+  const UnknownPage(this.name, {super.key});
 
   static MaterialPageRoute create(RouteSettings settings) => MaterialPageRoute(
     builder: (BuildContext context) => UnknownPage(settings.name.toString()),

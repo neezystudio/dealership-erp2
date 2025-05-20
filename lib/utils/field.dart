@@ -111,6 +111,7 @@ class SambazaField {
     $dirty = controller.value.text.isNotEmpty;
   }
 
+  @override
   String toString() =>
       '{"label":"$label","max":"$max","maxlength":"$maxlength","min":"$min","minlength":"$minlength","name":"$name","preliminaryValue":"$preliminaryValue","required":"$require","step":"$step","type":"$type","value":"$value"}';
 
@@ -126,23 +127,23 @@ class SambazaField {
       if (type == 'email') {
         Pattern pattern =
             r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-        RegExp regex = new RegExp(pattern);
+        RegExp regex = RegExp(pattern);
         if (!regex.hasMatch(value)) return 'Please provide a valid email';
       }
       if (valueIsString) {
-        if (maxlength != null && value.length > maxlength) {
+        if (value.length > maxlength) {
           return 'This value must be less than ${maxlength + 1} characters';
         }
-        if (minlength != null && value.length < minlength) {
+        if (value.length < minlength) {
           return 'This value must be more than ${minlength - 1} characters';
         }
       }
       if (type == 'number') {
         num val = num.parse(value);
-        if (max != null && val > max) {
+        if (val > max) {
           return 'This value must be less than ${maxlength + step}';
         }
-        if (min != null && val < min) {
+        if (val < min) {
           return 'This value must be less than ${maxlength - step}';
         }
       }

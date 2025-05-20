@@ -39,9 +39,9 @@ class User extends SambazaModel<UserResource> with SambazaModelFlags {
 
   bool get usable;
 
-  User.create([Map<String, dynamic> user]) : super.create(user);
+  User.create([super.user]) : super.create();
 
-  User.from(Map<String, dynamic> user) : super.from(user);
+  User.from(super.user) : super.from();
 
   @override
   void init() {

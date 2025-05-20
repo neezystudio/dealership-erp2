@@ -10,6 +10,8 @@ import '../../widgets/all.dart';
 class EditOrderPage extends StatelessWidget {
   static String route = '/orders/edit';
 
+  const EditOrderPage({super.key});
+
   static EditOrderPage create(BuildContext context) => EditOrderPage();
 
   @override
@@ -29,16 +31,18 @@ class _EditOrderFormState extends SambazaInjectableWidgetState<_EditOrderForm> {
   final Map<String, SambazaFieldBuilder> _fieldBuilders =
       <String, SambazaFieldBuilder>{};
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  @override
   final List<Type> $inject = <Type>[SambazaAPI, SambazaStorage];
-  List<List<String>> _nestedFieldBuilderSets = <List<String>>[];
+  final List<List<String>> _nestedFieldBuilderSets = <List<String>>[];
   Order _order;
 
   ThemeData get themeData => Theme.of(context);
 
   @override
   void dispose() {
-    _fieldBuilders.values
-        .forEach((SambazaFieldBuilder builder) => builder.field.destroy());
+    for (var builder in _fieldBuilders.values) {
+      builder.field.destroy();
+    }
     super.dispose();
   }
 
@@ -94,6 +98,7 @@ class _EditOrderFormState extends SambazaInjectableWidgetState<_EditOrderForm> {
 
   Form _buildForm(List<Airtime> airtimeList) => Form(
         autovalidate: _autovalidate,
+        key: _formKey,
         child: Column(
           children: <Widget>[
             Row(
@@ -150,7 +155,6 @@ class _EditOrderFormState extends SambazaInjectableWidgetState<_EditOrderForm> {
             ]),
           mainAxisSize: MainAxisSize.min,
         ),
-        key: _formKey,
       );
 
   SambazaFieldBuilder _createFieldBuilder(SambazaField field) =>
@@ -222,20 +226,6 @@ class _EditOrderFormState extends SambazaInjectableWidgetState<_EditOrderForm> {
       a.$telco = telcos.list.firstWhere((Telco t) => t.id == a.telco);
       return a;
     }).toList();
-    if (_order == null) {
-      _order = ModalRoute.of(context).settings.arguments;
-      _order.orderItems.asMap().forEach((int index, OrderItem orderItem) {
-        _addNestedFieldBuilderSet(airtimeList);
-        _fieldBuilders[_nestedFieldBuilderSets[index][0]]
-            .field
-            .controller
-            .value = TextEditingValue(text: orderItem.airtime.id);
-        _fieldBuilders[_nestedFieldBuilderSets[index][1]]
-            .field
-            .controller
-            .value = TextEditingValue(text: orderItem.quantity.toString());
-      });
-    }
     return airtimeList;
   }
 

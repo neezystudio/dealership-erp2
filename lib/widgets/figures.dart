@@ -8,9 +8,10 @@ import '../utils/injectable/widget.dart';
 
 class SambazaFiguresCard extends SambazaInjectableStatelessWidget {
   final SambazaFiguresConfig config;
+  @override
   final List<Type> $inject = <Type>[SambazaAPI, SambazaStorage];
 
-  SambazaFiguresCard(this.config);
+  SambazaFiguresCard(this.config, {super.key});
 
   ThemeData get _themeData => Theme.of(context);
 
@@ -31,6 +32,8 @@ class SambazaFiguresCard extends SambazaInjectableStatelessWidget {
           builder: (BuildContext context, AsyncSnapshot<double> snapshot) {
             if (snapshot.hasData) {
               return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   SizedBox(height: 8),
                   Text(
@@ -43,8 +46,6 @@ class SambazaFiguresCard extends SambazaInjectableStatelessWidget {
                     style: _themeData.textTheme.headlineMedium,
                   )
                 ],
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
               );
             } else if (snapshot.hasError) {
               print(snapshot.error);

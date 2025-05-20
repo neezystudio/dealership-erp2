@@ -15,9 +15,9 @@ class Sale extends SambazaModel<SaleResource>
   String get user;
   num get value;
 
-  Sale.create([Map<String, dynamic> sale]) : super.create(sale);
+  Sale.create([super.sale]) : super.create();
 
-  Sale.from(Map<String, dynamic> sale) : super.from(sale);
+  Sale.from(super.sale) : super.from();
 
   @override
   init() {

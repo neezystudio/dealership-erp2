@@ -6,11 +6,12 @@ class SambazaCreatePage extends StatelessWidget {
   final Widget form;
   final String title;
 
-  SambazaCreatePage({required this.form, required this.title});
+  const SambazaCreatePage({super.key, required this.form, required this.title});
 
   @override
   Widget build(BuildContext context) => SambazaPage(
         body: ListView(
+          shrinkWrap: true,
           children: <Widget>[
             SizedBox(height: 8),
             Padding(
@@ -28,7 +29,6 @@ class SambazaCreatePage extends StatelessWidget {
               padding: EdgeInsets.all(16.0),
             ),
           ],
-          shrinkWrap: true,
         ),
         title: title, fab:form
         ,

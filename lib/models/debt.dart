@@ -12,7 +12,7 @@ class Debt extends SambazaModel with SambazaModelTimestamps {
 
   Debt.create([Map<String, dynamic>? debt]) : super.create(debt!);
 
-  Debt.from(Map<String, dynamic> debt) : super.from(debt);
+  Debt.from(super.debt) : super.from();
 
   @override
   void init() {

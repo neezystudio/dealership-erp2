@@ -47,13 +47,13 @@ class _LPOItemsViewState extends State<_LPOItemsView> {
         builder: (BuildContext context, AsyncSnapshot<List<LPOItem>> snapshot) {
           if (snapshot.hasData) {
             return ListView(
-              children: <Widget>[
-                _buildList(snapshot.data),
-              ],
               padding: EdgeInsets.only(
                 bottom: 80,
                 top: 8,
               ),
+              children: <Widget>[
+                _buildList(snapshot.data),
+              ],
             );
           } else if (snapshot.hasError) {
             return SambazaError(snapshot.error);
@@ -99,6 +99,7 @@ class _LPOItemsViewState extends State<_LPOItemsView> {
           ? SizedBox(height: 8)
           : GestureDetector(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Icon(
                     Icons.assignment,
@@ -113,7 +114,6 @@ class _LPOItemsViewState extends State<_LPOItemsView> {
                     ),
                   ),
                 ],
-                mainAxisAlignment: MainAxisAlignment.center,
               ),
               onTap: () {
                 Navigator.pushNamed(context, AssignSerialsPage.route,
@@ -131,9 +131,7 @@ class _LPOItemsViewState extends State<_LPOItemsView> {
     if (ModalRoute.of(context).settings.arguments is! LPO) {
       throw SambazaException('Expected LPO Items to be passed to this page.');
     }
-    if (_lpo == null) {
-      _lpo = ModalRoute.of(context).settings.arguments;
-    }
+    _lpo ??= ModalRoute.of(context).settings.arguments;
     return _lpo.lpoItems;
   }
 }

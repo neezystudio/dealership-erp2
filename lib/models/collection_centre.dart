@@ -19,8 +19,8 @@ class CollectionCentre extends SambazaModel<CollectionCentreResource>
   CollectionCentre.create([Map<String, dynamic>? collectionCentre])
       : super.create(collectionCentre!);
 
-  CollectionCentre.from(Map<String, dynamic> collectionCentre)
-      : super.from(collectionCentre);
+  CollectionCentre.from(super.collectionCentre)
+      : super.from();
 
   @override
   void init() {

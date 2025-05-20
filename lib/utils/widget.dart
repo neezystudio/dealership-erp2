@@ -5,6 +5,8 @@ import '../state.dart';
 abstract class SambazaStatelessWidget extends StatelessWidget {
   final Map<String, dynamic> vars = <String, dynamic>{};
 
+  const SambazaStatelessWidget({super.key});
+
   BuildContext get context => vars['context'];
 
   SambazaState get state => vars['state'];
