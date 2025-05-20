@@ -19,11 +19,11 @@ class SambazaListBuilder<M extends SambazaModel, I extends SambazaModel> {
   final SambazaResource resource;
 
   SambazaListBuilder({
-    @required this.listItemConfigBuilder,
+    required this.listItemConfigBuilder,
     this.listName = '',
-    @required this.modelFactory,
-    this.requestParams,
-    @required this.resource,
+    required this.modelFactory,
+    required this.requestParams,
+    required this.resource,
   }) : listFuture =
             (() => SambazaModel.list<M>(resource, modelFactory, requestParams));
 
@@ -45,8 +45,8 @@ class SambazaListBuilder<M extends SambazaModel, I extends SambazaModel> {
       );
 
   SambazaListItemConfig<M, I> Function([I]) buildListItemConfig(M model) => (
-          [I listItem]) =>
-      SambazaListItemConfig<M, I>.from(listItemConfigBuilder, model, listItem);
+          [I? listItem]) =>
+      SambazaListItemConfig<M, I>.from(listItemConfigBuilder, model, listItem!);
 
   Widget call(BuildContext context) => ScopedModelDescendant<SambazaState>(
         builder: (BuildContext context, Widget child, SambazaState state) =>

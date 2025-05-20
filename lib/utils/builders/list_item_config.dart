@@ -13,17 +13,17 @@ class SambazaListItemConfigBuilder<M extends SambazaModel, I extends SambazaMode
   
   SambazaListItemConfigBuilder({
     this.group = _groupDefault,
-    @required this.leading,
-    @required this.subtitle,
-    @required this.title,
+    required this.leading,
+    required this.subtitle,
+    required this.title,
     this.trailing = _trailingDefault,
   });
 
   static String strFromTime(DateTime time) =>
       '${SambazaState.weekdays[time.weekday]}, ${time.day.toString()} ${SambazaState.months[time.month]} ${time.year.toString()}';
 
-  static String _groupDefault(SambazaModel m, [SambazaModel mI]) => '';
+  static String _groupDefault(SambazaModel m, [SambazaModel? mI]) => '';
 
-  static Widget _trailingDefault(SambazaModel m, [SambazaModel mI]) => SizedBox(height: 8);
+  static Widget _trailingDefault(SambazaModel m, [SambazaModel? mI]) => SizedBox(height: 8);
 
 }

@@ -1,4 +1,5 @@
-import 'package:sambaza/utils/exception.dart';
+import 'package:dealership_erp_sambaza_app/utils/exception.dart';
+
 
 class SambazaServiceNotInjectedException extends SambazaException {
   SambazaServiceNotInjectedException(String message, [String title = ''])

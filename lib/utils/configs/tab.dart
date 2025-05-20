@@ -17,9 +17,9 @@ class SambazaTabConfig with SambazaInjectable {
 
   SambazaTabConfig({
     this.active = false,
-    @required this.hasFab,
-    @required this.label,
-    @required this.listBuilder,
+    required this.hasFab,
+    required this.label,
+    required this.listBuilder,
     this.redirectRoute = '',
     this.redirectRouteSuccessCallbackMessage = '',
   }) {

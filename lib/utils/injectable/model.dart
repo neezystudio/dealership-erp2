@@ -4,7 +4,7 @@ import '../resource.dart';
 
 abstract class SambazaInjectableModel<R extends SambazaResource>
     extends SambazaModel<R> with SambazaInjectable {
-  SambazaInjectableModel.create([super.fields])
+  SambazaInjectableModel.create(super.fields)
       : super.create();
 
   SambazaInjectableModel.from(super.fields) : super.from();
