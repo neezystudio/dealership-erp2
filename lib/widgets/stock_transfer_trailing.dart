@@ -9,7 +9,7 @@ class StockTransferTrailing extends StatefulWidget {
 
   const StockTransferTrailing(
     this.entity,
-    this.stockTransfer, {super.key},
+    this.stockTransfer, {super.key}
   );
 
   @override
