@@ -4,7 +4,7 @@ import '../../state.dart';
 
 mixin SambazaServiceStateNotifier on SambazaService, SambazaStateNotifier {
   @override
-  SambazaState state;
+  late SambazaState state;
 
   @override
   void register(SambazaState state) {

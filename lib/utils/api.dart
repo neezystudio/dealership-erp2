@@ -49,9 +49,9 @@ class SambazaAPIEndpoints {
                   .join('&')}'
           : '';
 
-  static String withParams(String endpoint, [Map<String, dynamic> params]) =>
+  static String withParams(String endpoint, [Map<String, dynamic>? params]) =>
       endpoint + serialiseQueryParams(params ?? <String, dynamic>{});
 
-  static String urlWithParams(String endpoint, [Map<String, dynamic> params]) =>
+  static String urlWithParams(String endpoint, [Map<String, dynamic>? params]) =>
       BASE_URL + withParams(endpoint, params);
 }
