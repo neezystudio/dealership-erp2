@@ -15,7 +15,7 @@ class Batch extends SambazaModel<BatchResource>
   String get $startTime;
   DateTime get startTime => DateTime.parse($startTime);
 
-  Batch.create([Map<String, dynamic> batch]) : super.create(batch);
+  Batch.create([Map<String, dynamic>? batch]) : super.create(batch!);
 
   Batch.from(Map<String, dynamic> batch) : super.from(batch);
 

@@ -35,12 +35,12 @@ class SambazaFiguresCard extends SambazaInjectableStatelessWidget {
                   SizedBox(height: 8),
                   Text(
                     config.title,
-                    style: _themeData.textTheme.caption,
+                    style: _themeData.textTheme.bodySmall,
                   ),
                   SizedBox(width: 16),
                   Text(
                     'KES ${snapshot.data.toString()}',
-                    style: _themeData.textTheme.headline,
+                    style: _themeData.textTheme.headlineMedium,
                   )
                 ],
                 mainAxisAlignment: MainAxisAlignment.center,

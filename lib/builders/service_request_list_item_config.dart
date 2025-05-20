@@ -7,23 +7,23 @@ class SambazaServiceRequestListItemConfigBuilder
     extends SambazaListItemConfigBuilder<ServiceRequest, SambazaModel> {
   SambazaServiceRequestListItemConfigBuilder()
       : super(
-          group: (ServiceRequest request, [SambazaModel lI]) =>
+          group: (ServiceRequest request, [SambazaModel? lI]) =>
               SambazaListItemConfigBuilder.strFromTime(request.createdAt),
           leading: _buildLeading,
-          subtitle: (ServiceRequest request, [SambazaModel lI]) {
+          subtitle: (ServiceRequest request, [SambazaModel? lI]) {
             DateTime time = request.createdAt;
             return <String>[
               'KES ${request.amount.toInt().toString()}',
               'Placed at ${time.hour.toString()}:${time.minute.toString()}',
             ];
           },
-          title: (ServiceRequest request, [SambazaModel lI]) =>
+          title: (ServiceRequest request, [SambazaModel? lI]) =>
               request.requestNumber.toString(),
           trailing: _buildTrailing,
         );
 
   static List<Widget> _buildLeading(ServiceRequest request,
-          [SambazaModel lI]) =>
+          [SambazaModel? lI]) =>
       <Widget>[
         Icon(
           request.status == ServiceRequestStatus.fulfilled
@@ -34,7 +34,7 @@ class SambazaServiceRequestListItemConfigBuilder
         ),
       ];
 
-  static Widget _buildTrailing(ServiceRequest request, [SambazaModel lI]) =>
+  static Widget _buildTrailing(ServiceRequest request, [SambazaModel? lI]) =>
       Column(
         children: <Widget>[
           Icon(

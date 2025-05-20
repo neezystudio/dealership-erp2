@@ -6,7 +6,7 @@ class SambazaLatestList extends StatelessWidget {
   final SambazaLatestListBuilder builder;
   final String title;
 
-  SambazaLatestList({@required this.builder, @required this.title});
+  SambazaLatestList({required this.builder, required this.title});
 
   @override
   Widget build(BuildContext context) => Column(

@@ -16,8 +16,8 @@ class CollectionCentre extends SambazaModel<CollectionCentreResource>
   String get phone;
   set phone(p);
 
-  CollectionCentre.create([Map<String, dynamic> collectionCentre])
-      : super.create(collectionCentre);
+  CollectionCentre.create([Map<String, dynamic>? collectionCentre])
+      : super.create(collectionCentre!);
 
   CollectionCentre.from(Map<String, dynamic> collectionCentre)
       : super.from(collectionCentre);

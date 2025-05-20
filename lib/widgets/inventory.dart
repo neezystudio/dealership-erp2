@@ -11,7 +11,7 @@ class SambazaInventoryWidget<I extends Inventory>
   final SambazaListBuilder<I, SambazaModel> _listBuilder;
 
   SambazaInventoryWidget(
-      {SambazaModelFactory<I> modelFactory, SambazaResource resource})
+      {required SambazaModelFactory<I> modelFactory, required SambazaResource resource})
       : _listBuilder = SambazaListBuilder<I, SambazaModel>(
           listItemConfigBuilder: SambazaInventoryListItemConfigBuilder<I>(),
           modelFactory: modelFactory,

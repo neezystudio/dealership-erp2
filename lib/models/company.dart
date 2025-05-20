@@ -18,7 +18,7 @@ class Company extends SambazaModel<CompanyResource>
   String get poBox;
   String get tel;
 
-  Company.create([Map<String, dynamic> company]) : super.create(company);
+  Company.create([Map<String, dynamic>? company]) : super.create(company!);
 
   Company.from(Map<String, dynamic> company) : super.from(company);
 

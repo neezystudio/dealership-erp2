@@ -11,7 +11,7 @@ class SambazaList extends StatelessWidget {
   final int limit;
   final bool reverse;
 
-  SambazaList(this.list, {this.groupBy, this.limit, this.reverse = false})
+  SambazaList(this.list, {required this.groupBy, required this.limit, this.reverse = false})
       : _list = (reverse ? list.reversed : list)
             .take(limit == null || limit > list.length ? list.length : limit)
             .toList() {
@@ -40,7 +40,7 @@ class SambazaList extends StatelessWidget {
                               <Widget>[
                                 Text(
                                   key,
-                                  style: Theme.of(context).textTheme.subtitle,
+                                  style: Theme.of(context).textTheme.titleMedium,
                                 )
                               ]..addAll(_buildListItemsfromList(list))))
                   .values
@@ -50,7 +50,7 @@ class SambazaList extends StatelessWidget {
       : Center(
           child: Text(
             'No records here yet.',
-            style: Theme.of(context).textTheme.overline,
+            style: Theme.of(context).textTheme.labelSmall,
           ),
         );
 

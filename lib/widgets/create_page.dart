@@ -8,6 +8,7 @@ class SambazaCreatePage extends StatelessWidget {
 
   SambazaCreatePage({required this.form, required this.title});
 
+  @override
   Widget build(BuildContext context) => SambazaPage(
         body: ListView(
           children: <Widget>[
@@ -29,6 +30,7 @@ class SambazaCreatePage extends StatelessWidget {
           ],
           shrinkWrap: true,
         ),
-        title: title,
+        title: title, fab:form
+        ,
       );
 }

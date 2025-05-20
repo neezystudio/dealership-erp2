@@ -11,10 +11,10 @@ class SambazaDispatchWidget<D extends Dispatch, DI extends DispatchItem>
   final SambazaListBuilder<D, SambazaModel> _listBuilder;
 
   SambazaDispatchWidget({
-    @required SambazaModelFactory<D> modelFactory,
-    @required SambazaResource resource,
-    @required List<String> Function(D, [DI]) subtitle,
-    @required String Function(D, [DI]) title,
+    required SambazaModelFactory<D> modelFactory,
+    required SambazaResource resource,
+    required List<String> Function(D, [DI]) subtitle,
+    required String Function(D, [DI]) title,
   }) : _listBuilder = SambazaListBuilder<D, DI>(
           listItemConfigBuilder: SambazaDispatchListItemConfigBuilder<D, DI>(
             subtitle: subtitle,

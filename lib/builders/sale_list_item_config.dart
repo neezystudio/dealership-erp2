@@ -8,28 +8,28 @@ class SambazaSaleListItemConfigBuilder
     extends SambazaListItemConfigBuilder<Sale, SaleItem> {
   static Future<SambazaModels<Telco>> _telcoFuture = SambazaModel.list<Telco>(
     TelcoResource(),
-    ([Map<String, dynamic> fields]) => Telco.create(fields),
+    ([Map<String, dynamic>? fields]) => Telco.create(fields!),
   );
   
   SambazaSaleListItemConfigBuilder()
       : super(
-          group: (Sale sale, [SaleItem saleItem]) =>
-              SambazaListItemConfigBuilder.strFromTime(saleItem.createdAt),
+          group: (Sale sale, [SaleItem? saleItem]) =>
+              SambazaListItemConfigBuilder.strFromTime(saleItem!.createdAt),
           leading: _buildLeading,
-          subtitle: (Sale sale, [SaleItem saleItem]) {
-            DateTime time = saleItem.createdAt;
+          subtitle: (Sale sale, [SaleItem? saleItem]) {
+            DateTime time = saleItem!.createdAt;
             return <String>[
               'KES ${saleItem.value.toInt().toString()}',
               'Placed at ${time.hour.toString()}:${time.minute.toString()}',
             ];
           },
-          title: (Sale sale, [SaleItem saleItem]) =>
-              '${saleItem.quantity.toInt().toString()} Cards',
+          title: (Sale sale, [SaleItem? saleItem]) =>
+              '${saleItem!.quantity.toInt().toString()} Cards',
         );
 
-  static List<Widget> _buildLeading(Sale sale, [SaleItem saleItem]) => <Widget>[
+  static List<Widget> _buildLeading(Sale sale, [SaleItem? saleItem]) => <Widget>[
         Text(
-          saleItem.airtime.value.toInt().toString(),
+          saleItem!.airtime.value.toInt().toString(),
           style: TextStyle(
             color: Colors.white,
             fontSize: 14,
@@ -42,7 +42,7 @@ class SambazaSaleListItemConfigBuilder
           ) {
             if (snapshot.hasData) {
               return Text(
-                snapshot.data.list
+                snapshot.data!.list
                     .firstWhere(
                       (Telco telco) => telco.id == saleItem.airtime.telco,
                     )

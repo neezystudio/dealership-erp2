@@ -3,7 +3,7 @@ import 'dispatch.dart';
 import '../resources.dart';
 
 class BranchDispatch extends Dispatch<BranchDispatchResource> {
-  BranchDispatch.create([Map<String, dynamic> dispatch])
+  BranchDispatch.create([Map<String, dynamic>? dispatch])
       : super.create(dispatch ?? <String, dynamic>{});
 
   BranchDispatch.from(Map<String, dynamic> dispatch) : super.from(dispatch);
@@ -14,7 +14,7 @@ class BranchDispatch extends Dispatch<BranchDispatchResource> {
     listOn<BranchDispatchItem>(
         'dispatch_items',
         List<Map<String, dynamic>>.from(fields['dispatch_items']),
-        ([Map<String, dynamic> dI]) => BranchDispatchItem.create(resource, dI));
+        ([Map<String, dynamic>? dI]) => BranchDispatchItem.create(resource, dI));
     super.init();
   }
 }

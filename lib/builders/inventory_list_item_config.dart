@@ -8,18 +8,18 @@ class SambazaInventoryListItemConfigBuilder<I extends Inventory>
     extends SambazaListItemConfigBuilder<I, SambazaModel> {
   static Future<SambazaModels<Telco>> _telcoFuture = SambazaModel.list<Telco>(
     TelcoResource(),
-    ([Map<String, dynamic> fields]) => Telco.create(fields),
+    ([Map<String, dynamic>? fields]) => Telco.create(fields!),
   );
 
   SambazaInventoryListItemConfigBuilder()
       : super(
-          leading: (I inventory, [SambazaModel li]) =>
+          leading: (I inventory, [SambazaModel? li]) =>
               _buildLeadingIcon(inventory),
-          subtitle: (I inventory, [SambazaModel li]) =>
+          subtitle: (I inventory, [SambazaModel? li]) =>
               <String>['KES ${inventory.value.toString()}'],
-          title: (I inventory, [SambazaModel li]) =>
+          title: (I inventory, [SambazaModel? li]) =>
               '${inventory.quantity} Cards',
-          trailing: (I inventory, [SambazaModel li]) =>
+          trailing: (I inventory, [SambazaModel? li]) =>
               _buildTrailingIcon(inventory),
         );
 
@@ -39,7 +39,7 @@ class SambazaInventoryListItemConfigBuilder<I extends Inventory>
           ) {
             if (snapshot.hasData) {
               return Text(
-                snapshot.data.list
+                snapshot.data!.list
                     .firstWhere(
                       (Telco telco) => telco.id == inventory.airtime.telco,
                     )

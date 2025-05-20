@@ -9,7 +9,7 @@ class SambazaTabBarView extends SambazaInjectableStatelessWidget {
   final TabController controller;
   final List<Type> $inject = <Type>[SambazaStorage];
 
-  SambazaTabBarView({@required this.configs, @required this.controller});
+  SambazaTabBarView({required this.configs, required this.controller});
 
   @override
   Widget template(BuildContext context) => TabBarView(
