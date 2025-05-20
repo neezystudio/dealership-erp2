@@ -42,7 +42,7 @@ class _InventoryNavView extends StatefulWidget with SambazaInjectable {
           hasFab: false,
           listBuilder: SambazaListBuilder<DSAInventory, SambazaModel>(
             listItemConfigBuilder: SambazaInventoryListItemConfigBuilder(),
-            modelFactory: ([Map<String, dynamic> fields]) =>
+            modelFactory: ([Map<String, dynamic>? fields]) =>
                 DSAInventory.create(fields),
             resource: DSAInventoryResource(),
           ),
@@ -54,8 +54,8 @@ class _InventoryNavView extends StatefulWidget with SambazaInjectable {
             listItemConfigBuilder: SambazaStockTransferListItemConfigBuilder(
               $$<SambazaAuth>().user.id,
             ),
-            modelFactory: ([Map<String, dynamic> fields]) =>
-                StockTransfer.create(fields),
+            modelFactory: ([Map<String, dynamic>? fields]) =>
+                StockTransfer.create(fields!),
             resource: StockTransferResource(),
           ),
           label: 'Stock Transfers',
@@ -87,7 +87,7 @@ class _InventoryNavViewState extends SambazaWidgetState<_InventoryNavView>
         SingleTickerProviderStateMixin,
         SambazaStateNotifier,
         SambazaWidgetStateStateNotifier {
-  TabController _tabController;
+  late TabController _tabController;
 
   @override
   Widget template(

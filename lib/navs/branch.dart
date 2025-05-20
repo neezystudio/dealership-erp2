@@ -129,7 +129,7 @@ class _BranchManagementCard extends StatelessWidget {
   final String route;
   final String title;
 
-  const _BranchManagementCard({this.icon, this.route, this.title});
+  const _BranchManagementCard({required this.icon, required this.route, required this.title});
 
   @override
   Widget build(BuildContext context) => GestureDetector(

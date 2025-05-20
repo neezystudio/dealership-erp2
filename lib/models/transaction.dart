@@ -42,7 +42,7 @@ class Transaction extends SambazaModel<TransactionResource>
   String get user;
   num get value;
 
-  Transaction.create([super.transaction])
+  Transaction.create(super.transaction)
       : super.create();
 
   Transaction.from(super.transaction) : super.from();

@@ -15,7 +15,7 @@ class Sale extends SambazaModel<SaleResource>
   String get user;
   num get value;
 
-  Sale.create([super.sale]) : super.create();
+  Sale.create(super.sale) : super.create();
 
   Sale.from(super.sale) : super.from();
 
@@ -33,7 +33,7 @@ class Sale extends SambazaModel<SaleResource>
     listOn<SaleItem>(
         'sale_items',
         List<Map<String, dynamic>>.from(fields['sale_items']),
-        ([Map<String, dynamic> oI]) => SaleItem.create(oI));
+        ([Map<String, dynamic>? oI]) => SaleItem.create(oI!));
     resource = SaleResource();
     super.init();
   }

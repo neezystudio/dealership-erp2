@@ -34,23 +34,23 @@ class _OrdersNavView extends StatefulWidget {
             SambazaDispatchListItemConfigBuilder<DSADispatch, DSADispatchItem>(
           subtitle: (
             DSADispatch dispatch, [
-            DSADispatchItem dispatchItem,
+            DSADispatchItem? dispatchItem,
           ]) {
-            dispatchItem.serialFirst ??= 0;
-            dispatchItem.serialLast ??= 0;
+            dispatchItem!.serialFirst ??= 0;
+            dispatchItem!.serialLast ??= 0;
             return <String>[
               '${DSADispatchItem.serialFormatter(dispatchItem.serialFirst)} - ${DSADispatchItem.serialFormatter(dispatchItem.serialLast)}',
             ];
           },
           title: (
             DSADispatch dispatch, [
-            DSADispatchItem dispatchItem,
+            DSADispatchItem? dispatchItem,
           ]) =>
-              '${dispatchItem.quantity.toString()} Cards - ${dispatchItem.value.toInt().toString()}/=',
+              '${dispatchItem!.quantity.toString()} Cards - ${dispatchItem.value.toInt().toString()}/=',
         ),
         listName: 'dispatch_items',
         modelFactory: ([
-          Map<String, dynamic> fields,
+          Map<String, dynamic>? fields,
         ]) =>
             DSADispatch.create(fields),
         resource: DSADispatchResource(),
@@ -64,9 +64,9 @@ class _OrdersNavView extends StatefulWidget {
         listItemConfigBuilder: SambazaOrderListItemConfigBuilder(),
         listName: 'order_items',
         modelFactory: ([
-          Map<String, dynamic> fields,
+          Map<String, dynamic>? fields,
         ]) =>
-            Order.create(fields),
+            Order.create(fields!),
         resource: OrderResource(),
       ),
       label: 'Orders',
@@ -95,7 +95,7 @@ class _OrdersNavViewState extends SambazaWidgetState<_OrdersNavView>
         SingleTickerProviderStateMixin,
         SambazaStateNotifier,
         SambazaWidgetStateStateNotifier {
-  TabController _tabController;
+  late TabController _tabController;
 
   @override
   Widget template(BuildContext context) => Column(

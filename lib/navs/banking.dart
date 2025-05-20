@@ -34,7 +34,7 @@ class _BankingNavView extends StatefulWidget {
       listBuilder: SambazaListBuilder<Rollup, SambazaModel>(
         listItemConfigBuilder: SambazaRollupListItemConfigBuilder(),
         listName: '',
-        modelFactory: ([Map<String, dynamic> fields]) => Rollup.create(fields),
+        modelFactory: ([Map<String, dynamic>? fields]) => Rollup.create(fields!),
         resource: RollupResource(),
       ),
       label: 'Rollups',
@@ -45,7 +45,7 @@ class _BankingNavView extends StatefulWidget {
       listBuilder: SambazaListBuilder<Sale, SaleItem>(
         listItemConfigBuilder: SambazaSaleListItemConfigBuilder(),
         listName: 'sale_items',
-        modelFactory: ([Map<String, dynamic> fields]) => Sale.create(fields),
+        modelFactory: ([Map<String, dynamic>? fields]) => Sale.create(fields!),
         resource: SaleResource(),
       ),
       label: 'Sales',
@@ -58,8 +58,8 @@ class _BankingNavView extends StatefulWidget {
       listBuilder: SambazaListBuilder<Transaction, SambazaModel>(
         listItemConfigBuilder: SambazaTransactionListItemConfigBuilder(),
         listName: '',
-        modelFactory: ([Map<String, dynamic> fields]) =>
-            Transaction.create(fields),
+        modelFactory: ([Map<String, dynamic>? fields]) =>
+            Transaction.create(fields!),
         resource: TransactionResource(),
       ),
       label: 'Transactions',
@@ -89,7 +89,7 @@ class _BankingNavViewState extends SambazaInjectableWidgetState<_BankingNavView>
         SambazaWidgetStateStateNotifier {
   @override
   final List<Type> $inject = <Type>[SambazaAPI, SambazaStorage];
-  TabController _tabController;
+  late TabController _tabController;
 
   @override
   Widget template(BuildContext context) => Column(

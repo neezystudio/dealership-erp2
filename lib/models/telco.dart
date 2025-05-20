@@ -7,7 +7,7 @@ class Telco extends SambazaModel<TelcoResource>
   String get country;
   String get name;
 
-  Telco.create([super.telco]) : super.create();
+  Telco.create(super.telco) : super.create();
 
   Telco.from(super.telco) : super.from();
 

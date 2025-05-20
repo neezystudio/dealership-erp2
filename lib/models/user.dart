@@ -39,7 +39,7 @@ class User extends SambazaModel<UserResource> with SambazaModelFlags {
 
   bool get usable;
 
-  User.create([super.user]) : super.create();
+  User.create(super.user) : super.create();
 
   User.from(super.user) : super.from();
 
