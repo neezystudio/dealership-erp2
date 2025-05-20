@@ -51,5 +51,5 @@ class SambazaState extends Model {
   Future<SambazaState> ready() =>
       $provide<SambazaStorage>().ready.then((x) => this);
 
-  T $provide<T extends SambazaService>() => $provider(T);
+  T $provide<T extends SambazaService>() => $provider(T) as T;
 }

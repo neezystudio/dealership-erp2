@@ -1,3 +1,4 @@
+import 'package:dealership_erp_sambaza_app/utils/exception.dart';
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -25,44 +26,66 @@ class SambazaListBuilder<M extends SambazaModel, I extends SambazaModel> {
     required this.requestParams,
     required this.resource,
   }) : listFuture =
-            (() => SambazaModel.list<M>(resource, modelFactory, requestParams));
+           (() => SambazaModel.list<M>(resource, modelFactory, requestParams));
 
-  List<SambazaListItemConfig<M, I>> addDisplay(M model) => listName.isEmpty
-      ? <SambazaListItemConfig<M, I>>[buildListItemConfig(model)()]
-      : model
-          .listFor<I>(listName)
-          .list
-          .map<SambazaListItemConfig<M, I>>(buildListItemConfig(model))
-          .toList();
+  List<SambazaListItemConfig<M, I>> addDisplay(M model) =>
+      listName.isEmpty
+          ? <SambazaListItemConfig<M, I>>[buildListItemConfig(model)()]
+          : model
+              .listFor<I>(listName)!
+              .list
+              .map<SambazaListItemConfig<M, I>>(
+                (item) => buildListItemConfig(model)(item as I),
+              )
+              .toList();
 
   SambazaList buildList(List<M> models) => SambazaList(
-        models
-            .map<List<SambazaListItemConfig<M, I>>>(addDisplay)
-            .expand<SambazaListItemConfig<M, I>>(
-                (List<SambazaListItemConfig<M, I>> x) => x)
-            .toList(),
-        groupBy: 'createdAt',
+    models
+        .map<List<SambazaListItemConfig<M, I>>>(addDisplay)
+        .expand<SambazaListItemConfig<M, I>>(
+          (List<SambazaListItemConfig<M, I>> x) => x,
+        )
+        .toList(),
+    groupBy: 'createdAt',
+    limit: requestParams['limit'] ?? 20,
+  );
+
+  SambazaListItemConfig<M, I> Function([I]) buildListItemConfig(M model) =>
+      ([I? listItem]) => SambazaListItemConfig<M, I>.from(
+        listItemConfigBuilder,
+        model,
+        listItem!,
       );
 
-  SambazaListItemConfig<M, I> Function([I]) buildListItemConfig(M model) => (
-          [I? listItem]) =>
-      SambazaListItemConfig<M, I>.from(listItemConfigBuilder, model, listItem!);
-
   Widget call(BuildContext context) => ScopedModelDescendant<SambazaState>(
-        builder: (BuildContext context, Widget child, SambazaState state) =>
-            FutureBuilder<SambazaModels<M>>(
-          builder:
-              (BuildContext context, AsyncSnapshot<SambazaModels<M>> snapshot) {
+    builder:
+        (
+          BuildContext context,
+          Widget? child,
+          SambazaState state,
+        ) => FutureBuilder<SambazaModels<M>>(
+          builder: (
+            BuildContext context,
+            AsyncSnapshot<SambazaModels<M>> snapshot,
+          ) {
             if (snapshot.hasData) {
-              return buildList(snapshot.data.list);
+              return buildList(snapshot.data!.list);
             } else if (snapshot.hasError) {
-              return SambazaError(snapshot.error);
+              return SambazaError(
+                SambazaException(
+                  snapshot.error.toString(),
+                  'Error loading ${resource.endpoint}',
+                ),
+                onButtonPressed: () {
+                  // TODO: Implement error handling action, e.g., retry logic
+                },
+              );
             }
-            return child;
+            return child ?? const SizedBox.shrink();
           },
           future: listFuture(),
         ),
-        rebuildOnChange: true,
-        child: SambazaLoader(),
-      );
+    rebuildOnChange: true,
+    child: SambazaLoader(),
+  );
 }
