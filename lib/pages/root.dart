@@ -89,9 +89,9 @@ class _RootPageState extends SambazaInjectableWidgetState<RootPage> {
           } else if (snapshot.hasError) {
             final error = snapshot.error;
             if (error is SambazaException) {
-              return SambazaError(error);
+              return SambazaError(error, onButtonPressed: () {  },);
             } else {
-              return SambazaError(SambazaException(error?.toString() ?? 'Unknown error'));
+              return SambazaError(SambazaException(error?.toString() ?? 'Unknown error'), onButtonPressed: () {  },);
             }
           }
 
