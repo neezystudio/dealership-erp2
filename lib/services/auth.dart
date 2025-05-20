@@ -1,4 +1,5 @@
 import 'package:corsac_jwt/corsac_jwt.dart';
+import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 
 import 'api.dart';
 import 'storage.dart';

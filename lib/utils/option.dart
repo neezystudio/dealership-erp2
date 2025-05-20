@@ -6,8 +6,8 @@ class  SambazaOption {
   final dynamic value;
 
   SambazaOption({
-    @required this.optionText,
-    @required this.value,
+    required this.optionText,
+    required this.value,
   });
 
   @override

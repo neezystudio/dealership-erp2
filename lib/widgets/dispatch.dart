@@ -23,7 +23,7 @@ class SambazaDispatchWidget<D extends Dispatch, DI extends DispatchItem>
           ),
           listName: 'dispatch_items',
           modelFactory: modelFactory,
-          resource: resource,
+          resource: resource, requestParams: {},
         );
 
   @override

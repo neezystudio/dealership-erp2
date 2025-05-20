@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'package:sambaza/utils/all.dart';
+
 
 import 'auth.dart';
 import '../utils/api.dart';
@@ -126,7 +126,7 @@ class SambazaAPI extends SambazaInjectableService {
   }
 
   Future<String> send(String endpoint, Map<String, dynamic> body,
-      [Map<String, dynamic> params]) async {
+      [Map<String, dynamic>? params]) async {
     String url = SambazaAPIEndpoints.urlWithParams(endpoint, params);
     Map<String, String> headers = _headers(<String, String>{
       HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',

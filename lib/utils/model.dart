@@ -1,4 +1,3 @@
-import 'dart:async';
 
 import 'cache.dart';
 import 'exception.dart';
@@ -25,14 +24,14 @@ abstract class SambazaModel<R extends SambazaResource>
     init();
   }
 
-  SambazaModel.create([Map<String, dynamic> fields])
+  SambazaModel.create([Map<String, dynamic>? fields])
       : this(fields = fields ?? <String, dynamic>{});
 
   SambazaModel.from(Map<String, dynamic> fields) : this(fields);
 
   static Future<SambazaModels<T>> list<T extends SambazaModel>(
       SambazaResource r, SambazaModelFactory<T> f,
-      [Map<String, dynamic> params]) async {
+      [Map<String, dynamic>? params]) async {
     List<Map<String, dynamic>> rL = await r.$list(params);
     return SambazaModels(rL, f);
   }
@@ -82,10 +81,10 @@ abstract class SambazaModel<R extends SambazaResource>
   Map<Type, SambazaModels> get _listsTypeMap => _lists.map<Type, SambazaModels>(
       (String field, SambazaModels m) => MapEntry(m.list.runtimeType, m));
 
-  SambazaModels listOf<T extends Type>(T type) =>
+  SambazaModels? listOf<T extends Type>(T type) =>
       _listsTypeMap[<T>[].runtimeType];
 
-  SambazaModels<M> listFor<M extends SambazaModel>(String field) =>
+  SambazaModels<SambazaModel<SambazaResource>>? listFor<M extends SambazaModel>(String field) =>
       _lists[field];
 
   void listOn<T extends SambazaModel>(
@@ -95,7 +94,7 @@ abstract class SambazaModel<R extends SambazaResource>
 
   bool lists(String fieldName) => _lists.containsKey(fieldName);
 
-  Future<void> pull([Map<String, dynamic> params]) async {
+  Future<void> pull([Map<String, dynamic>? params]) async {
     Map<String, dynamic> result = await resource.$get(id, params);
     fill(result);
   }
@@ -111,15 +110,15 @@ abstract class SambazaModel<R extends SambazaResource>
 
   bool relatesOn(String fieldName) => _relationships.containsKey(fieldName);
 
-  SambazaModelRelationship relationship(String fieldName) =>
+  SambazaModelRelationship? relationship(String fieldName) =>
       _relationships[fieldName];
 
-  Future<void> save([Map<String, dynamic> params]) async {
+  Future<void> save([Map<String, dynamic>? params]) async {
     Map<String, dynamic> result = await resource.$save(serialised, params);
     fill(result);
   }
 
-  Future<void> update([Map<String, dynamic> params]) async {
+  Future<void> update([Map<String, dynamic>? params]) async {
     Map<String, dynamic> result = await resource.$update(id, serialised, params);
     fill(result);
   }
@@ -132,19 +131,19 @@ abstract class SambazaModel<R extends SambazaResource>
     String key = invocation.memberName.toString().replaceAllMapped(
         RegExp(r'Symbol\("(\w+)=?"\)'), (Match m) => m.group(1));
     String snakeCaseKey = key.replaceAllMapped(
-        RegExp(r'[A-Z]'), (Match m) => '_${m.group(0).toLowerCase()}');
+        RegExp(r'[A-Z]'), (Match m) => '_${m.group(0)?.toLowerCase()}');
     if (invocation.isGetter == true) {
       if (lists(key)) {
-        return listFor(key).list;
+        return listFor(key)!.list;
       }
       if (lists(snakeCaseKey)) {
-        return listFor(snakeCaseKey).list;
+        return listFor(snakeCaseKey)!.list;
       }
       if (relatesOn(key)) {
-        return relationship(key).model;
+        return relationship(key)!.model;
       }
       if (relatesOn(snakeCaseKey)) {
-        return relationship(snakeCaseKey).model;
+        return relationship(snakeCaseKey)!.model;
       }
       if (knows(key) && has(key)) {
         return $get(key);
@@ -155,16 +154,16 @@ abstract class SambazaModel<R extends SambazaResource>
     } else if (invocation.isSetter == true) {
       dynamic value = invocation.positionalArguments.first;
       if (lists(key)) {
-        return listFor(key).refresh(value);
+        return listFor(key)?.refresh(value);
       }
       if (lists(snakeCaseKey)) {
-        return listFor(snakeCaseKey).refresh(value);
+        return listFor(snakeCaseKey)?.refresh(value);
       }
       if (relatesOn(key)) {
-        relationship(key).fill(value);
+        relationship(key)?.fill(value);
       }
       if (relatesOn(snakeCaseKey)) {
-        relationship(snakeCaseKey).fill(value);
+        relationship(snakeCaseKey)?.fill(value);
       }
       if (knows(key) && has(key)) {
         return $set(key, value);
