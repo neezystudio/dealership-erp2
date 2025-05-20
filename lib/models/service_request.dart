@@ -1,4 +1,4 @@
-zimport 'common/all.dart';
+import 'common/all.dart';
 import '../resources.dart';
 import '../utils/model.dart';
 
