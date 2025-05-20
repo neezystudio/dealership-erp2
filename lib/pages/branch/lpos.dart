@@ -12,7 +12,7 @@ class BranchLPOsPage extends SambazaPage {
 
   static BranchLPOsPage create(BuildContext context) => BranchLPOsPage();
 
-  BranchLPOsPage() : super(body: _BranchLPOsView(), title: 'Branch LPOs');
+  BranchLPOsPage({super.key}) : super(body: _BranchLPOsView(), title: 'Branch LPOs');
 }
 
 class _BranchLPOsView extends SambazaInjectableStatelessWidget {

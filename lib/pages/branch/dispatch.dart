@@ -19,16 +19,16 @@ class _BranchDispatchView
     extends SambazaDispatchWidget<BranchDispatch, BranchDispatchItem> {
   _BranchDispatchView()
       : super(
-          modelFactory: ([Map<String, dynamic> fields]) =>
+          modelFactory: ([Map<String, dynamic>? fields]) =>
               BranchDispatch.create(fields),
           resource: BranchDispatchResource(),
           subtitle:
-              (BranchDispatch dispatch, [BranchDispatchItem dispatchItem]) {
+              (BranchDispatch dispatch, [BranchDispatchItem? dispatchItem]) {
                 return <String>[
-                  'KES ${dispatchItem.value.toInt().toString()}'
+                  'KES ${dispatchItem!.value.toInt().toString()}'
                 ];
               },
-              title: (BranchDispatch dispatch, [BranchDispatchItem dispatchItem]) =>
-              '${dispatchItem.quantity.toString()} Cards',
+              title: (BranchDispatch dispatch, [BranchDispatchItem? dispatchItem]) =>
+              '${dispatchItem!.quantity.toString()} Cards',
         );
 }

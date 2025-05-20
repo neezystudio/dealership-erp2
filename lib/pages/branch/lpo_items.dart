@@ -12,7 +12,7 @@ class LPOItemsPage extends SambazaPage {
 
   static LPOItemsPage create(BuildContext context) => LPOItemsPage();
 
-  LPOItemsPage() : super(body: _LPOItemsView(), title: 'LPO Items');
+  LPOItemsPage({super.key}) : super(body: _LPOItemsView(), title: 'LPO Items');
 }
 
 class _LPOItemsView extends StatefulWidget {

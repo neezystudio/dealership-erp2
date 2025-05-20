@@ -38,16 +38,16 @@ class _ServiceRequestsView extends StatefulWidget {
 class _ServiceRequestsViewState extends SambazaInjectableWidgetState {
   @override
   final List<Type> $inject = <Type>[SambazaAuth, SambazaStorage];
-  SambazaListBuilder _listBuilder;
+  late SambazaListBuilder _listBuilder;
 
   @override
   void initState() {
     super.initState();
     _listBuilder = SambazaListBuilder<ServiceRequest, SambazaModel>(
       listItemConfigBuilder: SambazaServiceRequestListItemConfigBuilder(),
-      modelFactory: ([Map<String, dynamic> fields]) =>
+      modelFactory: ([Map<String, dynamic>? fields]) =>
           ServiceRequest.create(fields),
-      requestParams: {'branch': $$<SambazaAuth>().user.profile.branch},
+      requestParams: {'branch': $$<SambazaAuth>().user!.profile.branch},
       resource: ServiceRequestResource(),
     );
   }

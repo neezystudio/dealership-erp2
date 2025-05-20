@@ -15,8 +15,8 @@ class SambazaDebtCard extends SambazaInjectableStatelessWidget {
   ThemeData get _themeData => Theme.of(context);
 
   Future<User> _getUser() async {
-    User user = $$<SambazaAuth>().user;
-    await user.pull();
+    User? user = $$<SambazaAuth>().user;
+    await user!.pull();
     return user;
   }
 

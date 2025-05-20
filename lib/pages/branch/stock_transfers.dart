@@ -51,23 +51,23 @@ class _BranchStockTransfersViewState extends SambazaInjectableWidgetState {
     SambazaAuth,
     SambazaStorage,
   ];
-  SambazaListBuilder _listBuilder;
+  late SambazaListBuilder _listBuilder;
 
   @override
   void initState() {
     super.initState();
     _listBuilder = SambazaListBuilder<StockTransfer, SambazaModel>(
       listItemConfigBuilder: SambazaStockTransferListItemConfigBuilder(
-        $$<SambazaAuth>().user.profile.branch,
+        $$<SambazaAuth>().user!.profile.branch,
       ),
       modelFactory: ([
-        Map<String, dynamic> fields,
+        Map<String, dynamic>? fields,
       ]) =>
           StockTransfer.create(
         fields,
       ),
       requestParams: {
-        'branch': $$<SambazaAuth>().user.profile.branch,
+        'branch': $$<SambazaAuth>().user!.profile.branch,
       },
       resource: StockTransferResource(),
     );
