@@ -12,7 +12,7 @@ class BranchOrdersPage extends SambazaPage {
 
   static BranchOrdersPage create(BuildContext context) => BranchOrdersPage();
 
-  BranchOrdersPage() : super(body: _BranchOrdersView(), title: 'Branch Orders');
+  BranchOrdersPage({super.key}) : super(body: _BranchOrdersView(), title: 'Branch Orders');
 }
 
 class _BranchOrdersView extends SambazaInjectableStatelessWidget {

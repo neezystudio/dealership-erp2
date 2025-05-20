@@ -34,7 +34,7 @@ class _EditOrderFormState extends SambazaInjectableWidgetState<_EditOrderForm> {
   @override
   final List<Type> $inject = <Type>[SambazaAPI, SambazaStorage];
   final List<List<String>> _nestedFieldBuilderSets = <List<String>>[];
-  Order _order;
+  late Order _order;
 
   ThemeData get themeData => Theme.of(context);
 
@@ -115,7 +115,7 @@ class _EditOrderFormState extends SambazaInjectableWidgetState<_EditOrderForm> {
               SizedBox(height: 8),
               Row(
                 children: <Widget>[
-                  RaisedButton(
+                  ElevatedButton(
                       child: Text('ADD ITEM'),
                       onPressed: () {
                         setState(() {
@@ -131,7 +131,7 @@ class _EditOrderFormState extends SambazaInjectableWidgetState<_EditOrderForm> {
                   : SizedBox(height: 35),
               Row(
                 children: <Widget>[
-                  FlatButton(
+                  TextButton(
                     child: Text('Cancel'),
                     focusNode: null,
                     onPressed: !_processing
@@ -139,12 +139,12 @@ class _EditOrderFormState extends SambazaInjectableWidgetState<_EditOrderForm> {
                             Navigator.pop(context, null);
                           }
                         : null,
-                    textColor: Colors.black87,
+                  
                   ),
                   Expanded(
                     child: SizedBox(height: 8),
                   ),
-                  RaisedButton(
+                  ElevatedButton(
                     child: Text('SAVE'),
                     focusNode: null,
                     onPressed: !_processing ? _save : null,
@@ -184,12 +184,12 @@ class _EditOrderFormState extends SambazaInjectableWidgetState<_EditOrderForm> {
 
   Future<SambazaModels<Airtime>> _listAirtimes() => SambazaModel.list<Airtime>(
         AirtimeResource(),
-        ([Map<String, dynamic> fields]) => Airtime.create(fields),
+        ([Map<String, dynamic>? fields]) => Airtime.create(fields),
       );
 
   Future<SambazaModels<Telco>> _listTelcos() => SambazaModel.list<Telco>(
         TelcoResource(),
-        ([Map<String, dynamic> fields]) => Telco.create(fields),
+        ([Map<String, dynamic>? fields]) => Telco.create(fields),
       );
 
   void Function() _onFieldEditingComplete(SambazaField field) => () {
@@ -217,7 +217,7 @@ class _EditOrderFormState extends SambazaInjectableWidgetState<_EditOrderForm> {
       };
 
   Future<List<Airtime>> _prepareOrder() async {
-    if (ModalRoute.of(context).settings.arguments is! Order) {
+    if (ModalRoute.of(context)!.settings.arguments is! Order) {
       throw SambazaException('Expected "Order" to be passed to this page.');
     }
     SambazaModels<Airtime> airtimes = await _listAirtimes();
@@ -240,9 +240,9 @@ class _EditOrderFormState extends SambazaInjectableWidgetState<_EditOrderForm> {
                 .map<Map<String, dynamic>>(
                   (List<String> fieldSet) => <String, dynamic>{
                     'airtime': <String, dynamic>{
-                      'id': _fieldBuilders[fieldSet[0]].field.value,
+                      'id': _fieldBuilders[fieldSet[0]]!.field.value,
                     },
-                    'quantity': _fieldBuilders[fieldSet[1]].field.value,
+                    'quantity': _fieldBuilders[fieldSet[1]]!.field.value,
                   },
                 )
                 .toList(),
@@ -254,7 +254,7 @@ class _EditOrderFormState extends SambazaInjectableWidgetState<_EditOrderForm> {
         })
         .catchError((e) {
           if (e is SambazaException) {
-            Scaffold.of(context).showSnackBar(SnackBar(
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Row(
                 children: <Widget>[
                   Text('ERROR'),
@@ -280,11 +280,11 @@ class _EditOrderFormState extends SambazaInjectableWidgetState<_EditOrderForm> {
 
   Future<void> _validate() async {
     setState(() {
-      _valid = _formKey.currentState.validate();
+      _valid = _formKey.currentState!.validate();
       _autovalidate = _valid == false;
     });
     if (_valid) {
-      _formKey.currentState.save();
+      _formKey.currentState!.save();
       return;
     }
     _fieldBuilders.values

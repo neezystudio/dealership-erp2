@@ -11,7 +11,7 @@ class BranchInventoryPage extends SambazaPage {
   static BranchInventoryPage create(BuildContext context) =>
       BranchInventoryPage();
 
-  BranchInventoryPage()
+  BranchInventoryPage({super.key})
       : super(body: _BranchInventoryView(), title: 'Branch Inventory');
 }
 
