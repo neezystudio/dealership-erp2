@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sambaza/widgets/tab_bar.dart';
+
 
 import '../builders/all.dart';
 import '../models/all.dart';
@@ -35,7 +35,7 @@ class _BankingNavView extends StatefulWidget {
         listItemConfigBuilder: SambazaRollupListItemConfigBuilder(),
         listName: '',
         modelFactory: ([Map<String, dynamic>? fields]) => Rollup.create(fields!),
-        resource: RollupResource(),
+        resource: RollupResource(), requestParams: {},
       ),
       label: 'Rollups',
     ),
@@ -46,7 +46,7 @@ class _BankingNavView extends StatefulWidget {
         listItemConfigBuilder: SambazaSaleListItemConfigBuilder(),
         listName: 'sale_items',
         modelFactory: ([Map<String, dynamic>? fields]) => Sale.create(fields!),
-        resource: SaleResource(),
+        resource: SaleResource(), requestParams: {},
       ),
       label: 'Sales',
       redirectRoute: CreateSalePage.route,
@@ -60,7 +60,7 @@ class _BankingNavView extends StatefulWidget {
         listName: '',
         modelFactory: ([Map<String, dynamic>? fields]) =>
             Transaction.create(fields!),
-        resource: TransactionResource(),
+        resource: TransactionResource(), requestParams: {},
       ),
       label: 'Transactions',
       redirectRoute: CreateTransactionPage.route,

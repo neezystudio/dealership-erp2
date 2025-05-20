@@ -30,30 +30,26 @@ class _OrdersNavView extends StatefulWidget {
     SambazaTabConfig(
       hasFab: false,
       listBuilder: SambazaListBuilder<DSADispatch, DSADispatchItem>(
-        listItemConfigBuilder:
-            SambazaDispatchListItemConfigBuilder<DSADispatch, DSADispatchItem>(
-          subtitle: (
-            DSADispatch dispatch, [
-            DSADispatchItem? dispatchItem,
-          ]) {
+        listItemConfigBuilder: SambazaDispatchListItemConfigBuilder<
+          DSADispatch,
+          DSADispatchItem
+        >(
+          subtitle: (DSADispatch dispatch, [DSADispatchItem? dispatchItem]) {
             dispatchItem!.serialFirst ??= 0;
             dispatchItem!.serialLast ??= 0;
             return <String>[
               '${DSADispatchItem.serialFormatter(dispatchItem.serialFirst)} - ${DSADispatchItem.serialFormatter(dispatchItem.serialLast)}',
             ];
           },
-          title: (
-            DSADispatch dispatch, [
-            DSADispatchItem? dispatchItem,
-          ]) =>
-              '${dispatchItem!.quantity.toString()} Cards - ${dispatchItem.value.toInt().toString()}/=',
+          title:
+              (DSADispatch dispatch, [DSADispatchItem? dispatchItem]) =>
+                  '${dispatchItem!.quantity.toString()} Cards - ${dispatchItem.value.toInt().toString()}/=',
         ),
         listName: 'dispatch_items',
-        modelFactory: ([
-          Map<String, dynamic>? fields,
-        ]) =>
-            DSADispatch.create(fields),
+        modelFactory:
+            ([Map<String, dynamic>? fields]) => DSADispatch.create(fields),
         resource: DSADispatchResource(),
+        requestParams: {},
       ),
       label: 'Dispatch',
     ),
@@ -63,11 +59,9 @@ class _OrdersNavView extends StatefulWidget {
       listBuilder: SambazaListBuilder<Order, OrderItem>(
         listItemConfigBuilder: SambazaOrderListItemConfigBuilder(),
         listName: 'order_items',
-        modelFactory: ([
-          Map<String, dynamic>? fields,
-        ]) =>
-            Order.create(fields!),
+        modelFactory: ([Map<String, dynamic>? fields]) => Order.create(fields!),
         resource: OrderResource(),
+        requestParams: {},
       ),
       label: 'Orders',
       redirectRoute: CreateOrderPage.route,
@@ -77,9 +71,9 @@ class _OrdersNavView extends StatefulWidget {
   ];
 
   SambazaTabConfig get activeTabConfig => tabConfigs.firstWhere(
-        (SambazaTabConfig config) => config.active,
-        orElse: () => tabConfigs[0],
-      );
+    (SambazaTabConfig config) => config.active,
+    orElse: () => tabConfigs[0],
+  );
 
   bool get hasFab => activeTabConfig.hasFab;
 
@@ -99,22 +93,22 @@ class _OrdersNavViewState extends SambazaWidgetState<_OrdersNavView>
 
   @override
   Widget template(BuildContext context) => Column(
-        children: <Widget>[
-          Container(
-            color: Colors.cyanAccent,
-            child: SambazaTabBar(
-              configs: widget.tabConfigs,
-              controller: _tabController,
-            ),
-          ),
-          Expanded(
-            child: SambazaTabBarView(
-              configs: widget.tabConfigs,
-              controller: _tabController,
-            ),
-          ),
-        ],
-      );
+    children: <Widget>[
+      Container(
+        color: Colors.cyanAccent,
+        child: SambazaTabBar(
+          configs: widget.tabConfigs,
+          controller: _tabController,
+        ),
+      ),
+      Expanded(
+        child: SambazaTabBarView(
+          configs: widget.tabConfigs,
+          controller: _tabController,
+        ),
+      ),
+    ],
+  );
 
   @override
   void initState() {

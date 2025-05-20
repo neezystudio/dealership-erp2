@@ -48,7 +48,7 @@ class HomeNav with SambazaInjectable implements SambazaNav {
                 sales,
               );
             }
-            Scaffold.of(context).showSnackBar(
+            ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Row(
                   children: <Widget>[
