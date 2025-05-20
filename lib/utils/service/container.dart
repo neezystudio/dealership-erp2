@@ -23,11 +23,12 @@ class SambazaServiceContainer implements SambazaCache<Type, SambazaService> {
   @override
   SambazaService $get(Type type) {
     if (_services.containsKey(type)) {
-      return _services[type];
+      return _services[type] as SambazaService;
     } else {
       throw SambazaServiceNotFoundException(
-          'No service of type \'${type.toString()}\' could be found',
-          'Service not found');
+        'No service of type \'${type.toString()}\' could be found',
+        'Service not found',
+      );
     }
   }
 }

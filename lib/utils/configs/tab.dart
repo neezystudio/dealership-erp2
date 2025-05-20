@@ -30,26 +30,40 @@ class SambazaTabConfig with SambazaInjectable {
       listBuilder.resource.endpoint, listBuilder.requestParams);
 
   void Function() onFabPressed(BuildContext context) => () {
-        Navigator.pushNamed(context, redirectRoute).then((Object result) {
-          if ($$<SambazaStorage>().has(endpoint)) {
-            Map<String, dynamic> stored = Map<String, dynamic>.from(
-                $$<SambazaStorage>().$get(endpoint));
-            List<Map<String, dynamic>> results = List<Map<String, dynamic>>.from(stored['results'], growable: true,);
-            results.add(result);
-            stored['results'] = results;
-            $$<SambazaStorage>().$set(endpoint, stored);
-          }
-          Scaffold.of(context).showSnackBar(SnackBar(
-            content: Row(
-              children: <Widget>[
-                Text('DONE'),
-                SizedBox(width: 8),
-                Expanded(
-                  child: Text(redirectRouteSuccessCallbackMessage),
+        Navigator.pushNamed(
+          context,
+          redirectRoute,
+        ).then(
+          (Object? result) {
+            if (result is Map<String, dynamic>) {
+              Map<String, dynamic> newItem = Map<String, dynamic>.from(result);
+              SambazaStorage $storage = $$<SambazaStorage>();
+              if ($storage.has(endpoint)) {
+                List<Map<String, dynamic>> items =
+                    $storage.$get(endpoint);
+                items[items.indexWhere(
+                  (Map<String, dynamic> item) => item['id'] == newItem['id'],
+                )] = newItem;
+                $storage.$set(
+                  endpoint,
+                  items,
+                );
+              }
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Row(
+                    children: <Widget>[
+                      Text('DONE'),
+                      SizedBox(width: 8),
+                      Expanded(
+                        child: Text(redirectRouteSuccessCallbackMessage),
+                      ),
+                    ],
+                  ),
                 ),
-              ],
-            ),
-          ));
-                });
+              );
+            }
+          },
+        );
       };
 }

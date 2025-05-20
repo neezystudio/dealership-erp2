@@ -24,13 +24,13 @@ mixin SambazaInjectable<T extends SambazaService> {
           'There was a problem trying to access an injected service of type \'${type.toString()}\' ',
           'Service not injected');
     }
-    return $services[type];
+    return $services[type] as E;
   }
 
   void inject() {
     SambazaServiceProvider provider = SambazaServiceProvider();
     for (var type in $inject) {
-      $services[type] = provider(type);
+      $services[type] = provider(type) as T;
     }
   }
 }
