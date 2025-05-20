@@ -10,58 +10,64 @@ import '../utils/all.dart';
 import '../widgets/all.dart';
 
 class HomeNav with SambazaInjectable implements SambazaNav {
+  @override
   final bool hasFab = true;
+  @override
   final IconData icon = Icons.home;
+  @override
   final List<Type> $inject = <Type>[SambazaStorage];
+  @override
   final String label = 'Home tab';
+  @override
   final Widget view = _HomeNavView();
+  @override
   final String title = 'Home';
 
   HomeNav() {
     inject();
   }
 
+  @override
   void Function() onFabPressed(BuildContext context) => () {
         Navigator.pushNamed(
           context,
           CreateSalePage.route,
         ).then(
           (Object result) {
-            if (result != null) {
-              Map<String, dynamic> newSale = Map<String, dynamic>.from(result);
-              SaleResource resource = SaleResource();
-              SambazaStorage $storage = $$<SambazaStorage>();
-              if ($storage.has(resource.endpoint)) {
-                List<Map<String, dynamic>> sales =
-                    $storage.$get(resource.endpoint);
-                sales[sales.indexWhere(
-                  (Map<String, dynamic> sale) => sale['id'] == newSale['id'],
-                )] = newSale;
-                $storage.$set(
-                  resource.endpoint,
-                  sales,
-                );
-              }
-              Scaffold.of(context).showSnackBar(
-                SnackBar(
-                  content: Row(
-                    children: <Widget>[
-                      Text('DONE'),
-                      SizedBox(width: 8),
-                      Expanded(
-                        child: Text('Your sale was created successfully!'),
-                      ),
-                    ],
-                  ),
-                ),
+            Map<String, dynamic> newSale = Map<String, dynamic>.from(result);
+            SaleResource resource = SaleResource();
+            SambazaStorage $storage = $$<SambazaStorage>();
+            if ($storage.has(resource.endpoint)) {
+              List<Map<String, dynamic>> sales =
+                  $storage.$get(resource.endpoint);
+              sales[sales.indexWhere(
+                (Map<String, dynamic> sale) => sale['id'] == newSale['id'],
+              )] = newSale;
+              $storage.$set(
+                resource.endpoint,
+                sales,
               );
             }
-          },
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Row(
+                  children: <Widget>[
+                    Text('DONE'),
+                    SizedBox(width: 8),
+                    Expanded(
+                      child: Text('Your sale was created successfully!'),
+                    ),
+                  ],
+                ),
+              ),
+            );
+                    },
         );
       };
 }
 
 class _HomeNavView extends SambazaInjectableStatelessWidget {
+  @override
   final List<Type> $inject = <Type>[
     SambazaAuth,
     SambazaStorage,
@@ -137,6 +143,7 @@ class _HomeNavView extends SambazaInjectableStatelessWidget {
   @override
   Widget template(BuildContext context) => RefreshIndicator(
         child: ListView(
+          padding: EdgeInsets.fromLTRB(8, 8, 8, 80),
           children: <Widget>[
             Row(
               children: <Widget>[
@@ -174,23 +181,18 @@ class _HomeNavView extends SambazaInjectableStatelessWidget {
                 ),
               ),
             ),
-          padding: EdgeInsets.fromLTRB(8, 8, 8, 80),
         ),
         onRefresh: () => Future.microtask(
           () {
             User user = $$<SambazaAuth>().user;
             $$<SambazaStorage>()
                 .remove('${user.resource.endpoint}${user.id}/', false);
-            _figuresConfigs.forEach(
-              (SambazaFiguresConfig config) {
+            for (var config in _figuresConfigs) {
                 $$<SambazaStorage>().remove(config.endpointWithParams, false);
-              },
-            );
-            _latestListBuilders.forEach(
-              (SambazaLatestListBuilder builder) {
+              }
+            for (var builder in _latestListBuilders) {
                 $$<SambazaStorage>().remove(builder.resource.endpoint, false);
-              },
-            );
+              }
           },
         ),
       );

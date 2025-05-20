@@ -7,9 +7,9 @@ class Telco extends SambazaModel<TelcoResource>
   String get country;
   String get name;
 
-  Telco.create([Map<String, dynamic> telco]) : super.create(telco);
+  Telco.create(super.telco) : super.create();
 
-  Telco.from(Map<String, dynamic> telco) : super.from(telco);
+  Telco.from(super.telco) : super.from();
 
   @override
   void init() {

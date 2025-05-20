@@ -15,53 +15,49 @@ class SambazaStorage extends SambazaInjectableService
   SharedPreferences _prefs;
   Future<void> ready;
 
-  SambazaStorage() {
+ SambazaStorage() {
     ready = SharedPreferences.getInstance().then(_init);
   }
 
   void _init(SharedPreferences prefs) {
     _prefs = prefs;
-    String persisted = _prefs.getString('SambazaCache');
-    String times = _prefs.getString('SambazaCacheTimes');
-    if (times != null) {
-      _cacheTimes.addAll(
-        json.decode(times).cast<String, int>().map<String, DateTime>(
-              (String key, int time) => MapEntry(
-                key,
-                DateTime.fromMillisecondsSinceEpoch(time),
-              ),
+    String? persisted = _prefs.getString('SambazaCache');
+    String? times = _prefs.getString('SambazaCacheTimes');
+    _cacheTimes.addAll(
+      json.decode(times!).cast<String, int>().map<String, DateTime>(
+            (String key, int time) => MapEntry(
+              key,
+              DateTime.fromMillisecondsSinceEpoch(time),
             ),
-      );
+          ),
+    );
+      _cache.addAll(json.decode(persisted!).cast<String, dynamic>());
+    List<String> toRemove = <String>[];
+    _cacheTimes.forEach(
+      (String key, DateTime expiry) {
+        DateTime now = DateTime.now();
+        Duration toExpiry = expiry.difference(now);
+        if (toExpiry.isNegative) {
+          toRemove.add(key);
+        } else {
+          Future.delayed(
+            toExpiry,
+            () {
+              if (_cacheTimes.containsKey(key) &&
+                  _cacheTimes[key]!.isAtSameMomentAs(expiry)) {
+                remove(key);
+              }
+            },
+          );
+        }
+      },
+    );
+    toRemove.forEach(
+      (String key) {
+        remove(key);
+      },
+    );
     }
-    if (persisted != null) {
-      _cache.addAll(json.decode(persisted).cast<String, dynamic>());
-      List<String> toRemove = <String>[];
-      _cacheTimes.forEach(
-        (String key, DateTime expiry) {
-          DateTime now = DateTime.now();
-          Duration toExpiry = expiry.difference(now);
-          if (toExpiry.isNegative) {
-            toRemove.add(key);
-          } else {
-            Future.delayed(
-              toExpiry,
-              () {
-                if (_cacheTimes.containsKey(key) &&
-                    _cacheTimes[key].isAtSameMomentAs(expiry)) {
-                  remove(key);
-                }
-              },
-            );
-          }
-        },
-      );
-      toRemove.forEach(
-        (String key) {
-          remove(key);
-        },
-      );
-    }
-  }
 
   void _persist() {
     _prefs.setString(
@@ -100,7 +96,7 @@ class SambazaStorage extends SambazaInjectableService
       duration,
       () {
         if (_cacheTimes.containsKey(key) &&
-            _cacheTimes[key].isAtSameMomentAs(expiry)) {
+            _cacheTimes[key]!.isAtSameMomentAs(expiry)) {
           remove(key);
         }
       },
@@ -109,16 +105,16 @@ class SambazaStorage extends SambazaInjectableService
 
   void clear() {
     List<String> toRemove = _cache.keys.toList();
-    toRemove.forEach(
-      (String key) {
+    for (var key in toRemove) {
         remove(key, false);
-      },
-    );
+      }
     notifyState();
   }
 
+  @override
   bool has(String key) => _cache.containsKey(key);
 
+  @override
   dynamic noSuchMethod(Invocation invocation) {
     String key = invocation.memberName.toString().replaceAll(
           '=',
@@ -137,6 +133,7 @@ class SambazaStorage extends SambazaInjectableService
     super.noSuchMethod(invocation);
   }
 
+  @override
   dynamic $get(String key, [dynamic defaultValue]) =>
       has(key) ? _cache[key] : defaultValue;
 
@@ -153,6 +150,7 @@ class SambazaStorage extends SambazaInjectableService
     _persist();
   }
 
+  @override
   void $set(String key, dynamic value, [notify = true]) {
     _cache[key] = value;
     if (notify) {

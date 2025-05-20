@@ -10,9 +10,9 @@ class Profile extends SambazaModel with SambazaModelTimestamps {
   set picture(p);
   String get user;
 
-  Profile.create([Map<String, dynamic> profile]) : super.create(profile);
+  Profile.create(super.profile) : super.create();
 
-  Profile.from(Map<String, dynamic> profile) : super.from(profile);
+  Profile.from(super.profile) : super.from();
 
   @override
   void init() {

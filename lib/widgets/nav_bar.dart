@@ -7,12 +7,12 @@ class SambazaNavBar extends StatelessWidget {
   final List<SambazaNav> navs;
   final void Function(int) onTap;
 
-  SambazaNavBar({this.activeIndex, this.navs, this.onTap});
+  const SambazaNavBar({super.key, required this.activeIndex, required this.navs, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     ThemeData themeData = Theme.of(context);
-    TextStyle textStyle = themeData.textTheme.caption;
+    TextStyle? textStyle = themeData.textTheme.bodySmall;
     return BottomNavigationBar(
       currentIndex: activeIndex,
       items: navs
@@ -28,13 +28,13 @@ class SambazaNavBar extends StatelessWidget {
                 color: themeData.primaryIconTheme.color,
                 semanticLabel: nav.label,
               ),
-              title: Text(
+              label: 
                 nav.title,
-                style: _isActive(nav)
-                    ? textStyle
-                        .merge(TextStyle(color: themeData.primaryColorDark))
-                    : textStyle,
-              ),
+              // style: _isActive(nav)
+              //       ? textStyle
+              //           .merge(TextStyle(color: themeData.primaryColorDark))
+              //       : textStyle,
+              
             ),
           )
           .toList(),

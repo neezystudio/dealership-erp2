@@ -38,9 +38,9 @@ class SambazaState extends Model {
   final SambazaServiceProvider $provider = SambazaServiceProvider();
 
   SambazaState() {
-    SambazaServices.factories.forEach((SambazaServiceFactory serviceFactory) {
+    for (var serviceFactory in SambazaServices.factories) {
       serviceFactory().register(this);
-    });
+    }
   }
 
   static SambazaState of(BuildContext context) =>
@@ -51,5 +51,5 @@ class SambazaState extends Model {
   Future<SambazaState> ready() =>
       $provide<SambazaStorage>().ready.then((x) => this);
 
-  T $provide<T extends SambazaService>() => $provider(T);
+  T $provide<T extends SambazaService>() => $provider(T) as T;
 }

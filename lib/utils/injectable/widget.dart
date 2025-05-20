@@ -5,6 +5,8 @@ import '../widget.dart';
 
 abstract class SambazaInjectableStatelessWidget extends SambazaStatelessWidget
     with SambazaInjectable {
+  SambazaInjectableStatelessWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     inject();

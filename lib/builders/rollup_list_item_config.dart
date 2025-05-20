@@ -7,18 +7,18 @@ class SambazaRollupListItemConfigBuilder
     extends SambazaListItemConfigBuilder<Rollup, SambazaModel> {
   SambazaRollupListItemConfigBuilder()
       : super(
-          group: (Rollup rollup, [SambazaModel listItem]) =>
+          group: (Rollup rollup, [SambazaModel? listItem]) =>
               SambazaListItemConfigBuilder.strFromTime(rollup.createdAt),
-          leading: (Rollup rollup, [SambazaModel listItem]) =>
+          leading: (Rollup rollup, [SambazaModel? listItem]) =>
               _buildLeadingIcon(rollup),
-          subtitle: (Rollup rollup, [SambazaModel listItem]) {
+          subtitle: (Rollup rollup, [SambazaModel? listItem]) {
             DateTime time = rollup.createdAt;
             return <String>[
               'KES ${rollup.value.toInt().toString()}',
               'Placed at ${time.hour.toString()}:${time.minute.toString()}',
             ];
           },
-          title: (Rollup rollup, [SambazaModel listItem]) =>
+          title: (Rollup rollup, [SambazaModel? listItem]) =>
               rollup.referenceNumber.toString(),
         );
 

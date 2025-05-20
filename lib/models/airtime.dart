@@ -14,9 +14,9 @@ class Airtime extends SambazaModel<AirtimeResource>
   String get telco;
   num get value;
 
-  Airtime.create([Map<String, dynamic> airtime]) : super.create(airtime);
+  Airtime.create(super.airtime) : super.create();
 
-  Airtime.from(Map<String, dynamic> airtime) : super.from(airtime);
+  Airtime.from(super.airtime) : super.from();
 
   @override
   void init() {

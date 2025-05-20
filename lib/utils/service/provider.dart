@@ -2,7 +2,7 @@ import 'container.dart';
 import '../service.dart';
 
 class SambazaServiceProvider {
-  static SambazaServiceContainer _container = SambazaServiceContainer();
+  static final SambazaServiceContainer _container = SambazaServiceContainer();
 
   const SambazaServiceProvider();
 

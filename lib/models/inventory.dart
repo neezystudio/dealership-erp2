@@ -11,9 +11,9 @@ abstract class Inventory<R extends SambazaResource> extends SambazaModel<R>
   num get quantity;
   num get value;
 
-  Inventory.create([Map<String, dynamic> inventory]) : super.create(inventory);
+  Inventory.create(super.inventory) : super.create();
 
-  Inventory.from(Map<String, dynamic> inventory) : super.from(inventory);
+  Inventory.from(super.inventory) : super.from();
 
   @override
   void init() {

@@ -13,25 +13,29 @@ import '../widgets/all.dart';
 class AppPage extends StatefulWidget {
   static String route = '/app ';
 
+  const AppPage({super.key});
+
   static AppPage create(BuildContext context) => AppPage();
 
+  @override
   _AppPageState createState() => _AppPageState();
 }
 
 class _AppPageState extends SambazaInjectableWidgetState<AppPage> {
   int _currentIndex = 0;
-  List<SambazaNav> _navs = <SambazaNav>[
+  final List<SambazaNav> _navs = <SambazaNav>[
     HomeNav(),
     BankingNav(),
     OrdersNav(),
     InventoryNav(),
   ];
+  @override
   List<Type> $inject = <Type>[SambazaAPI, SambazaAuth, SambazaStorage];
 
   @override
   initState() {
     super.initState();
-    if ($$<SambazaAuth>().user.role == SambazaAuthRole.branch_admin) {
+    if ($$<SambazaAuth>().user!.role == SambazaAuthRole.branch_admin) {
       _navs.add(BranchNav());
     }
   }
@@ -44,6 +48,7 @@ class _AppPageState extends SambazaInjectableWidgetState<AppPage> {
           itemBuilder:
               (BuildContext context) => <PopupMenuEntry<int>>[
                 PopupMenuItem<int>(
+                  value: 0,
                   child: ListTile(
                     leading: Icon(
                       Icons.power_settings_new,
@@ -51,7 +56,6 @@ class _AppPageState extends SambazaInjectableWidgetState<AppPage> {
                     ),
                     title: Text('Log Out'),
                   ),
-                  value: 0,
                 ),
               ],
           onSelected: (int value) {

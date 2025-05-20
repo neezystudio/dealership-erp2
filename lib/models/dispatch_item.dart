@@ -31,11 +31,12 @@ abstract class DispatchItem<R extends SambazaResource> extends SambazaModel
 
   String get $status => _status;
 
+  @override
   final List<Type> $inject = <Type>[SambazaAPI];
 
   DispatchItem.create(this.dispatchResource,
-      [Map<String, dynamic> dispatchItem])
-      : super.create(dispatchItem);
+      [Map<String, dynamic>? dispatchItem])
+      : super.create(dispatchItem!);
 
   DispatchItem.from(this.dispatchResource, Map<String, dynamic> dispatchItem)
       : super.from(dispatchItem);

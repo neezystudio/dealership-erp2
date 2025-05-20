@@ -7,5 +7,5 @@ class SambazaAuthUser {
   final String lastName;
   final SambazaAuthRole role;
   SambazaAuthUser(
-      {this.id, this.email, this.firstName, this.lastName, this.role});
+      {required this.id, required this.email, required this.firstName, required this.lastName, required this.role});
 }

@@ -12,17 +12,17 @@ class SambazaListItemConfig<M extends SambazaModel, I extends SambazaModel> {
 
   SambazaListItemConfig({
     this.group = '',
-    @required this.leading,
-    @required this.subtitle,
-    @required this.title,
-    this.trailing,
+    required this.leading,
+    required this.subtitle,
+    required this.title,
+    required this.trailing,
   });
 
   SambazaListItemConfig.from(
       SambazaListItemConfigBuilder<M, I> builder, M model,
-      [I listItem])
+      [I? listItem])
       : this(
-          group: builder.group(model, listItem),
+          group: builder.group(model, listItem!),
           leading: builder.leading(model, listItem),
           subtitle: builder.subtitle(model, listItem),
           title: builder.title(model, listItem),

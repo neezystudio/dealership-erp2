@@ -7,7 +7,7 @@ class UnknownPage extends StatelessWidget {
 
   final String name;
 
-  UnknownPage(this.name);
+  const UnknownPage(this.name, {super.key});
 
   static MaterialPageRoute create(RouteSettings settings) => MaterialPageRoute(
     builder: (BuildContext context) => UnknownPage(settings.name.toString()),
@@ -17,6 +17,6 @@ class UnknownPage extends StatelessWidget {
   Widget build(BuildContext context) => SambazaError(
     SambazaException(
       'The page you were looking for does not exist. Ref: $name',
-    )
+    ), onButtonPressed: () {  },
   );
 }

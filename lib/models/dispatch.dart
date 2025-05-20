@@ -10,9 +10,9 @@ abstract class Dispatch<R extends SambazaResource> extends SambazaModel<R>
   List<DispatchItem> get dispatchItems;
   num get value;
 
-  Dispatch.create([Map<String, dynamic> dispatch]) : super.create(dispatch);
+  Dispatch.create(super.dispatch) : super.create();
 
-  Dispatch.from(Map<String, dynamic> dispatch) : super.from(dispatch);
+  Dispatch.from(super.dispatch) : super.from();
 
   @override
   void init() {

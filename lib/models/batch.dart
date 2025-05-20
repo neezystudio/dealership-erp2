@@ -6,6 +6,7 @@ import '../utils/all.dart';
 
 class Batch extends SambazaModel<BatchResource>
     with SambazaInjectable, SambazaModelFlags, SambazaModelTimestamps {
+  @override
   final List<Type> $inject = <Type>[SambazaAPI];
 
   String get $closeTime;
@@ -15,9 +16,9 @@ class Batch extends SambazaModel<BatchResource>
   String get $startTime;
   DateTime get startTime => DateTime.parse($startTime);
 
-  Batch.create([Map<String, dynamic> batch]) : super.create(batch);
+  Batch.create([Map<String, dynamic>? batch]) : super.create(batch!);
 
-  Batch.from(Map<String, dynamic> batch) : super.from(batch);
+  Batch.from(super.batch) : super.from();
 
   @override
   void init() {

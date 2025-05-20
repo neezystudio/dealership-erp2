@@ -5,11 +5,12 @@ import '../pages/all.dart';
 import '../utils/all.dart';
 
 class SambazaError extends SambazaInjectableStatelessWidget {
+  @override
   final List<Type> $inject = <Type>[SambazaAuth, SambazaStorage];
   final SambazaException exception;
   final void Function() onButtonPressed;
 
-  SambazaError(this.exception, {this.onButtonPressed});
+  SambazaError(this.exception, {super.key, required this.onButtonPressed});
 
   void _logout() {
     $$<SambazaAuth>().clear();
@@ -31,35 +32,29 @@ class SambazaError extends SambazaInjectableStatelessWidget {
       print(e);
     }
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Icon(
           Icons.error,
-          color: themeData.errorColor,
+          color: themeData.indicatorColor,
           semanticLabel: 'Error',
           size: themeData.iconTheme.size,
         ),
-        Text(
-          exception.title,
-          style: themeData.textTheme.headline,
-        ),
-        Text(
-          exception.message,
-          style: themeData.textTheme.caption,
-        ),
-        OutlineButton(
+        Text(exception.title, style: themeData.textTheme.headlineMedium),
+        Text(exception.message, style: themeData.textTheme.labelMedium),
+        OutlinedButton(
           child: Text(
             'OK',
             style: TextStyle(
               color: Colors.black87,
               inherit: true,
-            ).merge(themeData.textTheme.button),
+            ).merge(themeData.textTheme.labelLarge),
           ),
-          textColor: Colors.black87,
+
           onPressed: onPressed,
         ),
       ],
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisSize: MainAxisSize.min,
     );
   }
 }

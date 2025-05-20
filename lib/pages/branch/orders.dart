@@ -16,6 +16,7 @@ class BranchOrdersPage extends SambazaPage {
 }
 
 class _BranchOrdersView extends SambazaInjectableStatelessWidget {
+  @override
   final List<Type> $inject = <Type>[SambazaAuth, SambazaStorage];
 
   @override
@@ -29,13 +30,13 @@ class _BranchOrdersView extends SambazaInjectableStatelessWidget {
                 listBuilder.resource.endpoint, listBuilder.requestParams);
             return RefreshIndicator(
               child: ListView(
-                children: <Widget>[
-                  listBuilder(context),
-                ],
                 padding: EdgeInsets.only(
                   bottom: 80,
                   top: 8,
                 ),
+                children: <Widget>[
+                  listBuilder(context),
+                ],
               ),
               onRefresh: () => Future.sync(() {
                 $$<SambazaStorage>().remove(endpoint);
@@ -68,6 +69,7 @@ class _BranchOrdersView extends SambazaInjectableStatelessWidget {
 
   Widget _buildTrailing(Order order, [SambazaModel oI]) => GestureDetector(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Icon(
               Icons.edit,
@@ -82,7 +84,6 @@ class _BranchOrdersView extends SambazaInjectableStatelessWidget {
               ),
             ),
           ],
-          mainAxisAlignment: MainAxisAlignment.center,
         ),
         onTap: () {
           Navigator.pushNamed(context, EditOrderPage.route, arguments: order);

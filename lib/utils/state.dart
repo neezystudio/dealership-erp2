@@ -5,10 +5,11 @@ import '../state.dart';
 abstract class SambazaWidgetState<T extends StatefulWidget> extends State<T> {
   SambazaState get state => SambazaState.of(context);
 
+  @override
   Widget build(BuildContext context) => template(context);
 
   void showSnackBar(String title, String message) {
-    Scaffold.of(context).showSnackBar(SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Row(
         children: <Widget>[
           Text(title),

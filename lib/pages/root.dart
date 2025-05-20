@@ -12,6 +12,8 @@ import '../widgets/error.dart';
 class RootPage extends StatefulWidget {
   static String route = '/';
 
+  const RootPage({super.key});
+
   static RootPage create(BuildContext context) => RootPage();
 
   @override
@@ -19,8 +21,9 @@ class RootPage extends StatefulWidget {
 }
 
 class _RootPageState extends SambazaInjectableWidgetState<RootPage> {
-  FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
+  @override
   final List<Type> $inject = <Type>[SambazaAuth, SambazaStorage];
 
   static Future<void> myBackgroundMessageHandler(RemoteMessage message) async {
@@ -86,9 +89,9 @@ class _RootPageState extends SambazaInjectableWidgetState<RootPage> {
           } else if (snapshot.hasError) {
             final error = snapshot.error;
             if (error is SambazaException) {
-              return SambazaError(error);
+              return SambazaError(error, onButtonPressed: () {  },);
             } else {
-              return SambazaError(SambazaException(error?.toString() ?? 'Unknown error'));
+              return SambazaError(SambazaException(error?.toString() ?? 'Unknown error'), onButtonPressed: () {  },);
             }
           }
 

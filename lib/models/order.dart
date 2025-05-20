@@ -15,9 +15,9 @@ class Order extends SambazaModel<OrderResource> with SambazaModelFlags, SambazaM
   String get user;
   num get value;
 
-  Order.create([Map<String, dynamic> order]) : super.create(order);
+  Order.create(super.order) : super.create();
 
-  Order.from(Map<String, dynamic> order) : super.from(order);
+  Order.from(super.order) : super.from();
 
   @override
   init() {
@@ -35,7 +35,7 @@ class Order extends SambazaModel<OrderResource> with SambazaModelFlags, SambazaM
     listOn<OrderItem>(
         'order_items',
         List<Map<String, dynamic>>.from(fields['order_items']),
-        ([Map<String, dynamic> oI]) => OrderItem.create(oI));
+        ([Map<String, dynamic>? oI]) => OrderItem.create(oI!));
     resource = OrderResource();
     super.init();
   }

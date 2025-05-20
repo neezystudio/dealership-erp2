@@ -36,6 +36,7 @@ class _ServiceRequestsView extends StatefulWidget {
 }
 
 class _ServiceRequestsViewState extends SambazaInjectableWidgetState {
+  @override
   final List<Type> $inject = <Type>[SambazaAuth, SambazaStorage];
   SambazaListBuilder _listBuilder;
 
@@ -54,12 +55,12 @@ class _ServiceRequestsViewState extends SambazaInjectableWidgetState {
   @override
   Widget template(BuildContext context) => RefreshIndicator(
         child: ListView(
-          children: <Widget>[_listBuilder(context)],
           padding: EdgeInsets.only(
             bottom: 8,
             top: 8,
           ),
           scrollDirection: Axis.vertical,
+          children: <Widget>[_listBuilder(context)],
         ),
         onRefresh: () => Future.sync(() {
           $$<SambazaStorage>().remove(_listBuilder.resource.endpoint);

@@ -6,12 +6,18 @@ import '../utils/all.dart';
 import '../widgets/all.dart';
 
 class BranchNav implements SambazaNav {
+  @override
   final bool hasFab = false;
+  @override
   final IconData icon = Icons.business;
+  @override
   final String label = 'Branch tab';
+  @override
   final _BranchNavView view = _BranchNavView();
+  @override
   final String title = 'Branch';
 
+  @override
   void Function() onFabPressed(BuildContext context) => () {};
 }
 
@@ -74,6 +80,7 @@ class _BranchNavView extends SambazaInjectableStatelessWidget {
       title: 'LPOs',
     ),
   ];
+  @override
   final List<Type> $inject = <Type>[SambazaStorage];
 
   MediaQueryData get mediaQuery => MediaQuery.of(context);
@@ -81,6 +88,7 @@ class _BranchNavView extends SambazaInjectableStatelessWidget {
   @override
   Widget template(BuildContext context) => RefreshIndicator(
         child: ListView(
+          shrinkWrap: true,
           children: <Widget>[
             GridView.count(
               children: _figuresConfigs
@@ -107,12 +115,11 @@ class _BranchNavView extends SambazaInjectableStatelessWidget {
               shrinkWrap: true,
             ),
           ],
-          shrinkWrap: true,
         ),
         onRefresh: () => Future.microtask(() {
-          _figuresConfigs.forEach((SambazaFiguresConfig config) {
+          for (var config in _figuresConfigs) {
             $$<SambazaStorage>().remove(config.endpointWithParams, false);
-          });
+          }
         }),
       );
 }
@@ -122,12 +129,13 @@ class _BranchManagementCard extends StatelessWidget {
   final String route;
   final String title;
 
-  _BranchManagementCard({this.icon, this.route, this.title});
+  const _BranchManagementCard({required this.icon, required this.route, required this.title});
 
   @override
   Widget build(BuildContext context) => GestureDetector(
         child: Card(
             child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Icon(
               icon,
@@ -136,7 +144,6 @@ class _BranchManagementCard extends StatelessWidget {
             ),
             Text(title),
           ],
-          mainAxisAlignment: MainAxisAlignment.center,
         )),
         onTap: () {
           Navigator.pushNamed(context, route);

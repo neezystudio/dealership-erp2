@@ -14,6 +14,7 @@ final Map<String, LPOStatus> _lpoStatusMap =
             MapEntry(l.toString().split('.').last, l));
 
 class LPO extends SambazaModel<LPOResource> with SambazaInjectable, SambazaModelFlags, SambazaModelTimestamps {
+  @override
   final List<Type> $inject = <Type>[SambazaAPI];
 
   String get batch;
@@ -21,12 +22,12 @@ class LPO extends SambazaModel<LPOResource> with SambazaInjectable, SambazaModel
   String get company;
   List<LPOItem> get lpoItems;
   String get lpoNumber;
-  LPOStatus get status => _lpoStatusMap[$status];
+  LPOStatus? get status => _lpoStatusMap[$status];
   String get $status => fields['status'];
 
-  LPO.create([Map<String, dynamic> lpo]) : super.create(lpo);
+  LPO.create(super.lpo) : super.create();
 
-  LPO.from(Map<String, dynamic> lpo) : super.from(lpo);
+  LPO.from(super.lpo) : super.from();
 
   @override
   init() {
@@ -41,7 +42,7 @@ class LPO extends SambazaModel<LPOResource> with SambazaInjectable, SambazaModel
     listOn<LPOItem>(
         'lpo_items',
         List<Map<String, dynamic>>.from(fields['lpo_items']),
-        ([Map<String, dynamic> lI]) => LPOItem.create(LPOResource(), lI));
+        ([Map<String, dynamic>? lI]) => LPOItem.create(LPOResource(), lI));
     super.init();
     resource = LPOResource();
   }

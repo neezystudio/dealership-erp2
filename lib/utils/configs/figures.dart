@@ -18,8 +18,8 @@ class SambazaFiguresConfig {
   final Map<String, dynamic> params;
   final String type;
 
-  SambazaFiguresConfig(this.type, this.endpoint, this.period, [Map<String, dynamic> options]): params = options ?? <String, dynamic> {} {
-    params.addAll(_commissionParamMap[period]);
+  SambazaFiguresConfig(this.type, this.endpoint, this.period, [Map<String, dynamic>? options]): params = options ?? <String, dynamic> {} {
+    params.addAll(_commissionParamMap[period]!);
   }
 
   String get endpointWithParams => SambazaAPIEndpoints.withParams(endpoint, params);

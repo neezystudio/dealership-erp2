@@ -4,10 +4,10 @@ import '../resource.dart';
 
 abstract class SambazaInjectableModel<R extends SambazaResource>
     extends SambazaModel<R> with SambazaInjectable {
-  SambazaInjectableModel.create([Map<String, dynamic> fields])
-      : super.create(fields);
+  SambazaInjectableModel.create(super.fields)
+      : super.create();
 
-  SambazaInjectableModel.from(Map<String, dynamic> fields) : super.from(fields);
+  SambazaInjectableModel.from(super.fields) : super.from();
 
   @override
   void init() {

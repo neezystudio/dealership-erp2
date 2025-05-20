@@ -8,12 +8,18 @@ import '../utils/all.dart';
 import '../widgets/all.dart';
 
 class InventoryNav implements SambazaNav {
+  @override
   final bool hasFab = false;
+  @override
   final IconData icon = Icons.store_mall_directory;
+  @override
   final String label = 'Inventory tab';
+  @override
   final _InventoryNavView view = _InventoryNavView();
+  @override
   final String title = 'Inventory';
 
+  @override
   void Function() onFabPressed(
     BuildContext context,
   ) =>
@@ -21,6 +27,7 @@ class InventoryNav implements SambazaNav {
 }
 
 class _InventoryNavView extends StatefulWidget with SambazaInjectable {
+  @override
   final List<Type> $inject = <Type>[
     SambazaAuth,
   ];
@@ -35,9 +42,9 @@ class _InventoryNavView extends StatefulWidget with SambazaInjectable {
           hasFab: false,
           listBuilder: SambazaListBuilder<DSAInventory, SambazaModel>(
             listItemConfigBuilder: SambazaInventoryListItemConfigBuilder(),
-            modelFactory: ([Map<String, dynamic> fields]) =>
+            modelFactory: ([Map<String, dynamic>? fields]) =>
                 DSAInventory.create(fields),
-            resource: DSAInventoryResource(),
+            resource: DSAInventoryResource(), requestParams: {},
           ),
           label: 'Inventory',
         ),
@@ -45,11 +52,11 @@ class _InventoryNavView extends StatefulWidget with SambazaInjectable {
           hasFab: false,
           listBuilder: SambazaListBuilder<StockTransfer, SambazaModel>(
             listItemConfigBuilder: SambazaStockTransferListItemConfigBuilder(
-              $$<SambazaAuth>().user.id,
+              $$<SambazaAuth>().user!.id,
             ),
-            modelFactory: ([Map<String, dynamic> fields]) =>
-                StockTransfer.create(fields),
-            resource: StockTransferResource(),
+            modelFactory: ([Map<String, dynamic>? fields]) =>
+                StockTransfer.create(fields!),
+            resource: StockTransferResource(), requestParams: {},
           ),
           label: 'Stock Transfers',
         ),
@@ -80,7 +87,7 @@ class _InventoryNavViewState extends SambazaWidgetState<_InventoryNavView>
         SingleTickerProviderStateMixin,
         SambazaStateNotifier,
         SambazaWidgetStateStateNotifier {
-  TabController _tabController;
+  late TabController _tabController;
 
   @override
   Widget template(
@@ -89,11 +96,11 @@ class _InventoryNavViewState extends SambazaWidgetState<_InventoryNavView>
       Column(
         children: <Widget>[
           Container(
+            color: Colors.cyanAccent,
             child: SambazaTabBar(
               configs: widget.tabConfigs,
               controller: _tabController,
             ),
-            color: Colors.cyanAccent,
           ),
           Expanded(
             child: SambazaTabBarView(

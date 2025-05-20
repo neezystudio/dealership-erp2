@@ -7,18 +7,20 @@ import '../widgets/all.dart';
 
 class SambazaDispatchListItemConfigBuilder<D extends Dispatch,
     DI extends DispatchItem> extends SambazaListItemConfigBuilder<D, DI> {
-  static Future<SambazaModels<Telco>> _telcoFuture = SambazaModel.list<Telco>(
+  static final Future<SambazaModels<Telco>> _telcoFuture = SambazaModel.list<Telco>(
     TelcoResource(),
-    ([Map<String, dynamic> fields]) => Telco.create(fields),
+    ([Map<String, dynamic>? fields]) => Telco.create(fields!),
   );
+  @override
   final List<String> Function(D, [DI]) subtitle;
+  @override
   final String Function(D, [DI]) title;
 
   SambazaDispatchListItemConfigBuilder(
-      {@required this.subtitle, @required this.title})
+      {required this.subtitle, required this.title})
       : super(
-          group: (D dispatch, [DI dispatchItem]) =>
-              SambazaListItemConfigBuilder.strFromTime(dispatchItem.createdAt),
+          group: (D dispatch, [DI? dispatchItem]) =>
+              SambazaListItemConfigBuilder.strFromTime(dispatchItem!.createdAt),
           leading: _buildLeading,
           subtitle: subtitle,
           title: title,
@@ -27,10 +29,10 @@ class SambazaDispatchListItemConfigBuilder<D extends Dispatch,
 
   static List<Widget>
       _buildLeading<D extends Dispatch, DI extends DispatchItem>(D dispatch,
-              [DI dispatchItem]) =>
+              [DI? dispatchItem]) =>
           <Widget>[
             Text(
-              dispatchItem.airtime.value.toInt().toString(),
+              dispatchItem!.airtime.value.toInt().toString(),
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 14,
@@ -43,7 +45,7 @@ class SambazaDispatchListItemConfigBuilder<D extends Dispatch,
               ) {
                 if (snapshot.hasData) {
                   return Text(
-                    snapshot.data.list
+                    snapshot.data!.list
                         .firstWhere(
                           (Telco telco) => telco.id == dispatchItem.airtime.telco,
                         )
@@ -66,6 +68,6 @@ class SambazaDispatchListItemConfigBuilder<D extends Dispatch,
 
   static Widget _buildTrailing<D extends Dispatch, DI extends DispatchItem>(
           D dispatch,
-          [DI dispatchItem]) =>
-      DispatchItemTrailing(dispatchItem);
+          [DI? dispatchItem]) =>
+      DispatchItemTrailing(dispatchItem!);
 }

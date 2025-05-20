@@ -7,22 +7,22 @@ import '../widgets/all.dart';
 
 class SambazaStockTransferListItemConfigBuilder
     extends SambazaListItemConfigBuilder<StockTransfer, SambazaModel> {
-  static Future<SambazaModels<Airtime>> _airtimeFuture = SambazaModel.list(
+  static final Future<SambazaModels<Airtime>> _airtimeFuture = SambazaModel.list(
     AirtimeResource(),
     ([
-      Map<String, dynamic> f,
+      Map<String, dynamic>? f,
     ]) =>
         Airtime.create(
-      f,
+      f!,
     ),
   );
-  static Future<SambazaModels<Telco>> _telcoFuture = SambazaModel.list(
+  static final Future<SambazaModels<Telco>> _telcoFuture = SambazaModel.list(
     TelcoResource(),
     ([
-      Map<String, dynamic> f,
+      Map<String, dynamic>? f,
     ]) =>
         Telco.create(
-      f,
+      f!,
     ),
   );
 
@@ -31,7 +31,7 @@ class SambazaStockTransferListItemConfigBuilder
   ) : super(
           group: (
             StockTransfer sT, [
-            SambazaModel i,
+            SambazaModel? i,
           ]) =>
               SambazaListItemConfigBuilder.strFromTime(
             sT.createdAt,
@@ -39,19 +39,19 @@ class SambazaStockTransferListItemConfigBuilder
           leading: _buildLeading,
           subtitle: (
             StockTransfer sT, [
-            SambazaModel i,
+            SambazaModel? i,
           ]) =>
               <String>[
             '${sT.$originType} - ${sT.$destinationType}',
           ],
           title: (
             StockTransfer sT, [
-            SambazaModel i,
+            SambazaModel? i,
           ]) =>
               '${sT.quantity.toString()} Cards @ KES ${sT.value.toInt().toString()}',
           trailing: (
             StockTransfer sT, [
-            SambazaModel i,
+            SambazaModel? i,
           ]) =>
               StockTransferTrailing(
             entity,
@@ -61,7 +61,7 @@ class SambazaStockTransferListItemConfigBuilder
 
   static List<Widget> _buildLeading(
     StockTransfer sT, [
-    SambazaModel i,
+    SambazaModel? i,
   ]) =>
       <Widget>[
         _airtimeDependentBuilder(
@@ -82,8 +82,8 @@ class SambazaStockTransferListItemConfigBuilder
 
   static FutureBuilder<SambazaModels<Airtime>> _airtimeDependentBuilder(
     StockTransfer stockTransfer,
-    Widget Function(Airtime) _fulfilledWidgetBuilder,
-    Widget _progressWidget,
+    Widget Function(Airtime) fulfilledWidgetBuilder,
+    Widget progressWidget,
   ) =>
       FutureBuilder<SambazaModels<Airtime>>(
         builder: (
@@ -91,10 +91,10 @@ class SambazaStockTransferListItemConfigBuilder
           AsyncSnapshot<SambazaModels<Airtime>> snapshot,
         ) {
           if (snapshot.hasData) {
-            Airtime airtime = snapshot.data.list.firstWhere(
+            Airtime airtime = snapshot.data!.list.firstWhere(
               (Airtime a) => stockTransfer.airtime == a.id,
             );
-            return _fulfilledWidgetBuilder(
+            return fulfilledWidgetBuilder(
               airtime,
             );
           } else if (snapshot.hasError) {
@@ -106,7 +106,7 @@ class SambazaStockTransferListItemConfigBuilder
               semanticLabel: 'error',
             );
           }
-          return _progressWidget;
+          return progressWidget;
         },
         future: _airtimeFuture,
       );
@@ -132,7 +132,7 @@ class SambazaStockTransferListItemConfigBuilder
         ) {
           if (snapshot.hasData) {
             return Text(
-              snapshot.data.list
+              snapshot.data!.list
                   .firstWhere(
                     (Telco t) => airtime.telco == t.id,
                   )

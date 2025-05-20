@@ -5,6 +5,8 @@ import '../state.dart';
 abstract class SambazaStatelessWidget extends StatelessWidget {
   final Map<String, dynamic> vars = <String, dynamic>{};
 
+   SambazaStatelessWidget({super.key});
+
   BuildContext get context => vars['context'];
 
   SambazaState get state => vars['state'];
@@ -17,7 +19,7 @@ abstract class SambazaStatelessWidget extends StatelessWidget {
   }
 
   void showSnackBar(String title, String message) {
-    Scaffold.of(context).showSnackBar(SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Row(
         children: <Widget>[
           Text(title),

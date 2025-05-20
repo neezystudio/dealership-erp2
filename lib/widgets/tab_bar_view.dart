@@ -7,12 +7,14 @@ import '../utils/injectable/widget.dart';
 class SambazaTabBarView extends SambazaInjectableStatelessWidget {
   final List<SambazaTabConfig> configs;
   final TabController controller;
+  @override
   final List<Type> $inject = <Type>[SambazaStorage];
 
-  SambazaTabBarView({@required this.configs, @required this.controller});
+  SambazaTabBarView({super.key, required this.configs, required this.controller});
 
   @override
   Widget template(BuildContext context) => TabBarView(
+        controller: controller,
         children: configs
             .map<Widget>((SambazaTabConfig config) => RefreshIndicator(
                   child: ListView(
@@ -29,6 +31,5 @@ class SambazaTabBarView extends SambazaInjectableStatelessWidget {
                   }),
                 ))
             .toList(),
-        controller: controller,
       );
 }

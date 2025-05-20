@@ -7,6 +7,7 @@ import '../services/storage.dart';
 
 class SambazaResource with SambazaInjectable {
   final SambazaAPIEndpointGenerator endpointGenerator;
+  @override
   final List<Type> $inject = <Type>[
     SambazaAPI,
     SambazaStorage,
@@ -24,7 +25,7 @@ class SambazaResource with SambazaInjectable {
 
   Future<Map<String, dynamic>> _get(
     String path, [
-    Map<String, dynamic> params,
+    Map<String, dynamic>? params,
   ]) async {
     String urlWithParams = SambazaAPIEndpoints.urlWithParams(
       path,
@@ -41,7 +42,7 @@ class SambazaResource with SambazaInjectable {
     }
     String result = await $$<SambazaAPI>().fetch(
       path,
-      params,
+      params!,
     );
     Map<String, dynamic> decoded = Map<String, dynamic>.from(
       json.decode(
@@ -68,7 +69,7 @@ class SambazaResource with SambazaInjectable {
 
   Future<Map<String, dynamic>> $get([
     String id = '',
-    Map<String, dynamic> params,
+    Map<String, dynamic>? params,
   ]) =>
       _get(
         '$endpoint${(id ?? '').isEmpty ? '' : '$id/'}',
@@ -76,7 +77,7 @@ class SambazaResource with SambazaInjectable {
       );
 
   Future<List<Map<String, dynamic>>> $list([
-    Map<String, dynamic> params,
+    Map<String, dynamic>? params,
   ]) async {
     Map<String, dynamic> decoded = await _get(
       endpoint,
@@ -89,12 +90,12 @@ class SambazaResource with SambazaInjectable {
 
   Future<Map<String, dynamic>> $save(
     Map<String, dynamic> body, [
-    Map<String, dynamic> params
+    Map<String, dynamic>? params
   ]) async {
     String result = await $$<SambazaAPI>().send(
-      '$endpoint',
+      endpoint,
       body,
-      params,
+      params!,
     );
     return Map<String, dynamic>.from(
       json.decode(
@@ -106,13 +107,13 @@ class SambazaResource with SambazaInjectable {
   Future<Map<String, dynamic>> $update(
     String id,
     Map<String, dynamic> body, [
-    Map<String, dynamic> params,
+    Map<String, dynamic>? params,
   ]) async {
     String path = '$endpoint$id/';
     String result = await $$<SambazaAPI>().update(
       path,
       body,
-      params,
+      params!,
     );
     Map<String, dynamic> decoded = Map<String, dynamic>.from(
       json.decode(

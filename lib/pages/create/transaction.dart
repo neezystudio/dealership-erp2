@@ -9,6 +9,8 @@ import '../../widgets/all.dart';
 class CreateTransactionPage extends StatelessWidget {
   static String route = '/transactions/create';
 
+  const CreateTransactionPage({super.key});
+
   static CreateTransactionPage create(BuildContext context) =>
       CreateTransactionPage();
 
@@ -60,26 +62,30 @@ class _CreateTransactionFormState
       placeholder: 'Add some notes',
     ),
   ];
+  @override
   final List<Type> $inject = <Type>[SambazaAPI, SambazaStorage];
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
-    _fields.forEach((SambazaField field) => field.destroy());
+    for (var field in _fields) {
+      field.destroy();
+    }
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
-    _fields.forEach((SambazaField field) {
+    for (var field in _fields) {
       _addFieldBuilder(field, field.name);
-    });
+    }
   }
 
   @override
   Widget template(BuildContext context) => Form(
-        autovalidate: _autovalidate,
+        autovalidateMode: _autovalidate ,
+        key: _formKey,
         child: Column(
           children: <Widget>[
             _buildField('reference_number'),
@@ -119,7 +125,6 @@ class _CreateTransactionFormState
           ],
           mainAxisSize: MainAxisSize.min,
         ),
-        key: _formKey,
       );
 
   String _addFieldBuilder(SambazaField field, [String builderName]) {

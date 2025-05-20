@@ -8,6 +8,8 @@ import '../widgets/loader.dart';
 class ForgotPasswordPage extends StatelessWidget {
   static String route = '/forgot-password';
 
+  const ForgotPasswordPage({super.key});
+
   static ForgotPasswordPage create(BuildContext context) =>
       ForgotPasswordPage();
 
@@ -30,8 +32,8 @@ class ForgotPasswordPage extends StatelessWidget {
         ),
         Expanded(
           child: Container(
-            child: _ForgotPasswordForm(),
             padding: EdgeInsets.all(16.0),
+            child: _ForgotPasswordForm(),
           ),
         ),
       ],
@@ -56,6 +58,7 @@ class _ForgotPasswordFormState
     placeholder: 'Enter your email address',
     require: true,
   );
+  @override
   final List<Type> $inject = <Type>[SambazaAPI];
   final SambazaResource _resource = SambazaResource(
     SambazaAPIEndpoints.accounts,
@@ -83,6 +86,7 @@ class _ForgotPasswordFormState
   @override
   Widget template(BuildContext context) => Form(
     autovalidateMode: _autovalidateMode,
+    key: _formKey,
 
     child: Column(
       children: <Widget>[
@@ -119,7 +123,6 @@ class _ForgotPasswordFormState
       ],
       mainAxisAlignment: MainAxisAlignment.end,
     ),
-    key: _formKey,
   );
 
   void _handleError(Exception error) {

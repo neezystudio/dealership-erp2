@@ -12,9 +12,9 @@ class Rollup extends SambazaModel<RollupResource>
   User get user;
   num get value;
 
-  Rollup.create([Map<String, dynamic> fields]) : super.create(fields);
+  Rollup.create(super.fields) : super.create();
 
-  Rollup.from(Map<String, dynamic> fields) : super.from(fields);
+  Rollup.from(super.fields) : super.from();
 
   @override
   void init() {

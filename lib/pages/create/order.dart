@@ -10,13 +10,13 @@ import '../../widgets/all.dart';
 class CreateOrderPage extends StatelessWidget {
   static String route = '/orders/create';
 
+  const CreateOrderPage({super.key});
+
   static CreateOrderPage create(BuildContext context) => CreateOrderPage();
 
   @override
-  Widget build(BuildContext context) => SambazaCreatePage(
-        form: _CreateOrderForm(),
-        title: 'Place a new order',
-      );
+  Widget build(BuildContext context) =>
+      SambazaCreatePage(form: _CreateOrderForm(), title: 'Place a new order');
 }
 
 class _CreateOrderForm extends StatefulWidget {
@@ -26,8 +26,9 @@ class _CreateOrderForm extends StatefulWidget {
 
 class _CreateOrderFormState
     extends SambazaInjectableWidgetState<_CreateOrderForm> {
-  bool _autovalidate = false, _valid = false, _processing = false;
-  Future<List<Airtime>> _airtimeListFuture;
+  AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
+   bool _valid = false, _processing = false;
+  late Future<List<Airtime>> _airtimeListFuture;
   final Map<String, SambazaFieldBuilder> _fieldBuilders =
       <String, SambazaFieldBuilder>{};
   final List<SambazaField> _fields = <SambazaField>[
@@ -38,28 +39,32 @@ class _CreateOrderFormState
     ),
   ];
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  @override
   final List<Type> $inject = <Type>[SambazaAPI, SambazaStorage];
-  List<List<String>> _nestedFieldBuilderSets = <List<String>>[];
+  final List<List<String>> _nestedFieldBuilderSets = <List<String>>[];
 
   ThemeData get themeData => Theme.of(context);
 
   @override
   void dispose() {
-    _fieldBuilders.values
-        .forEach((SambazaFieldBuilder builder) => builder.field.destroy());
+    for (var builder in _fieldBuilders.values) {
+      builder.field.destroy();
+    }
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
-    _airtimeListFuture =
-        _listAirtimes().then((SambazaModels<Airtime> airtimes) async {
+    _airtimeListFuture = _listAirtimes().then((
+      SambazaModels<Airtime> airtimes,
+    ) async {
       SambazaModels<Telco> telcos = await _listTelcos();
-      List<Airtime> airtimeList = airtimes.list.map<Airtime>((Airtime a) {
-        a.$telco = telcos.list.firstWhere((Telco t) => t.id == a.telco);
-        return a;
-      }).toList();
+      List<Airtime> airtimeList =
+          airtimes.list.map<Airtime>((Airtime a) {
+            a.$telco = telcos.list.firstWhere((Telco t) => t.id == a.telco);
+            return a;
+          }).toList();
       _fields.addAll(<SambazaField>[
         SambazaField.select<Airtime>(
           label: 'Airtime',
@@ -77,9 +82,9 @@ class _CreateOrderFormState
           require: true,
         ),
       ]);
-      _fields.forEach((SambazaField field) {
+      for (var field in _fields) {
         _addFieldBuilder(field, field.name);
-      });
+      }
       _nestedFieldBuilderSets.add(<String>['airtime', 'quantity']);
       return airtimeList;
     });
@@ -87,16 +92,16 @@ class _CreateOrderFormState
 
   @override
   Widget template(BuildContext context) => FutureBuilder<List<Airtime>>(
-        builder: (BuildContext context, AsyncSnapshot<List<Airtime>> snapshot) {
-          if (snapshot.hasData) {
-            return _buildForm(snapshot.data);
-          } else if (snapshot.hasError) {
-            return SambazaError(snapshot.error);
-          }
-          return SambazaLoader('Loading...');
-        },
-        future: _airtimeListFuture,
-      );
+    builder: (BuildContext context, AsyncSnapshot<List<Airtime>> snapshot) {
+      if (snapshot.hasData) {
+        return _buildForm(snapshot.data);
+      } else if (snapshot.hasError) {
+        return SambazaError(snapshot.error);
+      }
+      return SambazaLoader('Loading...');
+    },
+    future: _airtimeListFuture,
+  );
 
   String _addFieldBuilder(SambazaField field, [String builderName]) {
     builderName ??= '${field.name}${_fieldBuilders.length}';
@@ -105,63 +110,68 @@ class _CreateOrderFormState
     return builderName;
   }
 
-  void _addNestedFieldBuilderSet(List<Airtime> airtimes) =>
-      setState(() => _nestedFieldBuilderSets.add(<String>[
-            _addFieldBuilder(SambazaField.select<Airtime>(
-              label: 'Airtime',
-              name: 'airtime',
-              options: airtimes,
-              optionBuilder: _buildAirtimeOption,
-              require: true,
-              type: 'text',
-            )),
-            _addFieldBuilder(SambazaField.number(
-              label: 'Quantity',
-              name: 'quantity',
-              placeholder: 'Quantity',
-              step: 1,
-              require: true,
-            )),
-          ]));
+  void _addNestedFieldBuilderSet(List<Airtime> airtimes) => setState(
+    () => _nestedFieldBuilderSets.add(<String>[
+      _addFieldBuilder(
+        SambazaField.select<Airtime>(
+          label: 'Airtime',
+          name: 'airtime',
+          options: airtimes,
+          optionBuilder: _buildAirtimeOption,
+          require: true,
+          type: 'text',
+        ),
+      ),
+      _addFieldBuilder(
+        SambazaField.number(
+          label: 'Quantity',
+          name: 'quantity',
+          placeholder: 'Quantity',
+          step: 1,
+          require: true,
+        ),
+      ),
+    ]),
+  );
 
   SambazaOption _buildAirtimeOption(Airtime airtime) => SambazaOption(
-        optionText:
-            '${airtime.$telco.name} - Bamba ${airtime.value.toInt().toString()}',
-        value: airtime.id,
-      );
+    optionText:
+        '${airtime.$telco.name} - Bamba ${airtime.value.toInt().toString()}',
+    value: airtime.id,
+  );
 
   Widget _buildField(String name) => _fieldBuilders[name].build(
-        _processing,
-        false,
-        _fieldBuilders.values.last.field.name == name,
-      );
+    _processing,
+    false,
+    _fieldBuilders.values.last.field.name == name,
+  );
 
   Form _buildForm(List<Airtime> airtimeList) => Form(
-        autovalidate: _autovalidate,
-        child: Column(
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                Text(
-                  'Order Items',
-                  style: themeData.textTheme.body2,
-                ),
-              ],
-            ),
-          ]
+    autovalidateMode: _autovalidate,
+    key: _formKey,
+    child: Column(
+      children:
+          <Widget>[
+              Row(
+                children: <Widget>[
+                  Text('Order Items', style: themeData.textTheme.body2),
+                ],
+              ),
+            ]
             ..addAll(_generateFieldSets())
             ..addAll(<Widget>[
               SizedBox(height: 8),
               // Divider(),
               Row(
                 children: <Widget>[
-                  RaisedButton(
-                      child: Text('ADD ITEM'),
-                      onPressed: () {
-                        setState(() {
-                          _addNestedFieldBuilderSet(airtimeList);
-                        });
-                      })
+                  ElevatedButton(
+                    child: Text('ADD ITEM'),
+                    onPressed: () {
+                      setState(() {
+                        _addNestedFieldBuilderSet(airtimeList);
+                      });
+                    },
+                  ),
                 ],
                 mainAxisAlignment: MainAxisAlignment.end,
               ),
@@ -172,20 +182,18 @@ class _CreateOrderFormState
                   : SizedBox(height: 35),
               Row(
                 children: <Widget>[
-                  FlatButton(
+                  TextButton(
                     child: Text('Cancel'),
                     focusNode: null,
-                    onPressed: !_processing
-                        ? () {
-                            Navigator.pop(context, null);
-                          }
-                        : null,
-                    textColor: Colors.black87,
+                    onPressed:
+                        !_processing
+                            ? () {
+                              Navigator.pop(context, null);
+                            }
+                            : null,
                   ),
-                  Expanded(
-                    child: SizedBox(height: 8),
-                  ),
-                  RaisedButton(
+                  Expanded(child: SizedBox(height: 8)),
+                  ElevatedButton(
                     child: Text('PLACE'),
                     focusNode: null,
                     onPressed: !_processing ? _place : null,
@@ -194,10 +202,9 @@ class _CreateOrderFormState
                 mainAxisAlignment: MainAxisAlignment.end,
               ),
             ]),
-          mainAxisSize: MainAxisSize.min,
-        ),
-        key: _formKey,
-      );
+      mainAxisSize: MainAxisSize.min,
+    ),
+  );
 
   SambazaFieldBuilder _createFieldBuilder(SambazaField field) =>
       SambazaFieldBuilder.of(
@@ -207,56 +214,60 @@ class _CreateOrderFormState
         onSubmit: _onFieldSubmitted(field),
       );
 
-  List<Widget> _generateFieldSets() => _nestedFieldBuilderSets
-      .map<Widget>(
-        (List<String> fieldSet) => SambazaAirtimeFieldSet(
-          _buildField,
-          airtimeFieldName: fieldSet[0],
-          quantityFieldName: fieldSet[1],
-          onDelete: () => setState(() {
-            _nestedFieldBuilderSets.remove(fieldSet);
-          }),
-        ),
-      )
-      .toList();
+  List<Widget> _generateFieldSets() =>
+      _nestedFieldBuilderSets
+          .map<Widget>(
+            (List<String> fieldSet) => SambazaAirtimeFieldSet(
+              _buildField,
+              airtimeFieldName: fieldSet[0],
+              quantityFieldName: fieldSet[1],
+              onDelete:
+                  () => setState(() {
+                    _nestedFieldBuilderSets.remove(fieldSet);
+                  }),
+            ),
+          )
+          .toList();
 
   void _handleError(Exception error) {
     print(error);
   }
 
   Future<SambazaModels<Airtime>> _listAirtimes() => SambazaModel.list<Airtime>(
-        AirtimeResource(),
-        ([Map<String, dynamic> fields]) => Airtime.create(fields),
-      );
+    AirtimeResource(),
+    ([Map<String, dynamic>? fields]) => Airtime.create(fields),
+  );
 
   Future<SambazaModels<Telco>> _listTelcos() => SambazaModel.list<Telco>(
-        TelcoResource(),
-        ([Map<String, dynamic> fields]) => Telco.create(fields),
-      );
+    TelcoResource(),
+    ([Map<String, dynamic>? fields]) => Telco.create(fields),
+  );
 
   void Function() _onFieldEditingComplete(SambazaField field) => () {
-        if (_fieldBuilders.values.last.field == field) {
-          _validate().catchError(_handleError);
-        }
-      };
+    if (_fieldBuilders.values.last.field == field) {
+      _validate().catchError(_handleError);
+    }
+  };
 
   void Function(String) _onFieldChanged(SambazaField field) => (String value) {
-        setState(() {
-          field.controller.value = TextEditingValue(text: value);
-        });
-      };
+    setState(() {
+      field.controller.value = TextEditingValue(text: value);
+    });
+  };
 
-  void Function(String) _onFieldSubmitted(SambazaField field) =>
-      (String value) {
-        List<SambazaField> f = _fieldBuilders.values
+  void Function(String) _onFieldSubmitted(SambazaField field) => (
+    String value,
+  ) {
+    List<SambazaField> f =
+        _fieldBuilders.values
             .map<SambazaField>((SambazaFieldBuilder builder) => builder.field)
             .toList();
-        if (f.last == field) {
-          _validate().catchError(_handleError);
-        } else {
-          f.elementAt(f.indexOf(field) + 1).focusNode.requestFocus();
-        }
-      };
+    if (f.last == field) {
+      _validate().catchError(_handleError);
+    } else {
+      f.elementAt(f.indexOf(field) + 1).focusNode.requestFocus();
+    }
+  };
 
   void _place() async {
     try {
@@ -264,35 +275,34 @@ class _CreateOrderFormState
       setState(() {
         _processing = true;
       });
-      Order order = Order.create(
-        <String, dynamic>{
-          'comments': _fieldBuilders['comments'].field.value,
-          'order_items': _nestedFieldBuilderSets
-              .map<Map<String, dynamic>>(
-                (List<String> fieldSet) => <String, dynamic>{
-                  'airtime': <String, dynamic>{
-                    'id': _fieldBuilders[fieldSet[0]].field.value,
+      Order order = Order.create(<String, dynamic>{
+        'comments': _fieldBuilders['comments']!.field.value,
+        'order_items':
+            _nestedFieldBuilderSets
+                .map<Map<String, dynamic>>(
+                  (List<String> fieldSet) => <String, dynamic>{
+                    'airtime': <String, dynamic>{
+                      'id': _fieldBuilders[fieldSet[0]]!.field.value,
+                    },
+                    'quantity': _fieldBuilders[fieldSet[1]]!.field.value,
                   },
-                  'quantity': _fieldBuilders[fieldSet[1]].field.value,
-                },
-              )
-              .toList(),
-        },
-      );
+                )
+                .toList(),
+      });
       await order.save();
       Navigator.pop(context, order.fields);
     } on SambazaException catch (e) {
-      Scaffold.of(context).showSnackBar(SnackBar(
-        content: Row(
-          children: <Widget>[
-            Text('ERROR'),
-            SizedBox(width: 8.0),
-            Expanded(
-              child: Text('${e.title} - ${e.message}'),
-            ),
-          ],
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: <Widget>[
+              Text('ERROR'),
+              SizedBox(width: 8.0),
+              Expanded(child: Text('${e.title} - ${e.message}')),
+            ],
+          ),
         ),
-      ));
+      );
     } catch (e) {
       _handleError(e);
       setState(() {
@@ -303,11 +313,11 @@ class _CreateOrderFormState
 
   Future<void> _validate() async {
     setState(() {
-      _valid = _formKey.currentState.validate();
-      _autovalidate = _valid == false;
+      _valid = _formKey.currentState!.validate();
+      _autovalidateMode = (_valid == false) as AutovalidateMode;
     });
     if (_valid) {
-      _formKey.currentState.save();
+      _formKey.currentState!.save();
       return;
     }
     _fieldBuilders.values

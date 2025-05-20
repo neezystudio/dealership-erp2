@@ -16,6 +16,7 @@ class BranchLPOsPage extends SambazaPage {
 }
 
 class _BranchLPOsView extends SambazaInjectableStatelessWidget {
+  @override
   final List<Type> $inject = <Type>[SambazaAuth, SambazaStorage];
 
   @override
@@ -29,13 +30,13 @@ class _BranchLPOsView extends SambazaInjectableStatelessWidget {
                 listBuilder.resource.endpoint, listBuilder.requestParams);
             return RefreshIndicator(
               child: ListView(
-                children: <Widget>[
-                  listBuilder(context),
-                ],
                 padding: EdgeInsets.only(
                   bottom: 80,
                   top: 8,
                 ),
+                children: <Widget>[
+                  listBuilder(context),
+                ],
               ),
               onRefresh: () => Future.sync(() {
                 $$<SambazaStorage>().remove(endpoint);
@@ -68,6 +69,7 @@ class _BranchLPOsView extends SambazaInjectableStatelessWidget {
 
   Widget _buildTrailing(LPO lpo, [SambazaModel lI]) => GestureDetector(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Icon(
               Icons.view_list,
@@ -82,7 +84,6 @@ class _BranchLPOsView extends SambazaInjectableStatelessWidget {
               ),
             ),
           ],
-          mainAxisAlignment: MainAxisAlignment.center,
         ),
         onTap: () {
           Navigator.pushNamed(context, LPOItemsPage.route,

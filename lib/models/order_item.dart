@@ -10,9 +10,9 @@ class OrderItem extends SambazaModel with SambazaModelTimestamps {
   set quantity(q);
   num get value;
 
-  OrderItem.create([Map<String, dynamic> orderItem]) : super.create(orderItem);
+  OrderItem.create(super.orderItem) : super.create();
 
-  OrderItem.from(Map<String, dynamic> orderItem) : super.from(orderItem);
+  OrderItem.from(super.orderItem) : super.from();
 
   @override
   void init() {

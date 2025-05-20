@@ -5,7 +5,7 @@ import '../models/dispatch_item.dart';
 class DispatchItemTrailing extends StatefulWidget {
   final DispatchItem dispatchItem;
 
-  DispatchItemTrailing(this.dispatchItem);
+  const DispatchItemTrailing(this.dispatchItem, {super.key});
 
   @override
   _DispatchItemTrailing createState() => _DispatchItemTrailing();
@@ -25,6 +25,7 @@ class _DispatchItemTrailing extends State<DispatchItemTrailing> {
 
   Widget _receive() => GestureDetector(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Icon(
               Icons.check_circle_outline,
@@ -39,7 +40,6 @@ class _DispatchItemTrailing extends State<DispatchItemTrailing> {
               ),
             ),
           ],
-          mainAxisAlignment: MainAxisAlignment.center,
         ),
         onTap: () {
           setState(() {
@@ -59,6 +59,7 @@ class _DispatchItemTrailing extends State<DispatchItemTrailing> {
       );
 
   Widget _received() => Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Icon(
             Icons.check_circle,
@@ -73,7 +74,6 @@ class _DispatchItemTrailing extends State<DispatchItemTrailing> {
             ),
           ),
         ],
-        mainAxisAlignment: MainAxisAlignment.center,
       );
 
   Widget _processing() =>

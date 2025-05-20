@@ -5,7 +5,7 @@ class SambazaPage extends StatelessWidget {
   final Widget fab;
   final String title;
 
-  SambazaPage({@required this.body, this.fab, @required this.title});
+  const SambazaPage({super.key, required this.body, required this.fab, required this.title});
 
   @override
   Widget build(BuildContext context) => Scaffold(
