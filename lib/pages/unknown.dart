@@ -17,6 +17,6 @@ class UnknownPage extends StatelessWidget {
   Widget build(BuildContext context) => SambazaError(
     SambazaException(
       'The page you were looking for does not exist. Ref: $name',
-    )
+    ), onButtonPressed: () {  },
   );
 }
