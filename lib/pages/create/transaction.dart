@@ -84,7 +84,7 @@ class _CreateTransactionFormState
 
   @override
   Widget template(BuildContext context) => Form(
-        autovalidate: _autovalidate,
+        autovalidateMode: _autovalidate ,
         key: _formKey,
         child: Column(
           children: <Widget>[

@@ -38,7 +38,7 @@ class _CreateStockTransferFormState
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   final List<Type> $inject = <Type>[SambazaAPI, SambazaAuth, SambazaStorage];
-  Future<int> _loadFuture;
+  late Future<int> _loadFuture;
 
   ThemeData get themeData => Theme.of(context);
 
