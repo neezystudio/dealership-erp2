@@ -11,28 +11,28 @@ class SambazaInventoryWidget<I extends Inventory>
   final List<Type> $inject = <Type>[SambazaAPI, SambazaAuth, SambazaStorage];
   final SambazaListBuilder<I, SambazaModel> _listBuilder;
 
-  SambazaInventoryWidget(
-      {super.key, required SambazaModelFactory<I> modelFactory, required SambazaResource resource})
-      : _listBuilder = SambazaListBuilder<I, SambazaModel>(
-          listItemConfigBuilder: SambazaInventoryListItemConfigBuilder<I>(),
-          modelFactory: modelFactory,
-          resource: resource,
-        );
+  SambazaInventoryWidget({
+    super.key,
+    required SambazaModelFactory<I> modelFactory,
+    required SambazaResource resource,
+  }) : _listBuilder = SambazaListBuilder<I, SambazaModel>(
+         listItemConfigBuilder: SambazaInventoryListItemConfigBuilder<I>(),
+         modelFactory: modelFactory,
+         resource: resource,
+         requestParams: const {}, // Provide appropriate params if needed
+       );
 
   @override
   Widget template(BuildContext context) => RefreshIndicator(
-        onRefresh: _onRefresh,
-        child: ListView(
-          children: <Widget>[_listBuilder(context)],
-          padding: EdgeInsets.only(
-            bottom: 8,
-            top: 8,
-          ),
-          scrollDirection: Axis.vertical,
-        ),
-      );
+    onRefresh: _onRefresh,
+    child: ListView(
+      children: <Widget>[_listBuilder(context)],
+      padding: EdgeInsets.only(bottom: 8, top: 8),
+      scrollDirection: Axis.vertical,
+    ),
+  );
 
   Future<void> _onRefresh() => Future.sync(() {
-        $$<SambazaStorage>().remove(_listBuilder.resource.endpoint);
-      });
+    $$<SambazaStorage>().remove(_listBuilder.resource.endpoint);
+  });
 }
