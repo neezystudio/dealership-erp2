@@ -71,7 +71,7 @@ class _AssignSerialsFormState extends State<_AssignSerialsForm> {
           if (snapshot.hasData) {
             return _buildForm();
           } else if (snapshot.hasError) {
-            return SambazaError(snapshot.error);
+            return SambazaError(snapshot.error, onButtonPressed: () {  },);
           }
           return SambazaLoader('Loading...');
         },
