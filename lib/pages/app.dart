@@ -35,7 +35,7 @@ class _AppPageState extends SambazaInjectableWidgetState<AppPage> {
   @override
   initState() {
     super.initState();
-    if ($$<SambazaAuth>().user.role == SambazaAuthRole.branch_admin) {
+    if ($$<SambazaAuth>().user!.role == SambazaAuthRole.branch_admin) {
       _navs.add(BranchNav());
     }
   }
