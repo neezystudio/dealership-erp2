@@ -12,7 +12,16 @@ class LPOItemsPage extends SambazaPage {
 
   static LPOItemsPage create(BuildContext context) => LPOItemsPage();
 
-  LPOItemsPage({super.key}) : super(body: _LPOItemsView(), title: 'LPO Items');
+  LPOItemsPage()
+      : super(
+          body: _LPOItemsView(),
+          title: 'LPO Items',
+          fab: FloatingActionButton(
+            onPressed: () {
+              // TODO: Implement your action here
+            },
+          ), // Replace null with your desired FloatingActionButton if needed
+        );
 }
 
 class _LPOItemsView extends StatefulWidget {
@@ -21,23 +30,23 @@ class _LPOItemsView extends StatefulWidget {
 }
 
 class _LPOItemsViewState extends State<_LPOItemsView> {
-  LPO _lpo;
-  SambazaModels<Telco> _telcos;
+  late LPO _lpo;
+  late SambazaModels<Telco> _telcos;
 
   SambazaListItemConfigBuilder<LPOItem, SambazaModel>
       get _listItemConfigBuilder =>
           SambazaListItemConfigBuilder<LPOItem, SambazaModel>(
-            group: (LPOItem lpoItem, [SambazaModel lI]) =>
+            group: (LPOItem lpoItem, [SambazaModel? lI]) =>
                 SambazaListItemConfigBuilder.strFromTime(lpoItem.createdAt),
             leading: _buildLeading,
-            subtitle: (LPOItem lpoItem, [SambazaModel lI]) {
+            subtitle: (LPOItem lpoItem, [SambazaModel? lI]) {
               DateTime time = lpoItem.createdAt;
               return <String>[
                 'KES ${lpoItem.value.toString()}',
                 'Placed at ${time.hour.toString()}:${time.minute.toString()}',
               ];
             },
-            title: (LPOItem lpoItem, [SambazaModel lI]) =>
+            title: (LPOItem lpoItem, [SambazaModel? lI]) =>
                 '${lpoItem.quantity.toInt().toString()} Cards',
             trailing: _buildTrailing,
           );
@@ -52,11 +61,15 @@ class _LPOItemsViewState extends State<_LPOItemsView> {
                 top: 8,
               ),
               children: <Widget>[
-                _buildList(snapshot.data),
+                _buildList(snapshot.data!),
               ],
             );
           } else if (snapshot.hasError) {
-            return SambazaError(snapshot.error);
+            return SambazaError(
+              snapshot.error is SambazaException
+                  ? snapshot.error as SambazaException
+                  : SambazaException(snapshot.error.toString()), onButtonPressed: () {  },
+            );
           }
           return SambazaLoader('Loading...');
         },
@@ -66,7 +79,7 @@ class _LPOItemsViewState extends State<_LPOItemsView> {
   SambazaListItemConfig<LPOItem, SambazaModel> _addDisplay(LPOItem item) =>
       _buildListItemConfig(item);
 
-  List<Widget> _buildLeading(LPOItem lpoItem, [SambazaModel lI]) => <Widget>[
+  List<Widget> _buildLeading(LPOItem lpoItem, [SambazaModel? lI]) => <Widget>[
         Text(
           'Bamba',
           style: TextStyle(
@@ -87,6 +100,10 @@ class _LPOItemsViewState extends State<_LPOItemsView> {
         items
             .map<SambazaListItemConfig<LPOItem, SambazaModel>>(_addDisplay)
             .toList(),
+        groupBy: items.isNotEmpty
+            ? SambazaListItemConfigBuilder.strFromTime(items.first.createdAt)
+            : '',
+        limit: items.length,
       );
 
   SambazaListItemConfig<LPOItem, SambazaModel> _buildListItemConfig(
@@ -94,7 +111,7 @@ class _LPOItemsViewState extends State<_LPOItemsView> {
       SambazaListItemConfig<LPOItem, SambazaModel>.from(
           _listItemConfigBuilder, item);
 
-  Widget _buildTrailing(LPOItem lpoItem, [SambazaModel lI]) =>
+  Widget _buildTrailing(LPOItem lpoItem, [SambazaModel? lI]) =>
       _lpo.status == LPOStatus.approved
           ? SizedBox(height: 8)
           : GestureDetector(
@@ -123,15 +140,16 @@ class _LPOItemsViewState extends State<_LPOItemsView> {
 
   Future<SambazaModels<Telco>> _listTelcos() => SambazaModel.list<Telco>(
         TelcoResource(),
-        ([Map<String, dynamic> fields]) => Telco.create(fields),
+        ([Map<String, dynamic> fields = const {}]) => Telco.create(fields),
       );
 
   Future<List<LPOItem>> _prepareItems() async {
     _telcos = await _listTelcos();                                                                
-    if (ModalRoute.of(context).settings.arguments is! LPO) {
+    final modalRoute = ModalRoute.of(context);
+    if (modalRoute?.settings.arguments is! LPO) {
       throw SambazaException('Expected LPO Items to be passed to this page.');
     }
-    _lpo ??= ModalRoute.of(context).settings.arguments;
+    _lpo = modalRoute!.settings.arguments as LPO;
     return _lpo.lpoItems;
   }
 }

@@ -45,7 +45,7 @@ class _AssignSerialsFormState extends State<_AssignSerialsForm> {
   final Map<String, SambazaFieldBuilder> _fieldBuilders =
       <String, SambazaFieldBuilder>{};
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  LPOItem _lpoItem;
+  late LPOItem _lpoItem;
 
   ThemeData get themeData => Theme.of(context);
 
@@ -71,28 +71,46 @@ class _AssignSerialsFormState extends State<_AssignSerialsForm> {
           if (snapshot.hasData) {
             return _buildForm();
           } else if (snapshot.hasError) {
-            return SambazaError(snapshot.error, onButtonPressed: () {  },);
+            return SambazaError(
+              snapshot.error is SambazaException
+                  ? snapshot.error as SambazaException
+                  : SambazaException(
+                      snapshot.error?.toString() ?? 'Unknown error',
+                      'Error',
+                    ),
+              onButtonPressed: () {
+                Navigator.of(context).pop();
+              },
+            );
           }
           return SambazaLoader('Loading...');
         },
         future: _prepareItem(),
       );
 
-  String _addFieldBuilder(SambazaField field, [String builderName]) {
+  String _addFieldBuilder(SambazaField field, [String? builderName]) {
     builderName ??= '${field.name}${_fieldBuilders.length}';
     field.init();
     _fieldBuilders[builderName] = _createFieldBuilder(field);
     return builderName;
   }
 
-  Widget _buildField(String name) => _fieldBuilders[name].build(
-        _processing,
-        false,
-        _fields.last.name == name,
-      );
+  Widget _buildField(String name) {
+    final builder = _fieldBuilders[name];
+    if (builder == null) {
+      throw Exception('Field builder for "$name" not found.');
+    }
+    return builder.build(
+      _processing,
+      false,
+      _fields.last.name == name,
+    );
+  }
 
   Form _buildForm() => Form(
-        autovalidate: _autovalidate,
+        autovalidateMode: _autovalidate
+            ? AutovalidateMode.always
+            : AutovalidateMode.disabled,
         key: _formKey,
         child: Column(
           children: <Widget>[
@@ -105,7 +123,7 @@ class _AssignSerialsFormState extends State<_AssignSerialsForm> {
                 : SizedBox(height: 35),
             Row(
               children: <Widget>[
-                FlatButton(
+                TextButton(
                   child: Text('Cancel'),
                   focusNode: null,
                   onPressed: !_processing
@@ -113,12 +131,14 @@ class _AssignSerialsFormState extends State<_AssignSerialsForm> {
                           Navigator.pop(context, null);
                         }
                       : null,
-                  textColor: Colors.black87,
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.black87,
+                  ),
                 ),
                 Expanded(
                   child: SizedBox(height: 8),
                 ),
-                RaisedButton(
+                ElevatedButton(
                   child: Text('ASSIGN'),
                   focusNode: null,
                   onPressed: !_processing ? _save : null,
@@ -139,7 +159,13 @@ class _AssignSerialsFormState extends State<_AssignSerialsForm> {
         onSubmit: _onFieldSubmitted(field),
       );
 
-  SambazaField _fieldNamed(String name) => _fieldBuilders[name].field;
+  SambazaField _fieldNamed(String name) {
+    final builder = _fieldBuilders[name];
+    if (builder == null) {
+      throw Exception('Field builder for "$name" not found.');
+    }
+    return builder.field;
+  }
 
   void _handleError(Exception error) {
     print(error);
@@ -151,14 +177,14 @@ class _AssignSerialsFormState extends State<_AssignSerialsForm> {
         }
       };
 
-  void Function(String) _onFieldChanged(SambazaField field) => (String value) {
+  void Function(String?) _onFieldChanged(SambazaField field) => (String? value) {
         setState(() {
-          field.controller.value = TextEditingValue(text: value);
+          field.controller.value = TextEditingValue(text: value ?? '');
         });
       };
 
-  void Function(String) _onFieldSubmitted(SambazaField field) =>
-      (String value) {
+  void Function(String?) _onFieldSubmitted(SambazaField field) =>
+      (String? value) {
         List<SambazaField> f = _fieldBuilders.values
             .map<SambazaField>((SambazaFieldBuilder builder) => builder.field)
             .toList();
@@ -170,10 +196,11 @@ class _AssignSerialsFormState extends State<_AssignSerialsForm> {
       };
 
   Future<LPOItem> _prepareItem() async {
-    if (ModalRoute.of(context).settings.arguments is! LPOItem) {
+    final route = ModalRoute.of(context);
+    if (route == null || route.settings.arguments is! LPOItem) {
       throw SambazaException('Expected "LPO Item" to be passed to this page.');
     }
-    _lpoItem ??= ModalRoute.of(context).settings.arguments;
+    _lpoItem = route.settings.arguments as LPOItem;
     return _lpoItem;
   }
 
@@ -188,7 +215,7 @@ class _AssignSerialsFormState extends State<_AssignSerialsForm> {
       Navigator.pop(context, _lpoItem.fields);
     }).catchError((e) {
       if (e is SambazaException) {
-        Scaffold.of(context).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Row(
             children: <Widget>[
               Text('ERROR'),
@@ -213,11 +240,11 @@ class _AssignSerialsFormState extends State<_AssignSerialsForm> {
 
   Future<void> _validate() async {
     setState(() {
-      _valid = _formKey.currentState.validate();
+      _valid = _formKey.currentState?.validate() ?? false;
       _autovalidate = _valid == false;
     });
     if (_valid) {
-      _formKey.currentState.save();
+      _formKey.currentState?.save();
       return;
     }
     _fields

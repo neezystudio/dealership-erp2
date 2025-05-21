@@ -12,7 +12,16 @@ class BranchLPOsPage extends SambazaPage {
 
   static BranchLPOsPage create(BuildContext context) => BranchLPOsPage();
 
-  BranchLPOsPage({super.key}) : super(body: _BranchLPOsView(), title: 'Branch LPOs');
+  BranchLPOsPage()
+      : super(
+          body: _BranchLPOsView(),
+          title: 'Branch LPOs',
+          fab: FloatingActionButton(
+            onPressed: () {
+              // TODO: Implement your action here
+            },
+          ), // Provide your FloatingActionButton here if needed
+        );
 }
 
 class _BranchLPOsView extends SambazaInjectableStatelessWidget {
@@ -25,7 +34,7 @@ class _BranchLPOsView extends SambazaInjectableStatelessWidget {
         builder: (BuildContext context,
             AsyncSnapshot<SambazaListBuilder<LPO, SambazaModel>> snapshot) {
           if (snapshot.hasData) {
-            SambazaListBuilder<LPO, SambazaModel> listBuilder = snapshot.data;
+            SambazaListBuilder<LPO, SambazaModel> listBuilder = snapshot.data!;
             String endpoint = SambazaAPIEndpoints.withParams(
                 listBuilder.resource.endpoint, listBuilder.requestParams);
             return RefreshIndicator(
@@ -43,14 +52,20 @@ class _BranchLPOsView extends SambazaInjectableStatelessWidget {
               }),
             );
           } else if (snapshot.hasError) {
-            return SambazaError(snapshot.error);
+            return SambazaError(
+              snapshot.error as SambazaException,
+              onButtonPressed: () {
+                // You can define what should happen when the button is pressed, e.g. retry
+                // For example, you can call setState or Navigator.pop(context)
+              },
+            );
           }
           return SambazaLoader('Loading...');
         },
         future: _prepareBuilder(),
       );
 
-  List<Widget> _buildLeading(LPO lpo, [SambazaModel lI]) => <Widget>[
+  List<Widget> _buildLeading(LPO lpo, [SambazaModel? lI]) => <Widget>[
         Text(
           'Items',
           style: TextStyle(
@@ -67,7 +82,7 @@ class _BranchLPOsView extends SambazaInjectableStatelessWidget {
         ),
       ];
 
-  Widget _buildTrailing(LPO lpo, [SambazaModel lI]) => GestureDetector(
+  Widget _buildTrailing(LPO lpo, [SambazaModel? lI]) => GestureDetector(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -94,10 +109,10 @@ class _BranchLPOsView extends SambazaInjectableStatelessWidget {
   Future<SambazaListBuilder<LPO, SambazaModel>> _prepareBuilder() async =>
       SambazaListBuilder<LPO, SambazaModel>(
         listItemConfigBuilder: SambazaListItemConfigBuilder<LPO, SambazaModel>(
-          group: (LPO lpo, [SambazaModel lI]) =>
+          group: (LPO lpo, [SambazaModel? lI]) =>
               SambazaListItemConfigBuilder.strFromTime(lpo.createdAt),
           leading: _buildLeading,
-          subtitle: (LPO lpo, [SambazaModel lI]) {
+          subtitle: (LPO lpo, [SambazaModel? lI]) {
             DateTime time = lpo.createdAt;
             int value = lpo.lpoItems
                 .map<num>((LPOItem lI) => lI.value)
@@ -108,12 +123,12 @@ class _BranchLPOsView extends SambazaInjectableStatelessWidget {
               'Placed at ${time.hour.toString()}:${time.minute.toString()}',
             ];
           },
-          title: (LPO lpo, [SambazaModel lI]) => "#${lpo.lpoNumber}",
+          title: (LPO lpo, [SambazaModel? lI]) => "#${lpo.lpoNumber}",
           trailing: _buildTrailing,
         ),
-        modelFactory: ([Map<String, dynamic> fields]) => LPO.create(fields),
+        modelFactory: ([Map<String, dynamic> fields = const {}]) => LPO.create(fields),
         requestParams: <String, dynamic>{
-          'branch': $$<SambazaAuth>().user.profile.branch,
+          'branch': $$<SambazaAuth>().user?.profile?.branch,
         },
         resource: LPOResource(),
       );

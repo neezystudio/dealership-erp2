@@ -12,7 +12,16 @@ class BranchOrdersPage extends SambazaPage {
 
   static BranchOrdersPage create(BuildContext context) => BranchOrdersPage();
 
-  BranchOrdersPage({super.key}) : super(body: _BranchOrdersView(), title: 'Branch Orders');
+  BranchOrdersPage()
+      : super(
+          body: _BranchOrdersView(),
+          title: 'Branch Orders',
+          fab: FloatingActionButton(
+            onPressed: () {
+              // TODO: Implement your action here
+            },
+          ), // Provide your FloatingActionButton or set to null if not needed
+        );
 }
 
 class _BranchOrdersView extends SambazaInjectableStatelessWidget {
@@ -25,7 +34,7 @@ class _BranchOrdersView extends SambazaInjectableStatelessWidget {
         builder: (BuildContext context,
             AsyncSnapshot<SambazaListBuilder<Order, SambazaModel>> snapshot) {
           if (snapshot.hasData) {
-            SambazaListBuilder<Order, SambazaModel> listBuilder = snapshot.data;
+            SambazaListBuilder<Order, SambazaModel> listBuilder = snapshot.data!;
             String endpoint = SambazaAPIEndpoints.withParams(
                 listBuilder.resource.endpoint, listBuilder.requestParams);
             return RefreshIndicator(
@@ -43,14 +52,22 @@ class _BranchOrdersView extends SambazaInjectableStatelessWidget {
               }),
             );
           } else if (snapshot.hasError) {
-            return SambazaError(snapshot.error);
+            return SambazaError(
+              snapshot.error is SambazaException
+                  ? snapshot.error as SambazaException
+                  : SambazaException(snapshot.error.toString()),
+              onButtonPressed: () {
+                // TODO: Implement error button action, e.g., retry or go back
+                Navigator.of(context).pop();
+              },
+            );
           }
           return SambazaLoader('Loading...');
         },
         future: _prepareBuilder(),
       );
 
-  List<Widget> _buildLeading(Order order, [SambazaModel oI]) => <Widget>[
+  List<Widget> _buildLeading(Order order, [SambazaModel? oI]) => <Widget>[
         Text(
           'Items',
           style: TextStyle(
@@ -67,7 +84,7 @@ class _BranchOrdersView extends SambazaInjectableStatelessWidget {
         ),
       ];
 
-  Widget _buildTrailing(Order order, [SambazaModel oI]) => GestureDetector(
+  Widget _buildTrailing(Order order, [SambazaModel? oI]) => GestureDetector(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -94,22 +111,22 @@ class _BranchOrdersView extends SambazaInjectableStatelessWidget {
       SambazaListBuilder<Order, SambazaModel>(
         listItemConfigBuilder:
             SambazaListItemConfigBuilder<Order, SambazaModel>(
-          group: (Order order, [SambazaModel oI]) =>
+          group: (Order order, [SambazaModel? oI]) =>
               SambazaListItemConfigBuilder.strFromTime(order.createdAt),
           leading: _buildLeading,
-          subtitle: (Order order, [SambazaModel oI]) {
+          subtitle: (Order order, [SambazaModel? oI]) {
             DateTime time = order.createdAt;
             return <String>[
               'KES ${order.value.toInt().toString()}',
               'Placed at ${time.hour.toString()}:${time.minute.toString()}',
             ];
           },
-          title: (Order order, [SambazaModel oI]) => "#${order.orderNumber}",
+          title: (Order order, [SambazaModel? oI]) => "#${order.orderNumber}",
           trailing: _buildTrailing,
         ),
-        modelFactory: ([Map<String, dynamic> fields]) => Order.create(fields),
+        modelFactory: ([Map<String, dynamic> fields = const {}]) => Order.create(fields),
         requestParams: <String, dynamic>{
-          'branch': $$<SambazaAuth>().user.profile.branch,
+          'branch': $$<SambazaAuth>().user?.profile?.branch,
         },
         resource: OrderResource(),
       );

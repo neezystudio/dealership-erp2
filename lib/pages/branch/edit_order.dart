@@ -50,16 +50,18 @@ class _EditOrderFormState extends SambazaInjectableWidgetState<_EditOrderForm> {
   Widget template(BuildContext context) => FutureBuilder<List<Airtime>>(
         builder: (BuildContext context, AsyncSnapshot<List<Airtime>> snapshot) {
           if (snapshot.hasData) {
-            return _buildForm(snapshot.data);
+            return _buildForm(snapshot.data!);
           } else if (snapshot.hasError) {
-            return SambazaError(snapshot.error);
+            return SambazaError(snapshot.error is SambazaException
+                ? snapshot.error as SambazaException
+                : SambazaException(snapshot.error.toString()), onButtonPressed: () {  });
           }
           return SambazaLoader('Loading...');
         },
         future: _prepareOrder(),
       );
 
-  String _addFieldBuilder(SambazaField field, [String builderName]) {
+  String _addFieldBuilder(SambazaField field, [String? builderName]) {
     builderName ??= '${field.name}${_fieldBuilders.length}';
     field.init();
     _fieldBuilders[builderName] = _createFieldBuilder(field);
@@ -90,14 +92,20 @@ class _EditOrderFormState extends SambazaInjectableWidgetState<_EditOrderForm> {
         value: airtime.id,
       );
 
-  Widget _buildField(String name) => _fieldBuilders[name].build(
-        _processing,
-        false,
-        _fieldBuilders.values.last.field.name == name,
-      );
+  Widget _buildField(String name) {
+    final builder = _fieldBuilders[name];
+    if (builder == null) {
+      throw Exception('Field builder for "$name" not found.');
+    }
+    return builder.build(
+      _processing,
+      false,
+      _fieldBuilders.values.last.field.name == name,
+    );
+  }
 
   Form _buildForm(List<Airtime> airtimeList) => Form(
-        autovalidate: _autovalidate,
+        autovalidateMode: _autovalidate ? AutovalidateMode.always : AutovalidateMode.disabled,
         key: _formKey,
         child: Column(
           children: <Widget>[
@@ -105,14 +113,10 @@ class _EditOrderFormState extends SambazaInjectableWidgetState<_EditOrderForm> {
               children: <Widget>[
                 Text(
                   'Order Items',
-                  style: themeData.textTheme.body2,
+                  style: themeData.textTheme.bodyMedium,
                 ),
               ],
-            ),
-          ]
-            ..addAll(_generateFieldSets())
-            ..addAll(<Widget>[
-              SizedBox(height: 8),
+            ), ..._generateFieldSets(), SizedBox(height: 8),
               Row(
                 children: <Widget>[
                   ElevatedButton(
@@ -132,14 +136,13 @@ class _EditOrderFormState extends SambazaInjectableWidgetState<_EditOrderForm> {
               Row(
                 children: <Widget>[
                   TextButton(
-                    child: Text('Cancel'),
+                    child: Text('Cancel', style: TextStyle(color: Colors.black87)),
                     focusNode: null,
                     onPressed: !_processing
                         ? () {
                             Navigator.pop(context, null);
                           }
                         : null,
-                  
                   ),
                   Expanded(
                     child: SizedBox(height: 8),
@@ -152,7 +155,9 @@ class _EditOrderFormState extends SambazaInjectableWidgetState<_EditOrderForm> {
                 ],
                 mainAxisAlignment: MainAxisAlignment.end,
               ),
-            ]),
+          ]
+            
+            ,
           mainAxisSize: MainAxisSize.min,
         ),
       );
@@ -168,7 +173,7 @@ class _EditOrderFormState extends SambazaInjectableWidgetState<_EditOrderForm> {
   List<Widget> _generateFieldSets() => _nestedFieldBuilderSets
       .map<Widget>(
         (List<String> fieldSet) => SambazaAirtimeFieldSet(
-          _buildField,
+          (String name) => _buildField(name) as FormField<String>,
           airtimeFieldName: fieldSet[0],
           quantityFieldName: fieldSet[1],
           onDelete: () => setState(() {
@@ -184,12 +189,12 @@ class _EditOrderFormState extends SambazaInjectableWidgetState<_EditOrderForm> {
 
   Future<SambazaModels<Airtime>> _listAirtimes() => SambazaModel.list<Airtime>(
         AirtimeResource(),
-        ([Map<String, dynamic>? fields]) => Airtime.create(fields),
+        ([Map<String, dynamic> fields = const {}]) => Airtime.create(fields),
       );
 
   Future<SambazaModels<Telco>> _listTelcos() => SambazaModel.list<Telco>(
         TelcoResource(),
-        ([Map<String, dynamic>? fields]) => Telco.create(fields),
+        ([Map<String, dynamic> fields = const {}]) => Telco.create(fields),
       );
 
   void Function() _onFieldEditingComplete(SambazaField field) => () {
@@ -198,9 +203,9 @@ class _EditOrderFormState extends SambazaInjectableWidgetState<_EditOrderForm> {
         }
       };
 
-  void Function(String) _onFieldChanged(SambazaField field) => (String value) {
+  void Function(String?) _onFieldChanged(SambazaField field) => (String? value) {
         setState(() {
-          field.controller.value = TextEditingValue(text: value);
+          field.controller.value = TextEditingValue(text: value ?? '');
         });
       };
 
@@ -217,7 +222,8 @@ class _EditOrderFormState extends SambazaInjectableWidgetState<_EditOrderForm> {
       };
 
   Future<List<Airtime>> _prepareOrder() async {
-    if (ModalRoute.of(context)!.settings.arguments is! Order) {
+    final route = ModalRoute.of(context);
+    if (route == null || route.settings.arguments is! Order) {
       throw SambazaException('Expected "Order" to be passed to this page.');
     }
     SambazaModels<Airtime> airtimes = await _listAirtimes();
@@ -280,11 +286,11 @@ class _EditOrderFormState extends SambazaInjectableWidgetState<_EditOrderForm> {
 
   Future<void> _validate() async {
     setState(() {
-      _valid = _formKey.currentState!.validate();
+      _valid = _formKey.currentState?.validate() ?? false;
       _autovalidate = _valid == false;
     });
     if (_valid) {
-      _formKey.currentState!.save();
+      _formKey.currentState?.save();
       return;
     }
     _fieldBuilders.values
