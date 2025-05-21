@@ -20,7 +20,7 @@ class ServiceRequest extends SambazaModel<ServiceRequestResource>
   String get requestNumber;
   set requestNumber(r);
   String get $status => fields['status'];
-  ServiceRequestStatus get status => _statusMap[$status];
+  ServiceRequestStatus get status => _statusMap[$status] ?? ServiceRequestStatus.created;
   set status(ServiceRequestStatus s) {
     fields['status'] = s.toString().split('.').last;
   }

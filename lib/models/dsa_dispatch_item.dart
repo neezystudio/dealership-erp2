@@ -7,13 +7,11 @@ class DSADispatchItem extends DispatchItem<DSADispatchResource> {
   num get serialLast;
   set serialLast(s);
 
-  DSADispatchItem.create(super.dispatchResource,
-      [super.dispatchItem])
-      : super.create();
+  DSADispatchItem.create(super.dispatchResource, [super.dispatchItem])
+    : super.create();
 
-  DSADispatchItem.from(
-      super.dispatchResource, super.dispatchItem)
-      : super.from();
+  DSADispatchItem.from(super.dispatchResource, super.dispatchItem)
+    : super.from();
 
   static String serialFormatter(num serial) {
     String s = serial.toInt().toString();
@@ -23,4 +21,10 @@ class DSADispatchItem extends DispatchItem<DSADispatchResource> {
             : '**${s.substring(s.length - 5)}'
         : s;
   }
+
+  // In DSADispatchItem class
+  static DSADispatchItem empty() => DSADispatchItem.create(
+    DSADispatchResource(), // Provide a default or empty DSADispatchResource
+    null, // or provide a default DispatchItem if needed
+  );
 }

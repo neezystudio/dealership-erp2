@@ -33,35 +33,37 @@ class HomeNav with SambazaInjectable implements SambazaNav {
           context,
           CreateSalePage.route,
         ).then(
-          (Object result) {
-            Map<String, dynamic> newSale = Map<String, dynamic>.from(result);
-            SaleResource resource = SaleResource();
-            SambazaStorage $storage = $$<SambazaStorage>();
-            if ($storage.has(resource.endpoint)) {
-              List<Map<String, dynamic>> sales =
-                  $storage.$get(resource.endpoint);
-              sales[sales.indexWhere(
-                (Map<String, dynamic> sale) => sale['id'] == newSale['id'],
-              )] = newSale;
-              $storage.$set(
-                resource.endpoint,
-                sales,
+          (Object? result) {
+            if (result is Map<String, dynamic>) {
+              Map<String, dynamic> newSale = Map<String, dynamic>.from(result);
+              SaleResource resource = SaleResource();
+              SambazaStorage $storage = $$<SambazaStorage>();
+              if ($storage.has(resource.endpoint)) {
+                List<Map<String, dynamic>> sales =
+                    $storage.$get(resource.endpoint);
+                sales[sales.indexWhere(
+                  (Map<String, dynamic> sale) => sale['id'] == newSale['id'],
+                )] = newSale;
+                $storage.$set(
+                  resource.endpoint,
+                  sales,
+                );
+              }
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Row(
+                    children: <Widget>[
+                      Text('DONE'),
+                      SizedBox(width: 8),
+                      Expanded(
+                        child: Text('Your sale was created successfully!'),
+                      ),
+                    ],
+                  ),
+                ),
               );
             }
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Row(
-                  children: <Widget>[
-                    Text('DONE'),
-                    SizedBox(width: 8),
-                    Expanded(
-                      child: Text('Your sale was created successfully!'),
-                    ),
-                  ],
-                ),
-              ),
-            );
-                    },
+          },
         );
       };
 }
@@ -100,46 +102,49 @@ class _HomeNavView extends SambazaInjectableStatelessWidget {
   MediaQueryData get mediaQuery => MediaQuery.of(context);
 
   static List<SambazaLatestListBuilder> _makeLatestListBuilders() =>
-      <SambazaLatestListBuilder>[
-        SambazaLatestListBuilder<DSADispatch, DSADispatchItem>(
-          listItemConfigBuilder: SambazaDispatchListItemConfigBuilder<
-              DSADispatch, DSADispatchItem>(
-            subtitle: (
-              DSADispatch dispatch, [
-              DSADispatchItem dispatchItem,
-            ]) {
-              dispatchItem.serialFirst ??= 0;
-              dispatchItem.serialLast ??= 0;
-              return <String>[
-                '${DSADispatchItem.serialFormatter(dispatchItem.serialFirst)} - ${DSADispatchItem.serialFormatter(dispatchItem.serialLast)}',
-              ];
-            },
-            title: (
-              DSADispatch dispatch, [
-              DSADispatchItem dispatchItem,
-            ]) =>
-                '${dispatchItem.quantity.toString()} Cards - ${dispatchItem.value.toInt().toString()}/=',
-          ),
-          listName: 'dispatch_items',
-          modelFactory: ([
-            Map<String, dynamic> fields,
-          ]) =>
-              DSADispatch.create(fields),
-          resource: DSADispatchResource(),
-          title: 'Latest Dispatches',
-        ),
-        SambazaLatestListBuilder<Sale, SaleItem>(
-          listItemConfigBuilder: SambazaSaleListItemConfigBuilder(),
-          listName: 'sale_items',
-          modelFactory: ([
-            Map<String, dynamic> fields,
-          ]) =>
-              Sale.create(fields),
-          resource: SaleResource(),
-          title: 'Latest Sales',
-        ),
+      
+    <SambazaLatestListBuilder>[
+      SambazaLatestListBuilder<DSADispatch, DSADispatchItem>(
+        listItemConfigBuilder: SambazaDispatchListItemConfigBuilder<
+            DSADispatch, DSADispatchItem>(
+          subtitle: (
+            DSADispatch dispatch, [
+            DSADispatchItem? dispatchItem,
+          ]) {
+      final item = dispatchItem ?? DSADispatchItem.empty();
+      return <String>[
+        '${DSADispatchItem.serialFormatter(item.serialFirst)} - ${DSADispatchItem.serialFormatter(item.serialLast)}',
       ];
-
+          },
+          title: (
+            DSADispatch dispatch, [
+            DSADispatchItem? dispatchItem,
+          ]) {
+            final item = dispatchItem ?? DSADispatchItem.empty();
+            return '${item.quantity.toString()} Cards - ${item.value.toInt().toString()}/=';
+          },
+        ),
+        listName: 'dispatch_items',
+        modelFactory: ([
+          Map<String, dynamic> fields = const {},
+        ]) =>
+            DSADispatch.create(fields),
+        resource: DSADispatchResource(),
+        title: 'Latest Dispatches',
+        requestParams: const <String, dynamic>{},
+      ),
+      SambazaLatestListBuilder<Sale, SaleItem>(
+        listItemConfigBuilder: SambazaSaleListItemConfigBuilder(),
+        listName: 'sale_items',
+        modelFactory: ([
+          Map<String, dynamic> fields = const {},
+        ]) =>
+            Sale.create(fields),
+        resource: SaleResource(),
+        title: 'Latest Sales',
+        requestParams: const <String, dynamic>{},
+      ),
+    ];
   @override
   Widget template(BuildContext context) => RefreshIndicator(
         child: ListView(
@@ -166,12 +171,10 @@ class _HomeNavView extends SambazaInjectableStatelessWidget {
               crossAxisCount: 2,
               crossAxisSpacing: 4,
               mainAxisSpacing: 4,
-              physics: new NeverScrollableScrollPhysics(),
+              physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
             ),
-            SizedBox(height: 8.0),
-          ]..addAll(
-              _latestListBuilders.map(
+            SizedBox(height: 8.0), ..._latestListBuilders.map(
                 (SambazaLatestListBuilder builder) => Card(
                   child: Container(
                     child: SambazaLatestList(
@@ -180,13 +183,15 @@ class _HomeNavView extends SambazaInjectableStatelessWidget {
                   ),
                 ),
               ),
-            ),
+          ],
         ),
         onRefresh: () => Future.microtask(
           () {
-            User user = $$<SambazaAuth>().user;
-            $$<SambazaStorage>()
-                .remove('${user.resource.endpoint}${user.id}/', false);
+            User? user = $$<SambazaAuth>().user;
+            if (user != null) {
+              $$<SambazaStorage>()
+                  .remove('${user.resource.endpoint}${user.id}/', false);
+            }
             for (var config in _figuresConfigs) {
                 $$<SambazaStorage>().remove(config.endpointWithParams, false);
               }

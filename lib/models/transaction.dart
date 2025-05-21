@@ -25,7 +25,7 @@ class Transaction extends SambazaModel<TransactionResource>
   set description(d);
   bool get isComplete;
   String get $method => fields['method'];
-  TransactionMethod get method => _methodMap[$method];
+  TransactionMethod get method => _methodMap[$method] ?? TransactionMethod.bank;
   set method(TransactionMethod m) {
     fields['method'] = m.toString().replaceAll('TransactionMethod.', '');
   }
@@ -33,7 +33,7 @@ class Transaction extends SambazaModel<TransactionResource>
   String get referenceNumber;
   set referenceNumber(r);
   String get $status => fields['status'];
-  TransactionStatus get status => _statusMap[$get('status')];
+  TransactionStatus get status => _statusMap[$get('status')] ?? TransactionStatus.created;
   set status(TransactionStatus s) {
     fields['status'] = s.toString().replaceAll('TransactionStatus.', '');
   }

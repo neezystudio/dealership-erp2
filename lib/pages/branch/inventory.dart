@@ -11,14 +11,22 @@ class BranchInventoryPage extends SambazaPage {
   static BranchInventoryPage create(BuildContext context) =>
       BranchInventoryPage();
 
-  BranchInventoryPage({super.key})
-      : super(body: _BranchInventoryView(), title: 'Branch Inventory');
+  BranchInventoryPage()
+      : super(
+          body: _BranchInventoryView(),
+          title: 'Branch Inventory',
+          fab: FloatingActionButton(
+            onPressed: () {
+              // TODO: Implement your action here
+            },
+          ), // Replace null with your FloatingActionButton if needed
+        );
 }
 
 class _BranchInventoryView extends SambazaInventoryWidget<BranchInventory> {
   _BranchInventoryView()
       : super(
-            modelFactory: ([Map<String, dynamic> fields]) =>
+            modelFactory: ([Map<String, dynamic> fields = const {}]) =>
                 BranchInventory.create(fields),
             resource: BranchInventoryResource());
 }
