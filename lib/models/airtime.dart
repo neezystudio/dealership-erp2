@@ -5,7 +5,7 @@ import '../utils/model.dart';
 
 class Airtime extends SambazaModel<AirtimeResource>
     with SambazaModelTimestamps {
-  Telco $telco;
+  late Telco $telco;
 
   String get name;
   num get packetSize;
@@ -14,7 +14,7 @@ class Airtime extends SambazaModel<AirtimeResource>
   String get telco;
   num get value;
 
-  Airtime.create(super.airtime) : super.create();
+  Airtime.create([super.airtime]) : super.create();
 
   Airtime.from(super.airtime) : super.from();
 

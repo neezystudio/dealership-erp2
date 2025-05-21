@@ -25,22 +25,39 @@ class StockTransfer extends SambazaModel<StockTransferResource>
   String get company;
   String get destination;
   String get $destinationType => fields['destination_type'];
-  StockTransferParty get destinationType =>
-      _stockTransferPartyMap[$destinationType];
+  StockTransferParty get destinationType {
+    final result = _stockTransferPartyMap[$destinationType];
+    if (result == null) {
+      throw StateError('Invalid destination type: ${$destinationType}');
+    }
+    return result;
+  }
   set destinationType(StockTransferParty d) {
     fields['destination_type'] = d.toString().split('.').last;
   }
 
   String get origin;
   String get $originType => fields['origin_type'];
-  StockTransferParty get originType => _stockTransferPartyMap[$originType];
+  StockTransferParty get originType {
+    final result = _stockTransferPartyMap[$originType];
+    if (result == null) {
+      throw StateError('Invalid origin type: ${$originType}');
+    }
+    return result;
+  }
   set originType(StockTransferParty o) {
     fields['origin_type'] = o.toString().split('.').last;
   }
 
   num get quantity;
   String get $status => fields['status'];
-  StockTransferStatus get status => _stockTransferStatusMap[$status];
+  StockTransferStatus get status {
+    final result = _stockTransferStatusMap[$status];
+    if (result == null) {
+      throw StateError('Invalid status: ${$status}');
+    }
+    return result;
+  }
   set status(StockTransferStatus s) {
     fields['status'] = s.toString().split('.').last;
   }
