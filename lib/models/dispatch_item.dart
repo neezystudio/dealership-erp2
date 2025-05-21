@@ -14,7 +14,7 @@ final Map<String, DispatchItemStatus> _dispatchItemStatusMap = DispatchItemStatu
 
 abstract class DispatchItem<R extends SambazaResource> extends SambazaModel
     with SambazaInjectable, SambazaModelTimestamps {
-      String _status;
+      late String _status;
 
   Airtime get airtime;
   String get dispatch;
@@ -23,7 +23,7 @@ abstract class DispatchItem<R extends SambazaResource> extends SambazaModel
   set quantity(q);
   bool get received;
   num get value;
-  DispatchItemStatus get status => _dispatchItemStatusMap[_status];
+  DispatchItemStatus get status => _dispatchItemStatusMap[_status] ?? DispatchItemStatus.created;
   set status(DispatchItemStatus d) {
     _status = d.toString().split('.').last;
     fields['received'] = d == DispatchItemStatus.received;
