@@ -94,16 +94,26 @@ class _CreateOrderFormState
   Widget template(BuildContext context) => FutureBuilder<List<Airtime>>(
     builder: (BuildContext context, AsyncSnapshot<List<Airtime>> snapshot) {
       if (snapshot.hasData) {
-        return _buildForm(snapshot.data);
+        return _buildForm(snapshot.data!);
       } else if (snapshot.hasError) {
-        return SambazaError(snapshot.error);
+        return SambazaError(
+          snapshot.error is SambazaException
+              ? snapshot.error as SambazaException
+              : SambazaException(
+                  snapshot.error?.toString() ?? 'Unknown error',
+                  'Error',
+                ),
+          onButtonPressed: () {
+            Navigator.of(context).pop();
+          },
+        );
       }
       return SambazaLoader('Loading...');
     },
     future: _airtimeListFuture,
   );
 
-  String _addFieldBuilder(SambazaField field, [String builderName]) {
+  String _addFieldBuilder(SambazaField field, [String? builderName]) {
     builderName ??= '${field.name}${_fieldBuilders.length}';
     field.init();
     _fieldBuilders[builderName] = _createFieldBuilder(field);
@@ -140,29 +150,33 @@ class _CreateOrderFormState
     value: airtime.id,
   );
 
-  Widget _buildField(String name) => _fieldBuilders[name].build(
-    _processing,
-    false,
-    _fieldBuilders.values.last.field.name == name,
-  );
+  Widget _buildField(String name) {
+    final builder = _fieldBuilders[name];
+    if (builder == null) {
+      return SizedBox.shrink();
+    }
+    return builder.build(
+      _processing,
+      false,
+      _fieldBuilders.values.last.field.name == name,
+    );
+  }
 
   Form _buildForm(List<Airtime> airtimeList) => Form(
-    autovalidateMode: _autovalidate,
+    autovalidateMode: _autovalidateMode,
     key: _formKey,
     child: Column(
+      mainAxisSize: MainAxisSize.min,
       children:
           <Widget>[
               Row(
                 children: <Widget>[
-                  Text('Order Items', style: themeData.textTheme.body2),
+                  Text('Order Items', style: themeData.textTheme.bodyLarge),
                 ],
-              ),
-            ]
-            ..addAll(_generateFieldSets())
-            ..addAll(<Widget>[
-              SizedBox(height: 8),
+              ), ..._generateFieldSets(), SizedBox(height: 8),
               // Divider(),
               Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   ElevatedButton(
                     child: Text('ADD ITEM'),
@@ -173,7 +187,6 @@ class _CreateOrderFormState
                     },
                   ),
                 ],
-                mainAxisAlignment: MainAxisAlignment.end,
               ),
               _buildField('comments'),
               SizedBox(height: 8),
@@ -181,9 +194,9 @@ class _CreateOrderFormState
                   ? SambazaLoader('Placing order')
                   : SizedBox(height: 35),
               Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   TextButton(
-                    child: Text('Cancel'),
                     focusNode: null,
                     onPressed:
                         !_processing
@@ -191,18 +204,19 @@ class _CreateOrderFormState
                               Navigator.pop(context, null);
                             }
                             : null,
+                    child: Text('Cancel'),
                   ),
                   Expanded(child: SizedBox(height: 8)),
                   ElevatedButton(
-                    child: Text('PLACE'),
                     focusNode: null,
                     onPressed: !_processing ? _place : null,
+                    child: Text('PLACE'),
                   ),
                 ],
-                mainAxisAlignment: MainAxisAlignment.end,
               ),
-            ]),
-      mainAxisSize: MainAxisSize.min,
+            ]
+            
+            ,
     ),
   );
 
@@ -218,7 +232,7 @@ class _CreateOrderFormState
       _nestedFieldBuilderSets
           .map<Widget>(
             (List<String> fieldSet) => SambazaAirtimeFieldSet(
-              _buildField,
+              (String name) => _buildField(name) as FormField<String>,
               airtimeFieldName: fieldSet[0],
               quantityFieldName: fieldSet[1],
               onDelete:
@@ -229,7 +243,7 @@ class _CreateOrderFormState
           )
           .toList();
 
-  void _handleError(Exception error) {
+  void _handleError(Object error) {
     print(error);
   }
 
@@ -249,9 +263,9 @@ class _CreateOrderFormState
     }
   };
 
-  void Function(String) _onFieldChanged(SambazaField field) => (String value) {
+  void Function(String?) _onFieldChanged(SambazaField field) => (String? value) {
     setState(() {
-      field.controller.value = TextEditingValue(text: value);
+      field.controller.value = TextEditingValue(text: value ?? '');
     });
   };
 

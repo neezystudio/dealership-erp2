@@ -11,7 +11,7 @@ class BranchDispatchPage extends SambazaPage {
   static BranchDispatchPage create(BuildContext context) =>
       BranchDispatchPage();
 
-  BranchDispatchPage()
+  BranchDispatchPage({super.key})
       : super(
           body: _BranchDispatchView(),
           title: 'Branch Dispatch',

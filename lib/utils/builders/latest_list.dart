@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'list.dart';
-import '../builders/list_item_config.dart';
 import '../configs/list_item.dart';
 import '../model.dart';
-import '../resource.dart';
 import '../../widgets/list.dart';
 
 class SambazaLatestListBuilder<M extends SambazaModel, I extends SambazaModel>

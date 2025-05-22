@@ -12,7 +12,7 @@ class BranchLPOsPage extends SambazaPage {
 
   static BranchLPOsPage create(BuildContext context) => BranchLPOsPage();
 
-  BranchLPOsPage()
+  BranchLPOsPage({super.key})
       : super(
           body: _BranchLPOsView(),
           title: 'Branch LPOs',
@@ -128,7 +128,7 @@ class _BranchLPOsView extends SambazaInjectableStatelessWidget {
         ),
         modelFactory: ([Map<String, dynamic> fields = const {}]) => LPO.create(fields),
         requestParams: <String, dynamic>{
-          'branch': $$<SambazaAuth>().user?.profile?.branch,
+          'branch': $$<SambazaAuth>().user?.profile.branch,
         },
         resource: LPOResource(),
       );

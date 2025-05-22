@@ -108,6 +108,7 @@ class _EditOrderFormState extends SambazaInjectableWidgetState<_EditOrderForm> {
         autovalidateMode: _autovalidate ? AutovalidateMode.always : AutovalidateMode.disabled,
         key: _formKey,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Row(
               children: <Widget>[
@@ -118,6 +119,7 @@ class _EditOrderFormState extends SambazaInjectableWidgetState<_EditOrderForm> {
               ],
             ), ..._generateFieldSets(), SizedBox(height: 8),
               Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   ElevatedButton(
                       child: Text('ADD ITEM'),
@@ -127,38 +129,36 @@ class _EditOrderFormState extends SambazaInjectableWidgetState<_EditOrderForm> {
                         });
                       })
                 ],
-                mainAxisAlignment: MainAxisAlignment.end,
               ),
               SizedBox(height: 8),
               _processing
                   ? SambazaLoader('Placing order')
                   : SizedBox(height: 35),
               Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   TextButton(
-                    child: Text('Cancel', style: TextStyle(color: Colors.black87)),
                     focusNode: null,
                     onPressed: !_processing
                         ? () {
                             Navigator.pop(context, null);
                           }
                         : null,
+                    child: Text('Cancel', style: TextStyle(color: Colors.black87)),
                   ),
                   Expanded(
                     child: SizedBox(height: 8),
                   ),
                   ElevatedButton(
-                    child: Text('SAVE'),
                     focusNode: null,
                     onPressed: !_processing ? _save : null,
+                    child: Text('SAVE'),
                   ),
                 ],
-                mainAxisAlignment: MainAxisAlignment.end,
               ),
           ]
             
             ,
-          mainAxisSize: MainAxisSize.min,
         ),
       );
 

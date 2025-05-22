@@ -15,14 +15,14 @@ class SambazaList extends StatelessWidget {
       : _list = (reverse ? list.reversed : list)
             .take(limit > list.length ? list.length : limit)
             .toList() {
-    _list.forEach((SambazaListItemConfig listItemConfig) {
+    for (var listItemConfig in _list) {
       String groupKey = listItemConfig.group;
       _groupedLists.update(
           groupKey,
           (List<SambazaListItemConfig> current) =>
               current..add(listItemConfig),
           ifAbsent: () => <SambazaListItemConfig>[listItemConfig]);
-    });
+    }
     }
 
   @override
@@ -79,8 +79,8 @@ class _SambazaListItem extends StatelessWidget {
         height: 48.0,
         width: 48.0,
         child: Column(
-          children: config.leading,
           mainAxisAlignment: MainAxisAlignment.center,
+          children: config.leading,
         ),
       ),
       subtitle: Row(

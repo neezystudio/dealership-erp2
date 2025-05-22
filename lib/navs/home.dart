@@ -151,20 +151,15 @@ class _HomeNavView extends SambazaInjectableStatelessWidget {
           padding: EdgeInsets.fromLTRB(8, 8, 8, 80),
           children: <Widget>[
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 Expanded(
                   child: SambazaDebtCard(),
                 ),
               ],
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
             ),
             SizedBox(height: 8.0),
             GridView.count(
-              children: _figuresConfigs
-                  .map<Widget>(
-                    (SambazaFiguresConfig c) => SambazaFiguresCard(c),
-                  )
-                  .toList(),
               childAspectRatio: mediaQuery.orientation == Orientation.portrait
                   ? 1 / mediaQuery.size.aspectRatio
                   : mediaQuery.size.aspectRatio,
@@ -173,13 +168,18 @@ class _HomeNavView extends SambazaInjectableStatelessWidget {
               mainAxisSpacing: 4,
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
+              children: _figuresConfigs
+                  .map<Widget>(
+                    (SambazaFiguresConfig c) => SambazaFiguresCard(c),
+                  )
+                  .toList(),
             ),
             SizedBox(height: 8.0), ..._latestListBuilders.map(
                 (SambazaLatestListBuilder builder) => Card(
                   child: Container(
+                    padding: EdgeInsets.all(8),
                     child: SambazaLatestList(
                         builder: builder, title: builder.title),
-                    padding: EdgeInsets.all(8),
                   ),
                 ),
               ),

@@ -2,6 +2,5 @@ import 'package:dealership_erp_sambaza_app/utils/exception.dart' show SambazaExc
 
 
 class SambazaServiceNotFoundException extends SambazaException {
-  SambazaServiceNotFoundException(String message, [String title = ''])
-      : super(message, title);
+  SambazaServiceNotFoundException(super.message, [super.title = '']);
 }

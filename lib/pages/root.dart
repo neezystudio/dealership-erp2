@@ -121,10 +121,8 @@ class _RootPageState extends SambazaInjectableWidgetState<RootPage> {
   Future<SambazaState> _stateReady() async {
     if (!$$<SambazaStorage>().has(SambazaState.FCM_TOKEN_STORAGE_KEY)) {
       String? token = await _firebaseMessaging.getToken();
-      if (token != null) {
-        $$<SambazaStorage>().$set(SambazaState.FCM_TOKEN_STORAGE_KEY, token);
-      }
-    }
+      $$<SambazaStorage>().$set(SambazaState.FCM_TOKEN_STORAGE_KEY, token);
+        }
     return state.ready();
   }
 }

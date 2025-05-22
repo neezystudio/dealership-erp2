@@ -112,14 +112,24 @@ class _CreateStockTransferFormState
           if (snapshot.hasData) {
             return _buildForm();
           } else if (snapshot.hasError) {
-            return SambazaError(snapshot.error);
+            return SambazaError(
+              snapshot.error is SambazaException
+                  ? snapshot.error as SambazaException
+                  : SambazaException(
+                      snapshot.error?.toString() ?? 'Unknown error',
+                      'Error',
+                    ),
+              onButtonPressed: () {
+                Navigator.of(context).pop();
+              },
+            );
           }
           return SambazaLoader('Loading...');
         },
         future: _loadFuture,
       );
 
-  String _addFieldBuilder(SambazaField field, [String builderName]) {
+  String _addFieldBuilder(SambazaField field, [String? builderName]) {
     builderName ??= '${field.name}${_fieldBuilders.length}';
     field.init();
     _fieldBuilders[builderName] = _createFieldBuilder(field);
@@ -137,16 +147,19 @@ class _CreateStockTransferFormState
         value: branch.id,
       );
 
-  Widget _buildField(String name) => _fieldBuilders[name].build(
+  FormField<String> _buildField(String name) => _fieldBuilders[name]?.build(
         _processing,
         false,
         _fieldBuilders.values.last.field.name == name,
-      );
+      ) as FormField<String>;
 
   Form _buildForm() => Form(
-        autovalidate: _autovalidate,
+        autovalidateMode: _autovalidate
+            ? AutovalidateMode.always
+            : AutovalidateMode.disabled,
         key: _formKey,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             SambazaFieldRow(
               children: <Widget>[
@@ -186,30 +199,31 @@ class _CreateStockTransferFormState
                 ? SambazaLoader('Requesting transfer')
                 : SizedBox(height: 35),
             Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                FlatButton(
-                  child: Text('Cancel'),
+                TextButton(
                   focusNode: null,
                   onPressed: !_processing
                       ? () {
                           Navigator.pop(context, null);
                         }
                       : null,
-                  textColor: Colors.black87,
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.black87,
+                  ),
+                  child: Text('Cancel'),
                 ),
                 Expanded(
                   child: SizedBox(height: 8),
                 ),
-                RaisedButton(
-                  child: Text('TRANSFER'),
+                ElevatedButton(
                   focusNode: null,
                   onPressed: !_processing ? _transfer : null,
+                  child: Text('TRANSFER'),
                 ),
               ],
-              mainAxisAlignment: MainAxisAlignment.end,
             ),
           ],
-          mainAxisSize: MainAxisSize.min,
         ),
       );
 
@@ -232,17 +246,21 @@ class _CreateStockTransferFormState
         onSubmit: _onFieldSubmitted(field),
       );
 
-  SambazaField _field(String name) => _fieldBuilders[name].field;
+  SambazaField _field(String name) {
+    final builder = _fieldBuilders[name];
+    if (builder == null) {
+      throw Exception("Field builder for '$name' not found.");
+    }
+    return builder.field;
+  }
 
-  void _handleError(Exception error) {
+  void _handleError(Object error) {
     print(error);
   }
 
   Future<void> _listAirtime() => SambazaModel.list<Airtime>(
         AirtimeResource(),
-        ([
-          Map<String, dynamic> fields,
-        ]) =>
+        ([Map<String, dynamic> fields = const {}]) =>
             Airtime.create(fields),
       ).then(
         (SambazaModels<Airtime> airtimes) async {
@@ -278,44 +296,36 @@ class _CreateStockTransferFormState
 
   Future<void> _listBranches() => SambazaModel.list<Branch>(
         BranchResource(),
-        ([
-          Map<String, dynamic> fields,
-        ]) =>
-            Branch.create(fields),
-      ).then(
-        (SambazaModels<Branch> branches) {
-          _fieldSwappers[StockTransferParty.branch.toString().split('.').last] =
-              (SambazaField swapperField) {
-            _addFieldBuilder(
-              SambazaField.select<Branch>(
-                label: swapperField.name == 'destination_type'
-                    ? 'Recipient'
-                    : 'Donor',
-                name: swapperField.name == 'destination_type'
-                    ? 'destination'
-                    : 'origin',
-                options: branches.list,
-                optionBuilder: _buildBranchOption,
-                require: true,
-                type: 'text',
-              ),
-              swapperField.name == 'destination_type' ? 'to' : 'from',
-            );
-          };
-        },
-      );
+        ([Map<String, dynamic> fields = const {}]) => Branch.create(fields),
+      ).then((SambazaModels<Branch> branches) {
+        _fieldSwappers[StockTransferParty.branch.toString().split('.').last] =
+            (SambazaField swapperField) {
+          _addFieldBuilder(
+            SambazaField.select<Branch>(
+              label: swapperField.name == 'destination_type'
+                  ? 'Recipient'
+                  : 'Donor',
+              name: swapperField.name == 'destination_type'
+                  ? 'destination'
+                  : 'origin',
+              options: branches.list,
+              optionBuilder: _buildBranchOption,
+              require: true,
+              type: 'text',
+            ),
+            swapperField.name == 'destination_type' ? 'to' : 'from',
+          );
+        };
+      });
 
   Future<SambazaModels<Telco>> _listTelcos() => SambazaModel.list<Telco>(
         TelcoResource(),
-        ([Map<String, dynamic> fields]) => Telco.create(fields),
+        ([Map<String, dynamic> fields = const {}]) => Telco.create(fields),
       );
 
   Future<void> _listUsers() => SambazaModel.list<User>(
         UserResource(),
-        ([
-          Map<String, dynamic> fields,
-        ]) =>
-            User.create(fields),
+        ([Map<String, dynamic> fields = const {}]) => User.create(fields),
       ).then((SambazaModels<User> users) {
         _fieldSwappers[StockTransferParty.dsa.toString().split('.').last] =
             (SambazaField swapperField) {
@@ -347,12 +357,14 @@ class _CreateStockTransferFormState
         }
       };
 
-  void Function(String) _onFieldChanged(SambazaField field) => (String value) {
+  void Function(String?) _onFieldChanged(SambazaField field) => (String? value) {
         setState(() {
-          field.controller.value = TextEditingValue(text: value);
+          field.controller.value = TextEditingValue(text: value ?? '');
           if (<String>['destination_type', 'origin_type']
-              .contains(field.name)) {
-            _fieldSwappers[value](field);
+              .contains(field.name) && value != null) {
+            if (_fieldSwappers[value] != null) {
+              _fieldSwappers[value]!(field);
+            }
           }
         });
       };
@@ -385,7 +397,7 @@ class _CreateStockTransferFormState
       StockTransfer transfer = StockTransfer.create(
         <String, dynamic>{
           'airtime': _field('airtime').value,
-          'branch': $$<SambazaAuth>().user.profile.branch,
+          'branch': $$<SambazaAuth>().user?.profile.branch,
           'destination': _field('to').value,
           'destination_type': _field('destination_type').value,
           'origin': _field('from').value,
@@ -396,7 +408,7 @@ class _CreateStockTransferFormState
       await transfer.save();
       Navigator.pop(context, transfer.fields);
     } on SambazaException catch (e) {
-      Scaffold.of(context).showSnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Row(
             children: <Widget>[
@@ -419,11 +431,11 @@ class _CreateStockTransferFormState
 
   Future<void> _validate() async {
     setState(() {
-      _valid = _formKey.currentState.validate();
+      _valid = _formKey.currentState?.validate() ?? false;
       _autovalidate = _valid == false;
     });
     if (_valid) {
-      _formKey.currentState.save();
+      _formKey.currentState?.save();
       return;
     }
     _fieldBuilders.values

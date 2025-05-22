@@ -26,9 +26,9 @@ class SambazaInventoryWidget<I extends Inventory>
   Widget template(BuildContext context) => RefreshIndicator(
     onRefresh: _onRefresh,
     child: ListView(
-      children: <Widget>[_listBuilder(context)],
       padding: EdgeInsets.only(bottom: 8, top: 8),
       scrollDirection: Axis.vertical,
+      children: <Widget>[_listBuilder(context)],
     ),
   );
 

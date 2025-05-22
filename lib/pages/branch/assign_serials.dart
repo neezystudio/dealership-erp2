@@ -113,6 +113,7 @@ class _AssignSerialsFormState extends State<_AssignSerialsForm> {
             : AutovalidateMode.disabled,
         key: _formKey,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             _buildField('serial_first'),
             SizedBox(height: 8),
@@ -122,9 +123,9 @@ class _AssignSerialsFormState extends State<_AssignSerialsForm> {
                 ? SambazaLoader('Assigning serials')
                 : SizedBox(height: 35),
             Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 TextButton(
-                  child: Text('Cancel'),
                   focusNode: null,
                   onPressed: !_processing
                       ? () {
@@ -134,20 +135,19 @@ class _AssignSerialsFormState extends State<_AssignSerialsForm> {
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.black87,
                   ),
+                  child: Text('Cancel'),
                 ),
                 Expanded(
                   child: SizedBox(height: 8),
                 ),
                 ElevatedButton(
-                  child: Text('ASSIGN'),
                   focusNode: null,
                   onPressed: !_processing ? _save : null,
+                  child: Text('ASSIGN'),
                 ),
               ],
-              mainAxisAlignment: MainAxisAlignment.end,
             ),
           ],
-          mainAxisSize: MainAxisSize.min,
         ),
       );
 

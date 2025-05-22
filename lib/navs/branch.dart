@@ -91,28 +91,28 @@ class _BranchNavView extends SambazaInjectableStatelessWidget {
           shrinkWrap: true,
           children: <Widget>[
             GridView.count(
+              childAspectRatio: mediaQuery.orientation == Orientation.portrait ? 1 / mediaQuery.size.aspectRatio : mediaQuery.size.aspectRatio,
+              crossAxisCount: 2,
+              crossAxisSpacing: 4,
+              padding: EdgeInsets.all(4),
+              physics: NeverScrollableScrollPhysics(),
+              mainAxisSpacing: 4,
+              shrinkWrap: true,
               children: _figuresConfigs
                   .map<Widget>(
                     (SambazaFiguresConfig c) => SambazaFiguresCard(c),
                   )
                   .toList(),
-              childAspectRatio: mediaQuery.orientation == Orientation.portrait ? 1 / mediaQuery.size.aspectRatio : mediaQuery.size.aspectRatio,
-              crossAxisCount: 2,
-              crossAxisSpacing: 4,
-              padding: EdgeInsets.all(4),
-              physics: new NeverScrollableScrollPhysics(),
-              mainAxisSpacing: 4,
-              shrinkWrap: true,
             ),
             SizedBox(height: 8.0),
             GridView.count(
-              children: _menu,
               crossAxisCount: 2,
               crossAxisSpacing: 4,
               padding: EdgeInsets.all(4),
-              physics: new NeverScrollableScrollPhysics(),
+              physics: NeverScrollableScrollPhysics(),
               mainAxisSpacing: 4,
               shrinkWrap: true,
+              children: _menu,
             ),
           ],
         ),

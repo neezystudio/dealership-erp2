@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 
-import '../models/all.dart';
 import '../services/all.dart';
 import '../state.dart';
 import '../utils/all.dart';
@@ -226,9 +225,9 @@ class _LoginFormState extends SambazaInjectableWidgetState<_LoginForm> {
       final fcmToken = $$<SambazaStorage>()
           .$get(SambazaState.FCM_TOKEN_STORAGE_KEY)
           .toString();
-      await user?.pull();
+      await user.pull();
 
-      final profile = user!.profile;
+      final profile = user.profile;
       if (profile.deviceToken != fcmToken) {
         profile.deviceToken = fcmToken;
         await user.update();
