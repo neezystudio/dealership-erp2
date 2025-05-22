@@ -16,9 +16,9 @@ class CreateServiceRequestPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SambazaCreatePage(
-        form: _CreateServiceRequestForm(),
-        title: 'Make a service request',
-      );
+    form: _CreateServiceRequestForm(),
+    title: 'Make a service request',
+  );
 }
 
 class _CreateServiceRequestForm extends StatefulWidget {
@@ -73,59 +73,60 @@ class _CreateServiceRequestFormState
 
   @override
   Widget template(BuildContext context) => Form(
-        autovalidate: _autovalidate,
-        key: _formKey,
-        child: Column(
+    autovalidateMode:
+        _autovalidate ? AutovalidateMode.always : AutovalidateMode.disabled,
+    key: _formKey,
+    child: Column(
+      children: <Widget>[
+        _buildField('title'),
+        SizedBox(height: 8),
+        _buildField('amount'),
+        SizedBox(height: 8),
+        _buildField('description'),
+        SizedBox(height: 8),
+        _processing
+            ? SambazaLoader('Creating transaction')
+            : SizedBox(height: 35),
+        Row(
           children: <Widget>[
-            _buildField('title'),
-            SizedBox(height: 8),
-            _buildField('amount'),
-            SizedBox(height: 8),
-            _buildField('description'),
-            SizedBox(height: 8),
-            _processing
-                ? SambazaLoader('Creating transaction')
-                : SizedBox(height: 35),
-            Row(
-              children: <Widget>[
-                FlatButton(
-                  child: Text('Cancel'),
-                  focusNode: null,
-                  onPressed: !_processing
+            TextButton(
+              child: Text('Cancel', style: TextStyle(color: Colors.black87)),
+              focusNode: null,
+              onPressed:
+                  !_processing
                       ? () {
-                          Navigator.pop(context, null);
-                        }
+                        Navigator.pop(context, null);
+                      }
                       : null,
-                  textColor: Colors.black87,
-                ),
-                Expanded(
-                  child: SizedBox(height: 8),
-                ),
-                RaisedButton(
-                  child: Text('SUBMIT'),
-                  focusNode: null,
-                  onPressed: !_processing ? _submit : null,
-                ),
-              ],
-              mainAxisAlignment: MainAxisAlignment.end,
+            ),
+            Expanded(child: SizedBox(height: 8)),
+            ElevatedButton(
+              child: Text('SUBMIT'),
+              focusNode: null,
+              onPressed: !_processing ? _submit : null,
             ),
           ],
-          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.end,
         ),
-      );
+      ],
+      mainAxisSize: MainAxisSize.min,
+    ),
+  );
 
-  String _addFieldBuilder(SambazaField field, [String builderName]) {
+  String _addFieldBuilder(SambazaField field, [String? builderName]) {
     builderName ??= '${field.name}${_fieldBuilders.length}';
     field.init();
     _fieldBuilders[builderName] = _createFieldBuilder(field);
     return builderName;
   }
 
-  Widget _buildField(String name) => _fieldBuilders[name].build(
+  Widget _buildField(String name) =>
+      _fieldBuilders[name]?.build(
         _processing,
         false,
         _fields.last.name == name,
-      );
+      ) ??
+      SizedBox.shrink();
 
   SambazaFieldBuilder _createFieldBuilder(SambazaField field) =>
       SambazaFieldBuilder.of(
@@ -135,82 +136,97 @@ class _CreateServiceRequestFormState
         onSubmit: _onFieldSubmitted(field),
       );
 
-  SambazaField _field(String name) => _fieldBuilders[name].field;
+  SambazaField _field(String name) {
+    final builder = _fieldBuilders[name];
+    if (builder == null) {
+      throw Exception("Field builder for '$name' not found.");
+    }
+    return builder.field;
+  }
 
   void _handleError(Exception error) {
     print(error);
   }
 
   void Function() _onFieldEditingComplete(SambazaField field) => () {
-        if (_fieldBuilders.values.last.field == field) {
-          _validate().catchError(_handleError);
-        }
-      };
+    if (_fieldBuilders.values.last.field == field) {
+      _validate().catchError(_handleError);
+    }
+  };
 
-  void Function(String) _onFieldChanged(SambazaField field) => (String value) {
-        setState(() {
-          field.controller.value = TextEditingValue(text: value);
-        });
-      };
+  void Function(String?) _onFieldChanged(SambazaField field) => (
+    String? value,
+  ) {
+    setState(() {
+      field.controller.value = TextEditingValue(text: value ?? '');
+    });
+  };
 
-  void Function(String) _onFieldSubmitted(SambazaField field) =>
-      (String value) {
-        List<SambazaField> f = _fieldBuilders.values
+  void Function(String?) _onFieldSubmitted(SambazaField field) => (
+    String? value,
+  ) {
+    List<SambazaField> f =
+        _fieldBuilders.values
             .map<SambazaField>((SambazaFieldBuilder builder) => builder.field)
             .toList();
-        if (f.last == field) {
-          _validate().catchError(_handleError);
-        } else {
-          f.elementAt(f.indexOf(field) + 1).focusNode.requestFocus();
-        }
-      };
+    if (f.last == field) {
+      _validate().catchError(_handleError);
+    } else {
+      f.elementAt(f.indexOf(field) + 1).focusNode.requestFocus();
+    }
+  };
 
   void _submit() {
-    _validate().then<ServiceRequest>((_) {
-      setState(() {
-        _processing = true;
-      });
-      return ServiceRequest.create(<String, dynamic>{
-        'amount': _field('amount').value,
-        'description': _field('description').value,
-        'title': _field('title').value,
-      });
-    }).then<ServiceRequest>((ServiceRequest request) async {
-      await request.save();
-      return request;
-    }).then((ServiceRequest request) {
-      Navigator.pop(context, request.fields);
-    }).catchError((e) {
-      if (e is SambazaException) {
-        Scaffold.of(context).showSnackBar(SnackBar(
-          content: Row(
-            children: <Widget>[
-              Text('ERROR'),
-              SizedBox(width: 8.0),
-              Expanded(
-                child: Text('${e.title} - ${e.message}'),
+    _validate()
+        .then<ServiceRequest>((_) {
+          setState(() {
+            _processing = true;
+          });
+          return ServiceRequest.create(<String, dynamic>{
+            'amount': _field('amount').value,
+            'description': _field('description').value,
+            'title': _field('title').value,
+          });
+        })
+        .then<ServiceRequest>((ServiceRequest request) async {
+          await request.save();
+          return request;
+        })
+        .then((ServiceRequest request) {
+          Navigator.pop(context, request.fields);
+        })
+        .catchError((e) {
+          if (e is SambazaException) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Row(
+                  children: <Widget>[
+                    Text('ERROR'),
+                    SizedBox(width: 8.0),
+                    Expanded(child: Text('${e.title} - ${e.message}')),
+                  ],
+                ),
               ),
-            ],
-          ),
-        ));
-      }
-      if (e is Exception) {
-        _handleError(e);
-      }
-    }).whenComplete(() {
-      setState(() {
-        _processing = false;
-      });
-    });
+            );
+          }
+          if (e is Exception) {
+            _handleError(e);
+          }
+        })
+        .whenComplete(() {
+          setState(() {
+            _processing = false;
+          });
+        });
   }
 
   Future<void> _validate() async {
     setState(() {
-      _valid = _formKey.currentState.validate();
+      _valid = _formKey.currentState?.validate() ?? false;
       _autovalidate = _valid == false;
     });
     if (_valid) {
-      _formKey.currentState.save();
+      _formKey.currentState?.save();
       return;
     }
     _fields
@@ -218,6 +234,8 @@ class _CreateServiceRequestFormState
         .focusNode
         .requestFocus();
     throw SambazaException(
-        'A field(s) in the form is/are invalid', 'Form Error');
+      'A field(s) in the form is/are invalid',
+      'Form Error',
+    );
   }
 }
