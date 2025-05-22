@@ -177,6 +177,7 @@ class _CreateSaleFormState
             ), ..._generateFieldSets(), SizedBox(height: 8),
               // Divider(),
               Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   ElevatedButton(
                       child: Text('ADD ITEM'),
@@ -186,7 +187,6 @@ class _CreateSaleFormState
                         });
                       })
                 ],
-                mainAxisAlignment: MainAxisAlignment.end,
               ),
               _buildField('notes'),
               SizedBox(height: 8),
@@ -194,6 +194,7 @@ class _CreateSaleFormState
                   ? SambazaLoader('Creating sale')
                   : SizedBox(height: 35),
               Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   TextButton(
                     child: Text('SUBMIT', style: TextStyle(color: Colors.black87)),
@@ -213,7 +214,6 @@ class _CreateSaleFormState
                     onPressed: !_processing ? _create : null,
                   ),
                 ],
-                mainAxisAlignment: MainAxisAlignment.end,
               ),
           ]
             

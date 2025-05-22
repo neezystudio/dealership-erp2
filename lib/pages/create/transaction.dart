@@ -103,6 +103,7 @@ class _CreateTransactionFormState
             ? SambazaLoader('Creating transaction')
             : SizedBox(height: 35),
         Row(
+          mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
             TextButton(
               child: Text('Cancel', style: TextStyle(color: Colors.black87)),
@@ -121,7 +122,6 @@ class _CreateTransactionFormState
               onPressed: !_processing ? _submit : null,
             ),
           ],
-          mainAxisAlignment: MainAxisAlignment.end,
         ),
       ],
     ),

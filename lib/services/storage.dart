@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/all.dart';
-import '../utils/state_notifier/service.dart';
 
 class SambazaStorage extends SambazaInjectableService
     with SambazaStateNotifier, SambazaServiceStateNotifier {

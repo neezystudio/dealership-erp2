@@ -119,6 +119,7 @@ class _EditOrderFormState extends SambazaInjectableWidgetState<_EditOrderForm> {
               ],
             ), ..._generateFieldSets(), SizedBox(height: 8),
               Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   ElevatedButton(
                       child: Text('ADD ITEM'),
@@ -128,13 +129,13 @@ class _EditOrderFormState extends SambazaInjectableWidgetState<_EditOrderForm> {
                         });
                       })
                 ],
-                mainAxisAlignment: MainAxisAlignment.end,
               ),
               SizedBox(height: 8),
               _processing
                   ? SambazaLoader('Placing order')
                   : SizedBox(height: 35),
               Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   TextButton(
                     child: Text('Cancel', style: TextStyle(color: Colors.black87)),
@@ -154,7 +155,6 @@ class _EditOrderFormState extends SambazaInjectableWidgetState<_EditOrderForm> {
                     onPressed: !_processing ? _save : null,
                   ),
                 ],
-                mainAxisAlignment: MainAxisAlignment.end,
               ),
           ]
             

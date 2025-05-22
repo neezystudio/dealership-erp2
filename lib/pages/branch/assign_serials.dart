@@ -123,6 +123,7 @@ class _AssignSerialsFormState extends State<_AssignSerialsForm> {
                 ? SambazaLoader('Assigning serials')
                 : SizedBox(height: 35),
             Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 TextButton(
                   child: Text('Cancel'),
@@ -145,7 +146,6 @@ class _AssignSerialsFormState extends State<_AssignSerialsForm> {
                   onPressed: !_processing ? _save : null,
                 ),
               ],
-              mainAxisAlignment: MainAxisAlignment.end,
             ),
           ],
         ),

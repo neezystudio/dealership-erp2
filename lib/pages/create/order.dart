@@ -176,6 +176,7 @@ class _CreateOrderFormState
               ), ..._generateFieldSets(), SizedBox(height: 8),
               // Divider(),
               Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   ElevatedButton(
                     child: Text('ADD ITEM'),
@@ -186,7 +187,6 @@ class _CreateOrderFormState
                     },
                   ),
                 ],
-                mainAxisAlignment: MainAxisAlignment.end,
               ),
               _buildField('comments'),
               SizedBox(height: 8),
@@ -194,6 +194,7 @@ class _CreateOrderFormState
                   ? SambazaLoader('Placing order')
                   : SizedBox(height: 35),
               Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   TextButton(
                     child: Text('Cancel'),
@@ -212,7 +213,6 @@ class _CreateOrderFormState
                     onPressed: !_processing ? _place : null,
                   ),
                 ],
-                mainAxisAlignment: MainAxisAlignment.end,
               ),
             ]
             

@@ -199,6 +199,7 @@ class _CreateStockTransferFormState
                 ? SambazaLoader('Requesting transfer')
                 : SizedBox(height: 35),
             Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 TextButton(
                   child: Text('Cancel'),
@@ -221,7 +222,6 @@ class _CreateStockTransferFormState
                   onPressed: !_processing ? _transfer : null,
                 ),
               ],
-              mainAxisAlignment: MainAxisAlignment.end,
             ),
           ],
         ),
