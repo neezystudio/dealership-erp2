@@ -126,7 +126,7 @@ class _BranchOrdersView extends SambazaInjectableStatelessWidget {
         ),
         modelFactory: ([Map<String, dynamic> fields = const {}]) => Order.create(fields),
         requestParams: <String, dynamic>{
-          'branch': $$<SambazaAuth>().user?.profile?.branch,
+          'branch': $$<SambazaAuth>().user?.profile.branch,
         },
         resource: OrderResource(),
       );

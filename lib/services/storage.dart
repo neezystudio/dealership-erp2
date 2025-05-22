@@ -24,14 +24,14 @@ class SambazaStorage extends SambazaInjectableService
     String? persisted = _prefs.getString('SambazaCache');
     String? times = _prefs.getString('SambazaCacheTimes');
     _cacheTimes.addAll(
-      json.decode(times!).cast<String, int>().map<String, DateTime>(
+      json.decode(times).cast<String, int>().map<String, DateTime>(
             (String key, int time) => MapEntry(
               key,
               DateTime.fromMillisecondsSinceEpoch(time),
             ),
           ),
     );
-      _cache.addAll(json.decode(persisted!).cast<String, dynamic>());
+      _cache.addAll(json.decode(persisted).cast<String, dynamic>());
     List<String> toRemove = <String>[];
     _cacheTimes.forEach(
       (String key, DateTime expiry) {

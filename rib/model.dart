@@ -15,10 +15,8 @@ class SambazaModel extends Model {
   void _init(SharedPreferences prefs) {
     _prefs = prefs;
     String? persisted = _prefs.getString('SambazaCache');
-    if (persisted != null) {
-      _cache.addAll(json.decode(persisted));
+    _cache.addAll(json.decode(persisted));
     }
-  }
 
   void _persist() => _prefs.setString('SambazaCache', json.encode(_cache));
 

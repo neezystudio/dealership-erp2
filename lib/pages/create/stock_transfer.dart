@@ -397,7 +397,7 @@ class _CreateStockTransferFormState
       StockTransfer transfer = StockTransfer.create(
         <String, dynamic>{
           'airtime': _field('airtime').value,
-          'branch': $$<SambazaAuth>().user?.profile?.branch,
+          'branch': $$<SambazaAuth>().user?.profile.branch,
           'destination': _field('to').value,
           'destination_type': _field('destination_type').value,
           'origin': _field('from').value,
