@@ -15,18 +15,18 @@ class SambazaCreatePage extends StatelessWidget {
           children: <Widget>[
             SizedBox(height: 8),
             Padding(
-              child: Text(
-                'Fill in the form below',
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
               padding: EdgeInsets.only(
                 left: 8,
                 right: 8,
               ),
+              child: Text(
+                'Fill in the form below',
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
             ),
             Container(
-              child: form,
               padding: EdgeInsets.all(16.0),
+              child: form,
             ),
           ],
         ),

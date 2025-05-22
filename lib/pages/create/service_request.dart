@@ -77,6 +77,7 @@ class _CreateServiceRequestFormState
         _autovalidate ? AutovalidateMode.always : AutovalidateMode.disabled,
     key: _formKey,
     child: Column(
+      mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         _buildField('title'),
         SizedBox(height: 8),
@@ -109,7 +110,6 @@ class _CreateServiceRequestFormState
           mainAxisAlignment: MainAxisAlignment.end,
         ),
       ],
-      mainAxisSize: MainAxisSize.min,
     ),
   );
 

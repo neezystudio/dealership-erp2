@@ -89,6 +89,7 @@ class _ForgotPasswordFormState
     key: _formKey,
 
     child: Column(
+      mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
         fieldBuilder.build(_processing, true, true),
         Expanded(
@@ -121,7 +122,6 @@ class _ForgotPasswordFormState
           mainAxisAlignment: MainAxisAlignment.end,
         ),
       ],
-      mainAxisAlignment: MainAxisAlignment.end,
     ),
   );
 

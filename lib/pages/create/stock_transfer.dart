@@ -159,6 +159,7 @@ class _CreateStockTransferFormState
             : AutovalidateMode.disabled,
         key: _formKey,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             SambazaFieldRow(
               children: <Widget>[
@@ -223,7 +224,6 @@ class _CreateStockTransferFormState
               mainAxisAlignment: MainAxisAlignment.end,
             ),
           ],
-          mainAxisSize: MainAxisSize.min,
         ),
       );
 

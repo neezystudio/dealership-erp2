@@ -165,6 +165,7 @@ class _CreateSaleFormState
         autovalidateMode: _autovalidate ? AutovalidateMode.always : AutovalidateMode.disabled,
         key: _formKey,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Row(
               children: <Widget>[
@@ -217,7 +218,6 @@ class _CreateSaleFormState
           ]
             
             ,
-          mainAxisSize: MainAxisSize.min,
         ),
       );
 

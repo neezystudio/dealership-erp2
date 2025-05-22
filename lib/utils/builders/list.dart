@@ -54,7 +54,7 @@ class SambazaListBuilder<M extends SambazaModel, I extends SambazaModel> {
       ([I? listItem]) => SambazaListItemConfig<M, I>.from(
         listItemConfigBuilder,
         model,
-        listItem!,
+        listItem as I,
       );
 
   Widget call(BuildContext context) => ScopedModelDescendant<SambazaState>(

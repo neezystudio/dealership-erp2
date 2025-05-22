@@ -18,13 +18,13 @@ class SambazaTabBarView extends SambazaInjectableStatelessWidget {
         children: configs
             .map<Widget>((SambazaTabConfig config) => RefreshIndicator(
                   child: ListView(
-                    children: <Widget>[
-                      config.listBuilder(context),
-                    ],
                     padding: EdgeInsets.only(
                       bottom: 80,
                       top: 8,
                     ),
+                    children: <Widget>[
+                      config.listBuilder(context),
+                    ],
                   ),
                   onRefresh: () => Future.sync(() {
                     $$<SambazaStorage>().remove(config.endpoint);

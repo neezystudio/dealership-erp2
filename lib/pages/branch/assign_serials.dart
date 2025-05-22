@@ -113,6 +113,7 @@ class _AssignSerialsFormState extends State<_AssignSerialsForm> {
             : AutovalidateMode.disabled,
         key: _formKey,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             _buildField('serial_first'),
             SizedBox(height: 8),
@@ -147,7 +148,6 @@ class _AssignSerialsFormState extends State<_AssignSerialsForm> {
               mainAxisAlignment: MainAxisAlignment.end,
             ),
           ],
-          mainAxisSize: MainAxisSize.min,
         ),
       );
 

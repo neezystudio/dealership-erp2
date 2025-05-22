@@ -89,6 +89,7 @@ class _CreateTransactionFormState
         _autovalidate ? AutovalidateMode.always : AutovalidateMode.disabled,
     key: _formKey,
     child: Column(
+      mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         _buildField('reference_number'),
         SizedBox(height: 8),
@@ -123,7 +124,6 @@ class _CreateTransactionFormState
           mainAxisAlignment: MainAxisAlignment.end,
         ),
       ],
-      mainAxisSize: MainAxisSize.min,
     ),
   );
 

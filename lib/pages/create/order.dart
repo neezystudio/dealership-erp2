@@ -166,6 +166,7 @@ class _CreateOrderFormState
     autovalidateMode: _autovalidateMode,
     key: _formKey,
     child: Column(
+      mainAxisSize: MainAxisSize.min,
       children:
           <Widget>[
               Row(
@@ -216,7 +217,6 @@ class _CreateOrderFormState
             ]
             
             ,
-      mainAxisSize: MainAxisSize.min,
     ),
   );
 

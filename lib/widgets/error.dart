@@ -44,6 +44,7 @@ class SambazaError extends SambazaInjectableStatelessWidget {
         Text(exception.title, style: themeData.textTheme.headlineMedium),
         Text(exception.message, style: themeData.textTheme.labelMedium),
         OutlinedButton(
+          onPressed: onPressed,
           child: Text(
             'OK',
             style: TextStyle(
@@ -51,8 +52,6 @@ class SambazaError extends SambazaInjectableStatelessWidget {
               inherit: true,
             ).merge(themeData.textTheme.labelLarge),
           ),
-
-          onPressed: onPressed,
         ),
       ],
     );

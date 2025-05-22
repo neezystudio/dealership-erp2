@@ -45,9 +45,9 @@ class SambazaStorage extends SambazaInjectableService
         });
       }
     });
-    toRemove.forEach((String key) {
+    for (var key in toRemove) {
       remove(key);
-    });
+    }
   }
 
   void _persist() {

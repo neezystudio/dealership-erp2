@@ -15,7 +15,7 @@ class ServiceRequestsPage extends SambazaPage {
   static ServiceRequestsPage create(BuildContext context) =>
       ServiceRequestsPage(context);
 
-  ServiceRequestsPage(BuildContext context)
+  ServiceRequestsPage(BuildContext context, {super.key})
       : super(
             body: _ServiceRequestsView(),
             fab: FloatingActionButton(
