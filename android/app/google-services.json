@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "651549549527",
+    "project_id": "dealership-erp-sambaza-app",
+    "storage_bucket": "dealership-erp-sambaza-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:651549549527:android:f3aaff51b127b01c876192",
+        "android_client_info": {
+          "package_name": "com.example.dealership_erp_sambaza_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFx1W8tdK9BTfW6636sWZRxTAee3DoLQg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

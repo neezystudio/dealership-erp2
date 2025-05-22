@@ -13,7 +13,7 @@ class BranchStockTransfersPage extends SambazaPage with SambazaInjectable {
   static String route = '/branch/transfers';
 
   BranchStockTransfersPage(
-    BuildContext context, {super.key},
+    BuildContext context, {super.key}
   ) : super(
           body: _BranchStockTransfersView(),
           fab: FloatingActionButton(
