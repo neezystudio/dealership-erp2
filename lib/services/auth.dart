@@ -26,7 +26,9 @@ class SambazaAuth extends SambazaInjectableService {
         jwt = $$<SambazaStorage>().$get(SambazaState.AUTH_JWT_STORAGE_KEY);
       }
       if ($$<SambazaStorage>().has(SambazaState.AUTH_TOKEN_STORAGE_KEY)) {
-        _rawToken = $$<SambazaStorage>().$get(SambazaState.AUTH_TOKEN_STORAGE_KEY);
+        _rawToken = $$<SambazaStorage>().$get(
+          SambazaState.AUTH_TOKEN_STORAGE_KEY,
+        );
       }
     });
   }
@@ -41,7 +43,8 @@ class SambazaAuth extends SambazaInjectableService {
     user = null;
   }
 
-  Duration get expiresIn => _expiresAt?.difference(DateTime.now()) ?? Duration.zero;
+  Duration get expiresIn =>
+      _expiresAt?.difference(DateTime.now()) ?? Duration.zero;
 
   Duration get renewIn {
     DateTime now = DateTime.now();
@@ -58,7 +61,7 @@ class SambazaAuth extends SambazaInjectableService {
   set jwt(String newJWT) {
     assert(newJWT.isNotEmpty);
     _rawJWT = newJWT;
-    _decodedJWT = JWT.verify(newJWT, SecretKey('')); // Use your secret key if needed
+    _decodedJWT = JWT.decode(newJWT); // Decodes without verifying signature
     setUser();
     $$<SambazaStorage>().$set(SambazaState.AUTH_JWT_STORAGE_KEY, newJWT);
 
@@ -86,9 +89,12 @@ class SambazaAuth extends SambazaInjectableService {
       'email': _decodedJWT!.payload['email'],
       'first_name': _decodedJWT!.payload['first_name'],
       'last_name': _decodedJWT!.payload['last_name'],
-      'role': _decodedJWT!.payload['is_regular_user'] == true
-          ? 'regular'
-          : (_decodedJWT!.payload['is_branch_admin'] == true ? 'manager' : 'other'),
+      'role':
+          _decodedJWT!.payload['is_regular_user'] == true
+              ? 'regular'
+              : (_decodedJWT!.payload['is_branch_admin'] == true
+                  ? 'manager'
+                  : 'other'),
     });
   }
 

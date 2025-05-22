@@ -13,7 +13,7 @@ import 'pages/all.dart';
 // https://stackoverflow.com/questions/54616795/flutter-dart-httpclient-allow-self-signed-certificate
 class MyHttpOverrides extends HttpOverrides {
   @override
-  HttpClient createHttpClient(SecurityContext? context) {
+  HttpClient createHttpClient(SecurityContext? context) { 
     return super.createHttpClient(context)
       ..badCertificateCallback = (cert, host, port) => true;
   }
