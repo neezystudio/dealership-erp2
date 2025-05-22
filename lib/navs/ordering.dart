@@ -36,7 +36,7 @@ class _OrdersNavView extends StatefulWidget {
         >(
           subtitle: (DSADispatch dispatch, [DSADispatchItem? dispatchItem]) {
             dispatchItem!.serialFirst ??= 0;
-            dispatchItem.serialLast ??= 0;
+            dispatchItem.serialLast;
             return <String>[
               '${DSADispatchItem.serialFormatter(dispatchItem.serialFirst)} - ${DSADispatchItem.serialFormatter(dispatchItem.serialLast)}',
             ];
