@@ -29,7 +29,7 @@ class _CreateSaleForm extends StatefulWidget {
 class _CreateSaleFormState
     extends SambazaInjectableWidgetState<_CreateSaleForm> {
   bool _autovalidate = false, _valid = false, _processing = false;
-  Future<List<Airtime>> _airtimeListFuture;
+  late Future<List<Airtime>> _airtimeListFuture;
   final Map<String, SambazaFieldBuilder> _fieldBuilders =
       <String, SambazaFieldBuilder>{};
   final List<SambazaField> _fields = <SambazaField>[
@@ -92,16 +92,33 @@ class _CreateSaleFormState
   Widget template(BuildContext context) => FutureBuilder<List<Airtime>>(
         builder: (BuildContext context, AsyncSnapshot<List<Airtime>> snapshot) {
           if (snapshot.hasData) {
-            return _buildForm(snapshot.data);
+            return _buildForm(snapshot.data!);
           } else if (snapshot.hasError) {
-            return SambazaError(snapshot.error);
+            return SambazaError(
+              snapshot.error is SambazaException
+                  ? snapshot.error as SambazaException
+                  : SambazaException('Unknown error', snapshot.error?.toString() ?? ''),
+              onButtonPressed: () {
+                // You can define what should happen when the button is pressed, e.g. retry
+                setState(() {
+                  _airtimeListFuture = _listAirtimes().then((SambazaModels<Airtime> airtimes) async {
+                    SambazaModels<Telco> telcos = await _listTelcos();
+                    List<Airtime> airtimeList = airtimes.list.map<Airtime>((Airtime a) {
+                      a.$telco = telcos.list.firstWhere((Telco t) => t.id == a.telco);
+                      return a;
+                    }).toList();
+                    return airtimeList;
+                  });
+                });
+              },
+            );
           }
           return SambazaLoader('Loading...');
         },
         future: _airtimeListFuture,
       );
 
-  String _addFieldBuilder(SambazaField field, [String builderName]) {
+  String _addFieldBuilder(SambazaField field, [String? builderName]) {
     builderName ??= '${field.name}${_fieldBuilders.length}';
     field.init();
     _fieldBuilders[builderName] = _createFieldBuilder(field);
@@ -132,14 +149,20 @@ class _CreateSaleFormState
         value: airtime.id,
       );
 
-  Widget _buildField(String name) => _fieldBuilders[name].build(
-        _processing,
-        false,
-        _fieldBuilders.values.last.field.name == name,
-      );
+  Widget _buildField(String name) {
+    final builder = _fieldBuilders[name];
+    if (builder == null) {
+      return SizedBox.shrink();
+    }
+    return builder.build(
+      _processing,
+      false,
+      _fieldBuilders.values.last.field.name == name,
+    );
+  }
 
   Form _buildForm(List<Airtime> airtimeList) => Form(
-        autovalidate: _autovalidate,
+        autovalidateMode: _autovalidate ? AutovalidateMode.always : AutovalidateMode.disabled,
         key: _formKey,
         child: Column(
           children: <Widget>[
@@ -147,18 +170,14 @@ class _CreateSaleFormState
               children: <Widget>[
                 Text(
                   'Sale Items',
-                  style: themeData.textTheme.body2,
+                  style: themeData.textTheme.bodyMedium,
                 ),
               ],
-            ),
-          ]
-            ..addAll(_generateFieldSets())
-            ..addAll(<Widget>[
-              SizedBox(height: 8),
+            ), ..._generateFieldSets(), SizedBox(height: 8),
               // Divider(),
               Row(
                 children: <Widget>[
-                  RaisedButton(
+                  ElevatedButton(
                       child: Text('ADD ITEM'),
                       onPressed: () {
                         setState(() {
@@ -175,20 +194,19 @@ class _CreateSaleFormState
                   : SizedBox(height: 35),
               Row(
                 children: <Widget>[
-                  FlatButton(
-                    child: Text('SUBMIT'),
+                  TextButton(
+                    child: Text('SUBMIT', style: TextStyle(color: Colors.black87)),
                     focusNode: null,
                     onPressed: !_processing
                         ? () {
                             Navigator.pop(context, null);
                           }
                         : null,
-                    textColor: Colors.black87,
                   ),
                   Expanded(
                     child: SizedBox(height: 8),
                   ),
-                  RaisedButton(
+                  ElevatedButton(
                     child: Text('MAKE'),
                     focusNode: null,
                     onPressed: !_processing ? _create : null,
@@ -196,7 +214,9 @@ class _CreateSaleFormState
                 ],
                 mainAxisAlignment: MainAxisAlignment.end,
               ),
-            ]),
+          ]
+            
+            ,
           mainAxisSize: MainAxisSize.min,
         ),
       );
@@ -212,7 +232,11 @@ class _CreateSaleFormState
   List<Widget> _generateFieldSets() => _nestedFieldBuilderSets
       .map<Widget>(
         (List<String> fieldSet) => SambazaAirtimeFieldSet(
-          _buildField,
+          (String name) => _fieldBuilders[name]?.build(
+                _processing,
+                false,
+                _fieldBuilders.values.last.field.name == name,
+              ) as FormField<String>,
           airtimeFieldName: fieldSet[0],
           quantityFieldName: fieldSet[1],
           onDelete: () => setState(() {
@@ -228,12 +252,12 @@ class _CreateSaleFormState
 
   Future<SambazaModels<Airtime>> _listAirtimes() => SambazaModel.list<Airtime>(
         AirtimeResource(),
-        ([Map<String, dynamic> fields]) => Airtime.create(fields),
+        ([Map<String, dynamic> fields = const {}]) => Airtime.create(fields),
       );
 
   Future<SambazaModels<Telco>> _listTelcos() => SambazaModel.list<Telco>(
         TelcoResource(),
-        ([Map<String, dynamic> fields]) => Telco.create(fields),
+        ([Map<String, dynamic> fields = const {}]) => Telco.create(fields),
       );
 
   void Function() _onFieldEditingComplete(SambazaField field) => () {
@@ -242,9 +266,9 @@ class _CreateSaleFormState
         }
       };
 
-  void Function(String) _onFieldChanged(SambazaField field) => (String value) {
+  void Function(String?) _onFieldChanged(SambazaField field) => (String? value) {
         setState(() {
-          field.controller.value = TextEditingValue(text: value);
+          field.controller.value = TextEditingValue(text: value ?? '');
         });
       };
 
@@ -273,9 +297,9 @@ class _CreateSaleFormState
             .map<Map<String, dynamic>>(
                 (List<String> fieldSet) => <String, dynamic>{
                       'airtime': <String, dynamic>{
-                        'id': _fieldBuilders[fieldSet[0]].field.value,
+                        'id': _fieldBuilders[fieldSet[0]]!.field.value,
                       },
-                      'quantity': _fieldBuilders[fieldSet[1]].field.value,
+                      'quantity': _fieldBuilders[fieldSet[1]]!.field.value,
                     })
             .toList(),
       });
@@ -286,7 +310,7 @@ class _CreateSaleFormState
       Navigator.pop(context, sale.fields);
     }).catchError((e) {
       if (e is SambazaException) {
-        Scaffold.of(context).showSnackBar(SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Row(
             children: <Widget>[
               Text('ERROR'),
@@ -310,11 +334,11 @@ class _CreateSaleFormState
 
   Future<void> _validate() {
     setState(() {
-      _valid = _formKey.currentState.validate();
+      _valid = _formKey.currentState?.validate() ?? false;
       _autovalidate = _valid == false;
     });
     if (_valid) {
-      _formKey.currentState.save();
+      _formKey.currentState?.save();
       return Future.value();
     }
     _fields

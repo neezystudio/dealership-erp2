@@ -7,13 +7,13 @@ import '../utils/state_notifier/service.dart';
 
 class SambazaStorage extends SambazaInjectableService
     with
-        SambazaCache<String, dynamic>,
+        
         SambazaStateNotifier,
         SambazaServiceStateNotifier {
   final Map<String, dynamic> _cache = <String, dynamic>{};
   final Map<String, DateTime> _cacheTimes = <String, DateTime>{};
-  SharedPreferences _prefs;
-  Future<void> ready;
+  late SharedPreferences _prefs;
+  late Future<void> ready;
 
  SambazaStorage() {
     ready = SharedPreferences.getInstance().then(_init);
@@ -111,7 +111,6 @@ class SambazaStorage extends SambazaInjectableService
     notifyState();
   }
 
-  @override
   bool has(String key) => _cache.containsKey(key);
 
   @override
@@ -133,7 +132,6 @@ class SambazaStorage extends SambazaInjectableService
     super.noSuchMethod(invocation);
   }
 
-  @override
   dynamic $get(String key, [dynamic defaultValue]) =>
       has(key) ? _cache[key] : defaultValue;
 
@@ -150,7 +148,6 @@ class SambazaStorage extends SambazaInjectableService
     _persist();
   }
 
-  @override
   void $set(String key, dynamic value, [notify = true]) {
     _cache[key] = value;
     if (notify) {
