@@ -202,7 +202,6 @@ class _CreateStockTransferFormState
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 TextButton(
-                  child: Text('Cancel'),
                   focusNode: null,
                   onPressed: !_processing
                       ? () {
@@ -212,14 +211,15 @@ class _CreateStockTransferFormState
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.black87,
                   ),
+                  child: Text('Cancel'),
                 ),
                 Expanded(
                   child: SizedBox(height: 8),
                 ),
                 ElevatedButton(
-                  child: Text('TRANSFER'),
                   focusNode: null,
                   onPressed: !_processing ? _transfer : null,
+                  child: Text('TRANSFER'),
                 ),
               ],
             ),

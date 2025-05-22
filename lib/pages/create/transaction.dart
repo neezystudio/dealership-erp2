@@ -106,7 +106,6 @@ class _CreateTransactionFormState
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
             TextButton(
-              child: Text('Cancel', style: TextStyle(color: Colors.black87)),
               focusNode: null,
               onPressed:
                   !_processing
@@ -114,12 +113,13 @@ class _CreateTransactionFormState
                         Navigator.pop(context, null);
                       }
                       : null,
+              child: Text('Cancel', style: TextStyle(color: Colors.black87)),
             ),
             Expanded(child: SizedBox(height: 8)),
             ElevatedButton(
-              child: Text('SUBMIT'),
               focusNode: null,
               onPressed: !_processing ? _submit : null,
+              child: Text('SUBMIT'),
             ),
           ],
         ),

@@ -138,21 +138,21 @@ class _EditOrderFormState extends SambazaInjectableWidgetState<_EditOrderForm> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   TextButton(
-                    child: Text('Cancel', style: TextStyle(color: Colors.black87)),
                     focusNode: null,
                     onPressed: !_processing
                         ? () {
                             Navigator.pop(context, null);
                           }
                         : null,
+                    child: Text('Cancel', style: TextStyle(color: Colors.black87)),
                   ),
                   Expanded(
                     child: SizedBox(height: 8),
                   ),
                   ElevatedButton(
-                    child: Text('SAVE'),
                     focusNode: null,
                     onPressed: !_processing ? _save : null,
+                    child: Text('SAVE'),
                   ),
                 ],
               ),

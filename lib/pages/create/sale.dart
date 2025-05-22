@@ -197,21 +197,21 @@ class _CreateSaleFormState
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   TextButton(
-                    child: Text('SUBMIT', style: TextStyle(color: Colors.black87)),
                     focusNode: null,
                     onPressed: !_processing
                         ? () {
                             Navigator.pop(context, null);
                           }
                         : null,
+                    child: Text('SUBMIT', style: TextStyle(color: Colors.black87)),
                   ),
                   Expanded(
                     child: SizedBox(height: 8),
                   ),
                   ElevatedButton(
-                    child: Text('MAKE'),
                     focusNode: null,
                     onPressed: !_processing ? _create : null,
+                    child: Text('MAKE'),
                   ),
                 ],
               ),

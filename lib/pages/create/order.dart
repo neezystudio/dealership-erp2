@@ -197,7 +197,6 @@ class _CreateOrderFormState
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   TextButton(
-                    child: Text('Cancel'),
                     focusNode: null,
                     onPressed:
                         !_processing
@@ -205,12 +204,13 @@ class _CreateOrderFormState
                               Navigator.pop(context, null);
                             }
                             : null,
+                    child: Text('Cancel'),
                   ),
                   Expanded(child: SizedBox(height: 8)),
                   ElevatedButton(
-                    child: Text('PLACE'),
                     focusNode: null,
                     onPressed: !_processing ? _place : null,
+                    child: Text('PLACE'),
                   ),
                 ],
               ),

@@ -126,7 +126,6 @@ class _AssignSerialsFormState extends State<_AssignSerialsForm> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 TextButton(
-                  child: Text('Cancel'),
                   focusNode: null,
                   onPressed: !_processing
                       ? () {
@@ -136,14 +135,15 @@ class _AssignSerialsFormState extends State<_AssignSerialsForm> {
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.black87,
                   ),
+                  child: Text('Cancel'),
                 ),
                 Expanded(
                   child: SizedBox(height: 8),
                 ),
                 ElevatedButton(
-                  child: Text('ASSIGN'),
                   focusNode: null,
                   onPressed: !_processing ? _save : null,
+                  child: Text('ASSIGN'),
                 ),
               ],
             ),
