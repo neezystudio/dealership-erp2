@@ -27,7 +27,7 @@ class SambazaResource with SambazaInjectable {
         $$<SambazaStorage>().$get(urlWithParams),
       );
     }
-    String result = await $$<SambazaAPI>().fetch(path, params!);
+    String result = await $$<SambazaAPI>().fetch(path, params ?? {});
     Map<String, dynamic> decoded = Map<String, dynamic>.from(
       json.decode(result),
     );
@@ -70,12 +70,12 @@ class SambazaResource with SambazaInjectable {
     Map<String, dynamic>? params,
   ]) async {
     String path = '$endpoint$id/';
-    String result = await $$<SambazaAPI>().update(path, body, params!);
+    String result = await $$<SambazaAPI>().update(path, body, params ?? {});
     Map<String, dynamic> decoded = Map<String, dynamic>.from(
       json.decode(result),
     );
     $$<SambazaStorage>().cache(
-      SambazaAPIEndpoints.urlWithParams(path, params),
+      SambazaAPIEndpoints.urlWithParams(path, params ?? {}),
       decoded,
     );
     return decoded;

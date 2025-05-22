@@ -198,9 +198,10 @@ class _LoginFormState extends SambazaInjectableWidgetState<_LoginForm> {
       await _validate();
       setState(() => _processing = true);
 
-      final credentials = _fieldBuilders.map(
-        (name, builder) => MapEntry(name, builder.field.value),
-      );
+      final credentials = {
+        for (var builder in _fieldBuilders.values)
+          builder.field.name: builder.field.value,
+      };
 
       final jwtResult = await SambazaResource(
         SambazaAPIEndpoints.accounts,
