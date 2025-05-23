@@ -8,7 +8,7 @@ mixin SambazaServiceStateNotifier on SambazaService, SambazaStateNotifier {
 
   @override
   void register(SambazaState state) {
-    state = state;
+    this.state = state;
     return super.register(state);
   }
 }

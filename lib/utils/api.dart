@@ -11,14 +11,15 @@ class SambazaAPIException extends SambazaException {
   final Uri uri;
 
   SambazaAPIException(this.message, this.uri, [this.code = 0, this.title = ''])
-      : super(message, title);
+    : super(message, title);
 
   @override
   String toString() => message;
 }
 
 class SambazaAPIEndpoints {
-  static const String BASE_URL = 'https://api.sambazaerp.co.ke/api/v1';
+  static const String BASE_URL_DEV = 'https://api.sambazaerp.co.ke/api/v1';
+  static const String BASE_URL = 'https://api.tawierp.co.ke/api/v1';
 
   static String accounts([path = '/']) => '/accounts$path';
   static String airtime([path = '/']) => '/orders/airtime$path';
@@ -42,16 +43,14 @@ class SambazaAPIEndpoints {
 
   static String serialiseQueryParams(Map<String, dynamic> params) =>
       params.isNotEmpty
-          ? '?${params
-                  .map<String, String>((String key, dynamic value) =>
-                      MapEntry<String, String>(key, '$key=${value.toString()}'))
-                  .values
-                  .join('&')}'
+          ? '?${params.map<String, String>((String key, dynamic value) => MapEntry<String, String>(key, '$key=${value.toString()}')).values.join('&')}'
           : '';
 
   static String withParams(String endpoint, [Map<String, dynamic>? params]) =>
       endpoint + serialiseQueryParams(params ?? <String, dynamic>{});
 
-  static String urlWithParams(String endpoint, [Map<String, dynamic>? params]) =>
-      BASE_URL + withParams(endpoint, params);
+  static String urlWithParams(
+    String endpoint, [
+    Map<String, dynamic>? params,
+  ]) => BASE_URL + withParams(endpoint, params);
 }

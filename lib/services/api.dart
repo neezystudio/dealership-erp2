@@ -9,6 +9,28 @@ import '../utils/api.dart';
 import '../utils/exception.dart';
 import '../utils/injectable/service.dart';
 
+// Ensure these exception classes are defined if not already present in '../utils/exception.dart'
+// Example implementation (remove if already defined in your project):
+/*
+class SambazaAPIException implements Exception {
+  final String message;
+  final Uri uri;
+  final int? statusCode;
+  final String reasonPhrase;
+  SambazaAPIException(this.message, [this.uri = Uri(), this.statusCode, this.reasonPhrase = '']);
+  @override
+  String toString() => 'SambazaAPIException: $message';
+}
+
+class SambazaException implements Exception {
+  final String message;
+  final String reason;
+  SambazaException(this.message, [this.reason = '']);
+  @override
+  String toString() => 'SambazaException: $message';
+}
+*/
+
 class SambazaAPI extends SambazaInjectableService {
   final List<String> _errors = <String>[
     'detail',
@@ -81,7 +103,7 @@ class SambazaAPI extends SambazaInjectableService {
     }
     throw SambazaAPIException(
       error,
-      response.request!.url,
+      response.request is http.BaseRequest ? (response.request as http.BaseRequest).url : Uri(),
       response.statusCode,
       response.reasonPhrase ?? '',
     );
@@ -127,7 +149,7 @@ class SambazaAPI extends SambazaInjectableService {
 
   Future<String> send(String endpoint, Map<String, dynamic> body,
       [Map<String, dynamic>? params]) async {
-    String url = SambazaAPIEndpoints.urlWithParams(endpoint, params);
+    String url = SambazaAPIEndpoints.urlWithParams(endpoint, params ?? const <String, dynamic>{});
     Map<String, String> headers = _headers(<String, String>{
       HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
     });
@@ -147,6 +169,11 @@ class SambazaAPI extends SambazaInjectableService {
       throw SambazaException(
         '$endpoint ${e.message}',
         'Connection Error',
+      );
+    } catch (e) {
+      throw SambazaException(
+        '$endpoint Unexpected error: $e',
+        'Unknown Error',
       );
     }
   }

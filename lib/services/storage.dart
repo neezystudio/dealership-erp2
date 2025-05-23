@@ -16,39 +16,45 @@ class SambazaStorage extends SambazaInjectableService
   }
 
   void _init(SharedPreferences prefs) {
-    _prefs = prefs;
-    String? persisted = _prefs.getString('SambazaCache');
-    String? times = _prefs.getString('SambazaCacheTimes');
+  _prefs = prefs;
+  String? persisted = _prefs.getString('SambazaCache');
+  String? times = _prefs.getString('SambazaCacheTimes');
+
+  if (times != null) {
     _cacheTimes.addAll(
       json
-          .decode(times!)
+          .decode(times)
           .cast<String, int>()
           .map<String, DateTime>(
             (String key, int time) =>
                 MapEntry(key, DateTime.fromMillisecondsSinceEpoch(time)),
           ),
     );
-    _cache.addAll(json.decode(persisted!).cast<String, dynamic>());
-    List<String> toRemove = <String>[];
-    _cacheTimes.forEach((String key, DateTime expiry) {
-      DateTime now = DateTime.now();
-      Duration toExpiry = expiry.difference(now);
-      if (toExpiry.isNegative) {
-        toRemove.add(key);
-      } else {
-        Future.delayed(toExpiry, () {
-          if (_cacheTimes.containsKey(key) &&
-              _cacheTimes[key]!.isAtSameMomentAs(expiry)) {
-            remove(key);
-          }
-        });
-      }
-    });
-    for (var key in toRemove) {
-      remove(key);
-    }
   }
 
+  if (persisted != null) {
+    _cache.addAll(json.decode(persisted).cast<String, dynamic>());
+  }
+
+  List<String> toRemove = <String>[];
+  _cacheTimes.forEach((String key, DateTime expiry) {
+    DateTime now = DateTime.now();
+    Duration toExpiry = expiry.difference(now);
+    if (toExpiry.isNegative) {
+      toRemove.add(key);
+    } else {
+      Future.delayed(toExpiry, () {
+        if (_cacheTimes.containsKey(key) &&
+            _cacheTimes[key]!.isAtSameMomentAs(expiry)) {
+          remove(key);
+        }
+      });
+    }
+  });
+  for (var key in toRemove) {
+    remove(key);
+  }
+}
   void _persist() {
     _prefs.setString(
       'SambazaCacheTimes',

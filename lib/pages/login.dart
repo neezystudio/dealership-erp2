@@ -58,7 +58,8 @@ class _LoginFormState extends SambazaInjectableWidgetState<_LoginForm> {
   AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
   bool _valid = false, _processing = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final Map<String, SambazaFieldBuilder> _fieldBuilders = <String, SambazaFieldBuilder>{};
+  final Map<String, SambazaFieldBuilder> _fieldBuilders =
+      <String, SambazaFieldBuilder>{};
 
   final List<SambazaField> _fields = <SambazaField>[
     SambazaField.email(
@@ -151,7 +152,7 @@ class _LoginFormState extends SambazaInjectableWidgetState<_LoginForm> {
       );
 
   void _forgotPassword() {
-    Navigator.pushNamed< bool>(context, ForgotPasswordPage.route).then((result) {
+    Navigator.pushNamed<bool>(context, ForgotPasswordPage.route).then((result) {
       if (result == true) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -182,7 +183,9 @@ class _LoginFormState extends SambazaInjectableWidgetState<_LoginForm> {
     }
   };
 
-  void Function(String) _onFieldSubmitted(SambazaField field) => (String value) {
+  void Function(String) _onFieldSubmitted(SambazaField field) => (
+    String value,
+  ) {
     if (_fields.last == field) {
       _validate().catchError(_handleError);
     } else {
@@ -195,14 +198,23 @@ class _LoginFormState extends SambazaInjectableWidgetState<_LoginForm> {
       await _validate();
       setState(() => _processing = true);
 
-      final credentials = _fieldBuilders.map(
-        (name, builder) => MapEntry(name, builder.field.value),
-      );
+      final credentials = {
+        for (var builder in _fieldBuilders.values)
+          builder.field.name: builder.field.value,
+      };
 
       final jwtResult = await SambazaResource(
         SambazaAPIEndpoints.accounts,
         '/login',
       ).$save(credentials);
+
+      if (jwtResult['token'] == null) {
+        setState(() => _processing = false);
+        throw SambazaException(
+          'Login failed. Invalid credentials or server error.',
+          'No Token',
+        );
+      }
       $$<SambazaAuth>().jwt = jwtResult['token'].toString();
 
       final user = $$<SambazaAuth>().user;
@@ -213,7 +225,15 @@ class _LoginFormState extends SambazaInjectableWidgetState<_LoginForm> {
       ).$save(credentials);
       $$<SambazaAuth>().token = tokenResult['key'].toString();
 
-      if (user!.role == SambazaAuthRole.other) {
+      if (user == null) {
+        setState(() => _processing = false);
+        throw SambazaException(
+          'Login failed. Please check your credentials and try again.',
+          'User Not Found',
+        );
+      }
+
+      if (user.role == SambazaAuthRole.other) {
         $$<SambazaAuth>().clear();
         $$<SambazaStorage>().clear();
         throw SambazaException(
@@ -222,9 +242,10 @@ class _LoginFormState extends SambazaInjectableWidgetState<_LoginForm> {
         );
       }
 
-      final fcmToken = $$<SambazaStorage>()
-          .$get(SambazaState.FCM_TOKEN_STORAGE_KEY)
-          .toString();
+      final fcmToken =
+          $$<SambazaStorage>()
+              .$get(SambazaState.FCM_TOKEN_STORAGE_KEY)
+              .toString();
       await user.pull();
 
       final profile = user.profile;
@@ -263,16 +284,14 @@ class _LoginFormState extends SambazaInjectableWidgetState<_LoginForm> {
   Future<void> _validate() {
     setState(() {
       _valid = _formKey.currentState!.validate();
-      _autovalidateMode = _valid ? AutovalidateMode.always : AutovalidateMode.disabled;
+      _autovalidateMode =
+          _valid ? AutovalidateMode.always : AutovalidateMode.disabled;
     });
     if (_valid) {
       _formKey.currentState!.save();
       return Future.value();
     }
-    _fields
-        .firstWhere((field) => field.$invalid)
-        .focusNode
-        .requestFocus();
+    _fields.firstWhere((field) => field.$invalid).focusNode.requestFocus();
     return Future.error(
       SambazaException('A field(s) in the form is/are invalid', 'Form Error'),
     );
