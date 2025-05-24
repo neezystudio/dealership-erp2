@@ -5,6 +5,8 @@ on:
   workflow_dispatch:
 
 name: Build Android
+permissions:  
+  contents: write
 jobs:
   build:
     name: Build Apps
